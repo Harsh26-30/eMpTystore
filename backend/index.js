@@ -7,7 +7,7 @@ const User = require("./userdata");
 const Product = require("./productdata");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const SECRET = process.env.JWT_SECRET;
+const SECRET = process.env.JWT_SECRET || "secretkey";
 const multer = require("multer");
 const cloudinary = require("./cloudinary");
 
@@ -22,17 +22,6 @@ mongoose.connect(process.env.MONGO_URI, {
 .catch(err => console.log(err));
 
 app.use(express.json());
-
-// app.use(cors({
-//   origin: [
-//     "https://emptystore.onrender.com"
-//   ],
-//   credentials: true
-// }));
-
-// const path = require("path");
-
-// app.use(express.static(path.join(__dirname, "frontend/dist")));
 
 app.use(express.static("frontend/dist"));
 
