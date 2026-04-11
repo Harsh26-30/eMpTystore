@@ -23,12 +23,20 @@ mongoose.connect(process.env.MONGO_URI, {
 
 app.use(express.json());
 
-app.use(cors({
-  origin: [
-    "https://emptystore.onrender.com"
-  ],
-  credentials: true
-}));
+// app.use(cors({
+//   origin: [
+//     "https://emptystore.onrender.com"
+//   ],
+//   credentials: true
+// }));
+
+const path = require("path");
+
+app.use(express.static(path.join(__dirname, "frontend/dist")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "frontend/dist/index.html"));
+});
 
 const authMiddleware = (req, res, next) => {
   const header = req.headers.authorization;
