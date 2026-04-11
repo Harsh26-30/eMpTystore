@@ -1,27 +1,35 @@
 const express = require('express')
 const app = express()
 const cors = require("cors");
-const port = 3000
+const port = process.env.PORT || 3000;
 const mongoose = require("mongoose");
 const User = require("./userdata");
 const Product = require("./productdata");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const SECRET = "secretkey";
+// const SECRET = "secretkey";
+const SECRET = process.env.JWT_SECRET;
 const multer = require("multer");
 const cloudinary = require("./cloudinary");
 
 // multer config
 const upload = multer({ dest: "uploads/" });
 
-mongoose.connect("mongodb://127.0.0.1:27017/emptystoredata")
-  .then(() => console.log("MongoDB connected"))
-  .catch(err => console.log(err));
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log("MongoDB connected"))
+.catch(err => console.log(err));
 
 app.use(express.json());
 
 app.use(cors({
-  origin: "http://localhost:5173"
+  origin: [
+    "http://localhost:5173",
+    "https://emptystore.onrender.com"
+  ],
+  credentials: true
 }));
 
 const authMiddleware = (req, res, next) => {
