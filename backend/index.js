@@ -240,10 +240,6 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.use(cors({
-  origin: "*",
-  credentials: true
-}));
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
