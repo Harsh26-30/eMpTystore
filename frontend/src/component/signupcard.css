@@ -1,0 +1,59 @@
+#mainboxsignup{
+    background: #000;
+    width: 80%;
+    height: 60%;
+    border-radius: 20px;
+    padding: 5px;
+    color: #fff;
+}
+
+#mainboxsignup div h2{
+    text-transform: capitalize;
+    font-family: cursive;
+    font-size: larger;
+}
+
+#mainboxsignup div{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#mainboxsignup div form{
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+#mainboxsignup div form fieldset legend{
+    color: white;
+    font-family: sans-serif;
+    font-weight: bold;
+}
+
+#mainboxsignup div form .inputbox{
+    width: 100%;
+    height: 40px;
+    border-radius: 30px;
+    border: none;
+    outline: none;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#mainboxsignup div form #submitbtn{
+    width: 60%;
+    height: 30%;
+    font-size: x-large;
+    text-transform: capitalize;
+    font-weight: bolder;
+    border-radius: 10px;
+}
+
+form #submitbtn:focus{
+    background: #605d5d;
+}

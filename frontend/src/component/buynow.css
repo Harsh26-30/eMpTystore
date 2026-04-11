@@ -1,0 +1,92 @@
+#mainboxbuynow {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#box2buynow {
+    background-color: #000;
+    width: 95%;
+    height: 98%;
+}
+
+#box2buynow h2 {
+    color: white;
+    text-align: center;
+    margin-top: 10px;
+}
+
+#formbuynow {
+    height: 50%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    border-bottom: 2px solid white;
+}
+
+#formbuynow fieldset {
+    width: 70%;
+    height: 12%;
+    border: none;
+}
+
+#formbuynow fieldset legend {
+    color: #fff;
+    text-transform: capitalize;
+    font-weight: bolder;
+}
+
+#formbuynow fieldset input {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    border: none;
+    padding: 2px;
+}
+
+#formbuynow fieldset #inputbuynow {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    border: none;
+    padding: 4px;
+}
+
+
+#formbuynow button {
+    width: 40%;
+    height: 10%;
+    font-size: larger;
+    font-weight: bolder;
+    border-radius: 10px;
+}
+
+#formbuynow button:focus {
+    background-color: grey;
+}
+
+#paymentmethodbox {
+    height: 50%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    border-bottom: 2px solid white;
+}
+
+#paymentmethodbox select {
+    width: 80%;
+    height: 10%;
+}
+
+#paymentmethodbox button {
+    width: 200px;
+    height: 50px;
+    font-size: 20px;
+    font-weight: bolder;
+}

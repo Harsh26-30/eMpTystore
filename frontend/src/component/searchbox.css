@@ -1,0 +1,48 @@
+#mainboxsearch {
+    width: 100%;
+    height: 100vh;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    background-color: #d8080822;
+}
+
+#mainboxsearch #box2{
+    width: 100%;
+    height: 5%;
+    display: flex;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+}
+
+#mainboxsearch #box2 input {
+    width: 85%;
+    height: 90%;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+
+}
+
+#mainboxsearch #box2 button{
+    width: 15%;
+    height: 90%;
+}
+
+#mainboxsearch #buttonsearch {
+    width: 20%;
+    height:100%;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+}
+
+#mainboxsearch #buttonsearch img{
+    width: 100%;
+    height: 100%;
+}
+
+#mainboxsearch #buttonsearch:focus{
+    background-color: grey;
+}
