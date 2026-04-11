@@ -51,7 +51,7 @@ const buynow = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const res = await axios.post("http://localhost:3000/updateaddress", {
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}/updateaddress`, {
             address, country, state, district, pincode
         },
             {

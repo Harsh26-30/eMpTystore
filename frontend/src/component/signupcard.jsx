@@ -15,7 +15,7 @@ const signupcard = ({ setvalid }) => {
 
     const handlesubmit = async (e) => {
         e.preventDefault();
-        const res = await axios.post("http://localhost:3000/signup", {
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}/signup`, {
             name: username,
             email: useremail,
             dob: userdob,

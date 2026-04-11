@@ -24,7 +24,7 @@ const uploadproduct = () => {
         formData.append("productcolor", productcolor);
         formData.append("productprice", productprice);
         formData.append("productextrainfo", productextrainfo);
-        await axios.post("http://localhost:3000/add-product", formData, {
+        await axios.post(`${import.meta.env.VITE_API_URL}/add-product`, formData, {
             headers: {
                 Authorization: `Bearer ${token}`,
             }

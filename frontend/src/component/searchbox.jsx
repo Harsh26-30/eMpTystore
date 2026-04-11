@@ -16,7 +16,7 @@ const SearchBox = () => {
 
         try {
             const res = await axios.post(
-                "http://localhost:3000/search",
+                `${import.meta.env.VITE_API_URL}/search`,
                 { userinput },
                 {
                     headers: {

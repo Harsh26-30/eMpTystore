@@ -19,7 +19,7 @@ function App() {
   useEffect(() => {
     const checkUser = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/profile", {
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/profile`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

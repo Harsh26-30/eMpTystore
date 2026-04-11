@@ -13,7 +13,7 @@ const logincard = ({ setvalid }) => {
 
   const handlesubmit = async (e) => {
     e.preventDefault();
-    const res = await axios.post("http://localhost:3000/login", {
+    const res = await axios.post(`${import.meta.env.VITE_API_URL}/login`, {
       email: useremail,
       pass: userpass
     })
