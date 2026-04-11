@@ -174,23 +174,22 @@ app.get('/', (req, res) => {
 app.post("/signup", async (req, res) => {
   try {
     const { name, dob, gender, email, pass } = req.body;
+
     const regexname = /^[A-Za-z\s]{3,20}$/;
     const regexemail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (regexname.test(name)) {
-      if (regexemail.test(email)) {
-        pass
-      } else {
-        return res.json({ valid: "fasle", msg: "Inappropriate Email Typed" });
-      }
-    } else {
-      return res.json({ valid: "fasle", msg: "Inappropriate Name Typed" });
+    if (!regexname.test(name)) {
+      return res.json({ valid: "false", msg: "Invalid Name" });
     }
 
-    const user = await User.findOne({ email: email });
+    if (!regexemail.test(email)) {
+      return res.json({ valid: "false", msg: "Invalid Email" });
+    }
+
+    const user = await User.findOne({ email });
 
     if (user) {
-      return res.json({ valid: "fasle", msg: "Alerady this Email is used" });
+      return res.json({ valid: "false", msg: "Email already used" });
     }
 
     const hashedPassword = await bcrypt.hash(pass, 10);
@@ -202,14 +201,19 @@ app.post("/signup", async (req, res) => {
       email,
       pass: hashedPassword
     });
+
     await newUser.save();
+
     const token = jwt.sign(
-      { email: email, pass: pass }, "secretkey",
+      { email },
+      process.env.JWT_SECRET || "secretkey",
       { expiresIn: "1d" }
     );
 
     res.json({ valid: "true", token });
+
   } catch (err) {
+    console.log("SIGNUP ERROR:", err); // 🔥 IMPORTANT
     res.status(500).json({ error: err.message });
   }
 });
