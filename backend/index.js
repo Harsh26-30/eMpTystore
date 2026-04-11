@@ -7,7 +7,6 @@ const User = require("./userdata");
 const Product = require("./productdata");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-// const SECRET = "secretkey";
 const SECRET = process.env.JWT_SECRET;
 const multer = require("multer");
 const cloudinary = require("./cloudinary");
