@@ -16,21 +16,21 @@ function App() {
   const [valid, setvalid] = useState('')
   const token = localStorage.getItem("token");
 
-  useEffect(() => {
-    const checkUser = async () => {
-      try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/profile`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setvalid(res.data.valid)
-      } catch (err) {
-        setvalid("false");
-      }
-    };
-    checkUser();
-  });
+useEffect(() => {
+  const checkUser = async () => {
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/profile`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setvalid(res.data.valid)
+    } catch (err) {
+      setvalid("false");
+    }
+  };
+  checkUser();
+}, []); // ✅ IMPORTANT
 
   return (
     <BrowserRouter>
