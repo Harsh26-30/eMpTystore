@@ -30,13 +30,17 @@ app.use(express.json());
 //   credentials: true
 // }));
 
-const path = require("path");
+// const path = require("path");
 
-app.use(express.static(path.join(__dirname, "frontend/dist")));
+// app.use(express.static(path.join(__dirname, "frontend/dist")));
 
-app.get("/*", (req, res) => {
-  res.sendFile(path.join(__dirname, "frontend/dist/index.html"));
-});
+app.use(cors({
+  origin: [
+    "https://emptystore.onrender.com/api/"
+  ],
+  credentials: true
+}));
+
 
 const authMiddleware = (req, res, next) => {
   const header = req.headers.authorization;
