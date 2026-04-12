@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const cors = require("cors");
+require('dotenv').config();
 const port = process.env.PORT || 3000;
 const mongoose = require("mongoose");
 const User = require("./userdata");
@@ -10,6 +11,7 @@ const bcrypt = require("bcrypt");
 const SECRET = process.env.JWT_SECRET || "secretkey";
 const multer = require("multer");
 const cloudinary = require("./cloudinary");
+
 
 // multer config
 const upload = multer({ dest: "uploads/" });
