@@ -29,6 +29,10 @@ app.use(cors({
   credentials: true
 }));
 
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve("frontend/dist/index.html"));
+});
+
 
 const authMiddleware = (req, res, next) => {
   const header = req.headers.authorization;
