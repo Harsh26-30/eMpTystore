@@ -29,7 +29,7 @@ app.use(express.static("frontend/dist"));
 
 app.use(cors({
   origin: [
-    "https://emptystore.onrender.com/"
+    "https://emptystore.onrender.com"
   ],
   credentials: true
 }));
