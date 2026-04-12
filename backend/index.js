@@ -20,18 +20,19 @@ mongoose.connect(process.env.MONGO_URI)
 .then(() => console.log("MongoDB connected"))
 .catch(err => console.log(err));
 
-app.use(express.json());
-
-app.use(express.static("frontend/dist"));
-
 app.use(cors({
   origin: "https://emptystore.onrender.com",
   credentials: true
 }));
 
+app.use(express.json());
+
+app.use(express.static(path.join(__dirname, "frontend/dist")));
+
 app.get("*", (req, res) => {
-  res.sendFile(path.resolve("frontend/dist/index.html"));
+  res.sendFile(path.resolve(__dirname, "frontend/dist/index.html"));
 });
+
 
 
 const authMiddleware = (req, res, next) => {
