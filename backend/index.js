@@ -168,11 +168,6 @@ app.post("/add-product", upload.single("image"), authMiddleware, async (req, res
 
 
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
-
-
 app.post("/signup", async (req, res) => {
   try {
     const { name, dob, gender, email, pass } = req.body;
