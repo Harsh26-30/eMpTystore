@@ -31,9 +31,7 @@ app.use(express.json());
 
 app.use(express.static(path.join(__dirname, "frontend/dist")));
 
-app.get(/.*/, (req, res) => {
-  res.sendFile(path.resolve(__dirname, "frontend/dist/index.html"));
-});
+
 
 
 
@@ -252,6 +250,10 @@ app.post("/login", async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
+
+app.get(/.*/, (req, res) => {
+  res.sendFile(path.resolve(__dirname, "frontend/dist/index.html"));
 });
 
 
