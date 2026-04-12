@@ -10,7 +10,7 @@ const auth = ({ setvalid }) => {
     <div id='authpage'>
       <div id='headerbox'>
         <div id='box1'>
-          <img src="\public\E.png" alt="" />
+          <img src="\E.png" alt="logo" />
           <h1>Empty Store</h1>
         </div>
 

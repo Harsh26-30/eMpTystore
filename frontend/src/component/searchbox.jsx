@@ -43,7 +43,7 @@ const SearchBox = () => {
                     onChange={(e) => setUserInput(e.target.value)}
                 />
                 <button id="buttonsearch" onClick={handleClickSearch}>
-                    <img src="\src\assets\search_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.png" alt="search" />
+                    <img src="\search_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.png" alt="search" />
                 </button>
             </div>
 {/* 
