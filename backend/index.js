@@ -29,11 +29,8 @@ app.use(cors({
 
 app.use(express.json());
 
-app.use(express.static(path.join(__dirname, "frontend/dist")));
-
-
-
-
+app.use(express.static(path.join(__dirname, "../frontend/dist")));
+app.use('/uploads', express.static('uploads'));
 
 const authMiddleware = (req, res, next) => {
   const header = req.headers.authorization;
@@ -248,7 +245,7 @@ app.post("/login", async (req, res) => {
 });
 
 app.get(/.*/, (req, res) => {
-  res.sendFile(path.resolve(__dirname, "frontend/dist/index.html"));
+  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
 });
 
 
