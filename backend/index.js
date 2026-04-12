@@ -16,10 +16,7 @@ const cloudinary = require("./cloudinary");
 // multer config
 const upload = multer({ dest: "uploads/" });
 
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
+mongoose.connect(process.env.MONGO_URI)
 .then(() => console.log("MongoDB connected"))
 .catch(err => console.log(err));
 
@@ -28,9 +25,7 @@ app.use(express.json());
 app.use(express.static("frontend/dist"));
 
 app.use(cors({
-  origin: [
-    "https://emptystore.onrender.com"
-  ],
+  origin: "https://emptystore.onrender.com",
   credentials: true
 }));
 
@@ -213,6 +208,9 @@ app.post("/signup", async (req, res) => {
     );
 
     res.json({ valid: "true", token });
+
+    console.log("Sign up api caalled");
+    
 
   } catch (err) {
     console.log("SIGNUP ERROR:", err); // 🔥 IMPORTANT
