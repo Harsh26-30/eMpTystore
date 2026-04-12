@@ -188,7 +188,7 @@ app.post("/signup", async (req, res) => {
       return res.json({ valid: "false", msg: "Invalid Email" });
     }
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email:email });
 
     if (user) {
       return res.json({ valid: "false", msg: "Email already used" });
