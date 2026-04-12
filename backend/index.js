@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+const path = require("path");
 const cors = require("cors");
 require('dotenv').config();
 const port = process.env.PORT || 3000;
@@ -11,6 +12,7 @@ const bcrypt = require("bcrypt");
 const SECRET = process.env.JWT_SECRET || "secretkey";
 const multer = require("multer");
 const cloudinary = require("./cloudinary");
+
 
 
 // multer config
@@ -29,7 +31,7 @@ app.use(express.json());
 
 app.use(express.static(path.join(__dirname, "frontend/dist")));
 
-app.get("*", (req, res) => {
+app.get(/. */, (req, res) => {
   res.sendFile(path.resolve(__dirname, "frontend/dist/index.html"));
 });
 
