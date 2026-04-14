@@ -49,7 +49,7 @@ const NumberVerification = () => {
                             />
                         </fieldset>
 
-                        <button type="button" onClick={handlegetotp}>
+                        <button id='submitbtn2' type="button" onClick={handlegetotp}>
                             GET OTP
                         </button>
 
@@ -63,7 +63,7 @@ const NumberVerification = () => {
                             />
                         </fieldset>
 
-                        <button type="button" onClick={handleverify}>
+                        <button id='submitbtn2' type="button" onClick={handleverify}>
                             Verify
                         </button>
 

@@ -37,6 +37,10 @@
     gap: 30px;
 }
 
+#mainboxnumberverification div form fieldset{
+    border: none;
+}
+
 #mainboxnumberverification div form fieldset legend {
     color: white;
     font-family: sans-serif;
