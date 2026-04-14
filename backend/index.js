@@ -227,7 +227,7 @@ app.post("/verify-otp", async (req, res) => {
 
   try {
     const response = await axios.get(
-      `https://api.msg91.com/api/v5/otp/verify?mobile=91${phone}&otp=${otp}&authkey=YOUR_AUTH_KEY`
+      `https://api.msg91.com/api/v5/otp/verify?mobile=91${phone}&otp=${otp}&authkey=${process.env.MSG91_AUTH_KEY}`
     );
       const updatedUser = await User.findOneAndUpdate(
       { email: req.user.email },
