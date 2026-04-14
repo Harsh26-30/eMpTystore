@@ -6,16 +6,15 @@ import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const buynow = () => {
-    // const [information, setinformation] = useState('')
+    const location = useLocation();
+    const product = location.state;
+
     const [address, setaddress] = useState('')
     const [country, setcountry] = useState('')
     const [state, setstate] = useState('')
     const [district, setdistrict] = useState('')
     const [pincode, setpincode] = useState('')
-    const [paymentmethod, setpaymentmethod] = useState('PN')
-
-    const [p, setp] = useState('PN')
-
+    const [quantity, setquantity] = useState(1)
 
 
 
@@ -40,19 +39,42 @@ const buynow = () => {
                 setdistrict(res.data.district);
                 setpincode(res.data.pincode);
 
+
             } catch (err) {
                 console.log("Error:", err);
             }
         };
-
+        setquantity(1);
         fun1();
     }, [token]);
+
+    const increase = () => {
+        setquantity(prev => prev + 1);
+        console.log(quantity);
+    };
+
+    const decrease = () => {
+        setquantity(prev => (prev > 1 ? prev - 1 : 1));
+    };
 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const res = await axios.post(`${import.meta.env.VITE_API_URL}/updateaddress`, {
             address, country, state, district, pincode
+        },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+    }
+
+    const handleorder = async (e) => {
+
+        e.preventDefault();
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}/placeOrder`, {
+            quantity, sellerid: product.productsellerid
         },
             {
                 headers: {
@@ -86,24 +108,20 @@ const buynow = () => {
                         <legend>pincode</legend>
                         <input type="text" value={pincode} onChange={(e) => setpincode(e.target.value)} />
                     </fieldset>
-
                     <button type='submit'>Save</button>
                 </form>
-                    <h2>Payment Method</h2>
-                <div id='paymentmethodbox'>
-                    <select onChange={(e) => { setpaymentmethod(e.target.value) }}>
-                        <option deafault>Select</option>
-                        <option value="POD">Pay On Deleviry</option>
-                        <option value="PN">Pay Now</option>
-                    </select>
-                    {paymentmethod === 'PN' && <div>
-                        <button>Pay & Placed order</button>
-                    </div >}
-                    {paymentmethod === 'POD' && <div>
-                        <button>Placed order</button>
-                    </div>}
+                <div id='quanititybox'>
+                    <div id='quanititybox2'>
+                        <button onClick={decrease}>-</button>
+                        <span>{quantity}</span>
+                        <button onClick={increase}>+</button>
+                    </div>
                 </div>
-
+                <div id='placeOrderbox'>
+                    <div id='placeOrderbox2'>
+                        <button onClick={handleorder}>Order Now</button>
+                    </div>
+                </div>
             </div>
         </div>
     )

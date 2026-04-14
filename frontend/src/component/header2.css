@@ -9,14 +9,31 @@
     z-index: 20; */
 }
 
+#mainboxheader3{
+    background-color: #000;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content:flex-end;
+    /* position: fixed;
+    z-index: 20; */
+}
+
 #mainboxheader2 img{
     width: 100px;
     height: 70px;
     border-radius: 20px;
 }
 
+#mainboxheader3 button img{
+    width: 40%;
+    height: 90px;
+    border-radius: 20px;
+}
+
 #mainboxheader2 button{
-    width: 10%;
+    width: 25%;
     height: 50%;
     background-color: transparent;
     border: none;

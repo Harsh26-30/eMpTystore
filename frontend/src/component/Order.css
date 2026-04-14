@@ -1,0 +1,34 @@
+#mainboxOrder {
+    width: 100%;
+    height: 90vh;
+}
+
+#box1Order {
+    background-color: black;
+    height: 10vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+#box22Order {
+    width: 100%;
+    height: 50%;
+}
+
+#box22Order button{
+    width: 50%;
+    height: 100%;
+    border: none;
+    background-color: black;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#box22Order button:focus{
+    border-top: 2px solid white;
+    background-color: rgba(255, 255, 255, 0.398);
+
+}

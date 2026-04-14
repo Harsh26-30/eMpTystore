@@ -24,7 +24,7 @@ const signupcard = ({ setvalid }) => {
         })
         localStorage.setItem("token", res.data.token);
         if (res.data.valid === 'true') {
-            navigate("/home");
+            navigate("/Numberverification");
         }
     }
     const handleGender = (e) => {

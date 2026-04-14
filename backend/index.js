@@ -3,10 +3,12 @@ const app = express()
 const path = require("path");
 const cors = require("cors");
 require('dotenv').config();
+const axios = require("axios");
 const port = process.env.PORT || 3000;
 const mongoose = require("mongoose");
 const User = require("./userdata");
 const Product = require("./productdata");
+const Order = require("./orderdata");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const SECRET = process.env.JWT_SECRET || "secretkey";
@@ -19,11 +21,16 @@ const cloudinary = require("./cloudinary");
 const upload = multer({ dest: "uploads/" });
 
 mongoose.connect(process.env.MONGO_URI)
-.then(() => console.log("MongoDB connected"))
-.catch(err => console.log(err));
+  .then(() => console.log("MongoDB connected"))
+  .catch(err => console.log(err));
+
+// app.use(cors({
+//   origin: "https://emptystore.onrender.com",
+//   credentials: true
+// }));
 
 app.use(cors({
-  origin: "https://emptystore.onrender.com",
+  origin: "http://localhost:5173", // or your frontend port
   credentials: true
 }));
 
@@ -56,10 +63,10 @@ app.get("/profile", authMiddleware, (req, res) => {
 });
 
 app.get("/checkuserinfo", authMiddleware, async (req, res) => {
- 
-  
+
+
   const finduser = await User.findOne({ email: req.user.email });
-   
+
   res.json({
     address: finduser.address,
     country: finduser.country,
@@ -112,7 +119,42 @@ app.post("/search", authMiddleware, async (req, res) => {
   }
 });
 
-// const Product = require("./models/Product"); // your model
+app.post("/Orders", authMiddleware, async (req, res) => {
+
+  try {
+    const finduser = await User.findOne({ email: req.user.email });
+    const orders = await Order.find({
+      sellerid: finduser
+    });
+    res.json(orders);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post("/placeOrder", authMiddleware, async (req, res) => {
+  const { quantity, sellerid } = req.body;
+  const finduser = await User.findOne({ email: req.user.email });
+
+  try {
+    const newOrder = new Order({
+      customerid:finduser._id,
+      customername:finduser.name,
+      customeremail:finduser.email,
+      customerAddress:finduser.address,
+      quantity,
+      sellerid,
+      orderstatus: "Pending"
+    });
+
+    await newOrder.save();
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: err.message });
+  }
+});
 
 app.post("/add-product", upload.single("image"), authMiddleware, async (req, res) => {
   try {
@@ -165,6 +207,41 @@ app.post("/add-product", upload.single("image"), authMiddleware, async (req, res
 
 
 
+app.post("/send-otp", async (req, res) => {
+  const { phone } = req.body;
+
+  try {
+    const response = await axios.get(
+  `https://api.msg91.com/api/v5/otp?mobile=91${phone}&authkey=${process.env.MSG91_AUTH_KEY}`
+);
+
+    res.json({ success: true, data: response.data });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ success: false });
+  }
+});
+
+app.post("/verify-otp", async (req, res) => {
+  const { phone, otp } = req.body;
+
+  try {
+    const response = await axios.get(
+      `https://api.msg91.com/api/v5/otp/verify?mobile=91${phone}&otp=${otp}&authkey=YOUR_AUTH_KEY`
+    );
+      const updatedUser = await User.findOneAndUpdate(
+      { email: req.user.email },
+      {
+        phoneNo:phone
+      },
+      { new: true } 
+    );
+    res.json({ success: true, data: response.data ,verification:true });
+  } catch (err) {
+    res.status(400).json({ success: false });
+  }
+});
+
 app.post("/signup", async (req, res) => {
   try {
     const { name, dob, gender, email, pass } = req.body;
@@ -180,7 +257,7 @@ app.post("/signup", async (req, res) => {
       return res.json({ valid: "false", msg: "Invalid Email" });
     }
 
-    const user = await User.findOne({ email:email });
+    const user = await User.findOne({ email: email });
 
     if (user) {
       return res.json({ valid: "false", msg: "Email already used" });
@@ -207,7 +284,7 @@ app.post("/signup", async (req, res) => {
     res.json({ valid: "true", token });
 
     console.log("Sign up api caalled");
-    
+
 
   } catch (err) {
     console.log("SIGNUP ERROR:", err); // 🔥 IMPORTANT

@@ -10,27 +10,30 @@ import Uploadproduct from './component/uploadproduct'
 import Productview from './component/productview'
 import Buynow from './component/buynow'
 import Menu from './component/Menu'
+import Order from './component/Order'
+import Numberverification from './component/numberverification'
+
 
 
 function App() {
   const [valid, setvalid] = useState('')
   const token = localStorage.getItem("token");
 
-useEffect(() => {
-  const checkUser = async () => {
-    try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/profile`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setvalid(res.data.valid)
-    } catch (err) {
-      setvalid("false");
-    }
-  };
-  checkUser();
-}, []); // ✅ IMPORTANT
+  useEffect(() => {
+    const checkUser = async () => {
+      try {
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/profile`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setvalid(res.data.valid)
+      } catch (err) {
+        setvalid("false");
+      }
+    };
+    checkUser();
+  }, []); // ✅ IMPORTANT
 
   return (
     <BrowserRouter>
@@ -88,6 +91,24 @@ useEffect(() => {
           element={
             <ProtectedRoute>
               < Menu />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/Order"
+          element={
+            <ProtectedRoute>
+              < Order />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/Numberverification"
+          element={
+            <ProtectedRoute>
+              < Numberverification />
             </ProtectedRoute>
           }
         />

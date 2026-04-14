@@ -46,24 +46,6 @@ const SearchBox = () => {
                     <img src="\search_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.png" alt="search" />
                 </button>
             </div>
-{/* 
-
-            {Array.isArray(products) && products.length > 0 ? (
-                products.map((product) => (
-                    <div key={product._id}>
-                        <img
-                            src={product.productimage}
-                            alt={product.productname}
-                            width={100}
-                        />
-                        <h3>{product.productname}</h3>
-                        <p>Category: {product.productcategory}</p>
-                        <p>Price: {product.productprice}</p>
-                    </div>
-                ))
-            ) : (
-                <p>No products found</p>
-            )} */}
 
             <Searchresult products={products}/>
         </div>

@@ -69,8 +69,42 @@
     background-color: grey;
 }
 
-#paymentmethodbox {
-    height: 50%;
+#quanititybox {
+    height: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+        border-bottom: 2px solid white;
+
+}
+
+#quanititybox2 {
+    width: 50%;
+    height: 40%;
+    background-color: #FFF;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    border-radius: 50px;
+    
+}
+
+#quanititybox2 button {
+    width: 40%;
+    height: 90%;
+    font-size: 30px;
+        border-radius: 50px;
+
+}
+
+
+#quanititybox2 span {
+    font-size: 40px;
+}
+
+#placeOrderbox {
+    height: 30%;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -79,14 +113,19 @@
     border-bottom: 2px solid white;
 }
 
-#paymentmethodbox select {
+#placeOrderbox select {
     width: 80%;
     height: 10%;
 }
 
-#paymentmethodbox button {
+#placeOrderbox #placeOrderbox2 button {
     width: 200px;
     height: 50px;
     font-size: 20px;
     font-weight: bolder;
+    border-radius: 20px;
+}
+
+#placeOrderbox #placeOrderbox2 button:focus{
+    background-color: grey;
 }
