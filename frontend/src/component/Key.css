@@ -1,0 +1,30 @@
+#mainboxkey{
+height: 100vh;
+}
+
+p{
+    background-color: red;
+}
+
+#boxrequestkey{
+    height: 20%;
+    margin-top: 10%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#boxrequestkey h3{
+    font-size: 25px;
+}
+
+#boxrequestkey button{
+    height: 20%;
+    width: 30%;
+    background-color: black;
+    color: #fff;
+    border-radius: 10px;
+}
+
+#boxrequestkey button:focus{
+    background-color: grey;
+}

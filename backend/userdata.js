@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
+  role:{
+    type:String
+  },
   name: {
     type: String,
     required: true
@@ -20,24 +23,28 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  phoneNo:{
-    type:String,
+  phoneNo: {
+    type: String,
+    required: true
   },
-  country:{
-    type:String,
+  country: {
+    type: String,
   },
-  state:{
-    type:String,
+  state: {
+    type: String,
   },
-  district:{
-    type:String,
+  district: {
+    type: String,
   },
-  address:{
-    type:String
+  address: {
+    type: String
   },
-  pincode:{
-    type:String
-  }
+  pincode: {
+    type: String
+  },
+  pickup_location: {
+  type: String
+}
 });
 
 module.exports = mongoose.model("userdata", userSchema);

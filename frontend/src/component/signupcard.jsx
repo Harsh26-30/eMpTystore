@@ -9,6 +9,7 @@ const signupcard = ({ setvalid }) => {
     const [usergender, setusergender] = useState('')
     const [useremail, setuseremail] = useState('')
     const [userpass, setuserpass] = useState('')
+    const [userContact,setuserContact] = useState('')
     const navigate = useNavigate();
 
 
@@ -18,13 +19,14 @@ const signupcard = ({ setvalid }) => {
         const res = await axios.post(`${import.meta.env.VITE_API_URL}/signup`, {
             name: username,
             email: useremail,
+            phoneNo: userContact,
             dob: userdob,
             gender: usergender,
             pass: userpass
         })
         localStorage.setItem("token", res.data.token);
         if (res.data.valid === 'true') {
-            navigate("/Numberverification");
+            navigate("/addAddress");
         }
     }
     const handleGender = (e) => {
@@ -83,6 +85,11 @@ const signupcard = ({ setvalid }) => {
                             />
                             Other
                         </label>
+                    </fieldset>
+
+                    <fieldset style={{width:"90%",height:'50px',border:"none"}}>
+                        <legend>Contact</legend>
+                        <input className='inputbox' type="text" onChange={(e) => { setuserContact(e.target.value) }} />
                     </fieldset>
 
                     {/* Email input */}

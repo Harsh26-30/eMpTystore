@@ -14,6 +14,12 @@ const bcrypt = require("bcrypt");
 const SECRET = process.env.JWT_SECRET || "secretkey";
 const multer = require("multer");
 const cloudinary = require("./cloudinary");
+const twilio = require("twilio");
+
+const client = twilio(
+  process.env.TWILIO_SID,
+  process.env.TWILIO_AUTH
+);
 
 
 
@@ -62,6 +68,16 @@ app.get("/profile", authMiddleware, (req, res) => {
   });
 });
 
+// app.get("/checkUserRole", authMiddleware, (req, res) => {
+//   try {
+//     finduser = 
+
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json({ error: err.message });
+//   }
+// });
+
 app.get("/checkuserinfo", authMiddleware, async (req, res) => {
 
 
@@ -72,7 +88,10 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
     country: finduser.country,
     state: finduser.state,
     district: finduser.district,
-    pincode: finduser.pincode
+    pincode: finduser.pincode,
+    phoneNo: finduser.phoneNo,
+    role:finduser.role,
+    pickup_location:finduser.pickup_location
   })
 });
 
@@ -88,6 +107,26 @@ app.post("/updateaddress", authMiddleware, async (req, res) => {
         state,
         district,
         pincode
+      },
+      { new: true } // ✅ return updated data
+    );
+
+    res.json({ Alright: true })
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post("/updatecontact", authMiddleware, async (req, res) => {
+
+  try {
+    const { phoneNo } = req.body;
+    const updatedUser = await User.findOneAndUpdate(
+      { email: req.user.email },   // 🔍 find by email
+      {
+        phoneNo
       },
       { new: true } // ✅ return updated data
     );
@@ -119,14 +158,146 @@ app.post("/search", authMiddleware, async (req, res) => {
   }
 });
 
-app.post("/Orders", authMiddleware, async (req, res) => {
+app.post("/confirmOrders", authMiddleware, async (req, res) => {
+  const { orderid } = req.body
+  try {
+
+    const updatedOrder = await Order.findOneAndUpdate(
+      { _id: orderid },   // 🔍 find by email
+      {
+        orderstatus: "Confirm"
+      },
+      { new: true } // ✅ return updated data
+    );
+
+
+    res.json({ orders: updatedOrder });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post("/readyforshipment", authMiddleware, async (req, res) => {
+  const { orderid } = req.body;
 
   try {
-    const finduser = await User.findOne({ email: req.user.email });
-    const orders = await Order.find({
-      sellerid: finduser
+    const order = await Order.findById(orderid);
+    if (!order) {
+      return res.status(404).json({ msg: "Order not found" });
+    }
+
+    // 🔹 Get seller
+    const seller = await User.findById(order.sellerid);
+
+    if (!seller || !seller.pickup_location) {
+      return res.status(400).json({ msg: "Seller pickup location missing" });
+    }
+
+    // 🔹 Get Shiprocket token
+    const tokenRes = await axios.post(
+      "https://apiv2.shiprocket.in/v1/external/auth/login",
+      {
+        email: process.env.SHIPROCKET_EMAIL,
+        password: process.env.SHIPROCKET_PASSWORD
+      }
+    );
+
+    const token = tokenRes.data.token;
+
+    // 🔹 Create shipment
+    const shipmentRes = await axios.post(
+      "https://apiv2.shiprocket.in/v1/external/orders/create/adhoc",
+      {
+        order_id: order._id.toString(),
+        order_date: new Date(),
+
+        pickup_location: seller.pickup_location,
+
+        billing_customer_name: order.customername,
+        billing_address: order.address,
+        billing_pincode: order.pincode,
+        billing_phone: order.phoneNo,
+
+        shipping_is_billing: true,
+
+        order_items: [
+          {
+            name: order.productname,
+            sku: order.productid,
+            units: order.quantity,
+            selling_price: 500
+          }
+        ],
+
+        payment_method: "Prepaid",
+        sub_total: 500,
+
+        length: 10,
+        breadth: 10,
+        height: 5,
+        weight: order.weight || 0.5
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+
+    const shipment_id = shipmentRes.data.shipment_id;
+
+    // 🔹 Assign courier
+    const courierRes = await axios.post(
+      "https://apiv2.shiprocket.in/v1/external/courier/assign/awb",
+      { shipment_id },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+
+    const data = courierRes.data.response.data;
+
+    // 🔹 Save in DB
+    order.orderstatus = "Shipped";
+    order.shipment_id = shipment_id;
+    order.awb_code = data.awb_code;
+    order.courier_name = data.courier_name;
+    order.tracking_url = data.tracking_url;
+
+    await order.save();
+
+    res.json({
+      success: true,
+      awb: data.awb_code,
+      courier: data.courier_name
     });
-    res.json(orders);
+
+  } catch (err) {
+    console.log("ERROR:", err.response?.data || err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post("/Orders", authMiddleware, async (req, res) => {
+  try {
+    const finduser = await User.findOne({ email: req.user.email });
+
+    if (!finduser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const orders = await Order.find({
+      sellerid: finduser._id   // no need for toString if ObjectId
+    });
+
+
+    console.log(orders); // true or false
+
+    res.json({ orders: orders });
+
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: err.message });
@@ -134,7 +305,7 @@ app.post("/Orders", authMiddleware, async (req, res) => {
 });
 
 app.post("/placeOrder", authMiddleware, async (req, res) => {
-  const { quantity, sellerid } = req.body;
+  const { quantity, sellerid, productid, productname } = req.body;
   const finduser = await User.findOne({ email: req.user.email });
 
   try {
@@ -142,7 +313,14 @@ app.post("/placeOrder", authMiddleware, async (req, res) => {
       customerid: finduser._id,
       customername: finduser.name,
       customeremail: finduser.email,
-      customerAddress: finduser.address,
+      address: finduser.address,
+      country: finduser.country,
+      state: finduser.state,
+      district: finduser.district,
+      pincode: finduser.pincode,
+      phoneNo: finduser.phoneNo,
+      productid,
+      productname,
       quantity,
       sellerid,
       orderstatus: "Pending"
@@ -205,46 +383,64 @@ app.post("/add-product", upload.single("image"), authMiddleware, async (req, res
   }
 });
 
-
-
-app.post("/send-otp", async (req, res) => {
-  const { phone } = req.body;
-
+app.post("/createkey", authMiddleware, async (req, res) => {
   try {
-    const response = await axios.get(
-      `https://api.msg91.com/api/v5/otp?mobile=91${phone}&authkey=${process.env.MSG91_AUTH_KEY}`
-    );
-    console.log("OTP response:", response.data);
-    res.json({ success: true, data: response.data });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ success: false });
-  }
-});
+    // 🔹 get user
+    const user = await User.findOne({ email: req.user.email });
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
 
-app.post("/verify-otp", async (req, res) => {
-  const { phone, otp } = req.body;
-
-  try {
-    const response = await axios.get(
-      `https://api.msg91.com/api/v5/otp/verify?mobile=91${phone}&otp=${otp}&authkey=${process.env.MSG91_AUTH_KEY}`
-    );
-    const updatedUser = await User.findOneAndUpdate(
-      { email: req.user.email },
+    // 🔹 Shiprocket login
+    const tokenRes = await axios.post(
+      "https://apiv2.shiprocket.in/v1/external/auth/login",
       {
-        phoneNo: phone
-      },
-      { new: true }
+        email: process.env.SHIPROCKET_EMAIL,
+        password: process.env.SHIPROCKET_PASSWORD
+      }
     );
-    res.json({ success: true, data: response.data, verification: true });
+
+    const token = tokenRes.data.token;
+
+    // 🔹 Create pickup using USER DATA
+    const shiprocketRes = await axios.post(
+      "https://apiv2.shiprocket.in/v1/external/settings/company/addpickup",
+      {
+        pickup_location: user.pickup_location,
+        name: user.name,
+        email: user.email,
+        phone: user.phoneNo,
+        address: user.address,
+        address_2: "",
+        city: user.district,   // ⚠️ map correctly
+        state: user.state,
+        country: user.country,
+        pin_code: user.pincode
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+
+    res.json({
+      success: true,
+      message: "Pickup created from user data",
+      data: shiprocketRes.data
+    });
+
   } catch (err) {
-    res.status(400).json({ success: false });
+    console.log("Pickup Error:", err.response?.data || err.message);
+    res.status(500).json({
+      error: err.response?.data || err.message
+    });
   }
 });
 
 app.post("/signup", async (req, res) => {
   try {
-    const { name, dob, gender, email, pass } = req.body;
+    const { name, dob, gender, phoneNo, email, pass } = req.body;
 
     const regexname = /^[A-Za-z\s]{3,20}$/;
     const regexemail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -266,9 +462,11 @@ app.post("/signup", async (req, res) => {
     const hashedPassword = await bcrypt.hash(pass, 10);
 
     const newUser = new User({
+      role: 'Customer',
       name,
       dob,
       gender,
+      phoneNo,
       email,
       pass: hashedPassword
     });

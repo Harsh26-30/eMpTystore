@@ -14,10 +14,21 @@ const Menu = () => {
         <div id='mainboxMenu'>
             <div id='box2Menu'>
                 <h2>Menu</h2>
-                <button id='logoutbutton' onClick={logout}>Logout</button>
+
+                <button id='logoutbutton2' onClick={() => navigate("/Key")}>
+                    Key
+                </button>
+
+                <button id='logoutbutton2' onClick={() => navigate("/OrderStatus")}>
+                    Order Status
+                </button>
+
+                <button id='logoutbutton' onClick={logout}>
+                    Logout
+                </button>
             </div>
         </div>
     )
 }
 
-export default Menu
+export default Menu;

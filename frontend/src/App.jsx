@@ -11,7 +11,9 @@ import Productview from './component/productview'
 import Buynow from './component/buynow'
 import Menu from './component/Menu'
 import Order from './component/Order'
-import Numberverification from './component/numberverification'
+import OrderStatus from './component/OrderStatus'
+import AddAddress from './component/addAddress'
+import Key from './component/Key'
 
 
 
@@ -105,13 +107,41 @@ function App() {
         />
 
         <Route
-          path="/Numberverification"
+          path="/OrderStatus"
           element={
             <ProtectedRoute>
-              < Numberverification />
+              < OrderStatus />
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/addAddress"
+          element={
+            <ProtectedRoute>
+              < AddAddress />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/addAddress"
+          element={
+            <ProtectedRoute>
+              < AddAddress />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/Key"
+          element={
+            <ProtectedRoute>
+              < Key />
+            </ProtectedRoute>
+          }
+        />
+
+
       </Routes>
 
 

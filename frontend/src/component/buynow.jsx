@@ -15,6 +15,8 @@ const buynow = () => {
     const [district, setdistrict] = useState('')
     const [pincode, setpincode] = useState('')
     const [quantity, setquantity] = useState(1)
+    const [contact, setcontact] = useState()
+
 
 
 
@@ -26,7 +28,7 @@ const buynow = () => {
         const fun1 = async () => {
             try {
                 const res = await axios.get(
-                    "http://localhost:3000/checkuserinfo",
+                    `${import.meta.env.VITE_API_URL}/checkuserinfo`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -38,7 +40,7 @@ const buynow = () => {
                 setstate(res.data.state);
                 setdistrict(res.data.district);
                 setpincode(res.data.pincode);
-
+                setcontact(res.data.phoneNo)
 
             } catch (err) {
                 console.log("Error:", err);
@@ -70,17 +72,32 @@ const buynow = () => {
             })
     }
 
-    const handleorder = async (e) => {
-
+    const handlecontactSubmit = async (e) => {
         e.preventDefault();
-        const res = await axios.post(`${import.meta.env.VITE_API_URL}/placeOrder`, {
-            quantity, sellerid: product.productsellerid
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}/updatecontact`, {
+            phoneNo:contact
         },
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             })
+    }
+
+    const handleorder = async (e) => {
+
+        e.preventDefault();
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}/placeOrder`, {
+            quantity,productid:product._id,productname:product.productname, sellerid: product.productsellerid
+        },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+
+    
+        
     }
 
     return (
@@ -110,6 +127,13 @@ const buynow = () => {
                     </fieldset>
                     <button type='submit'>Save</button>
                 </form>
+                <form id='formbuynow2' onSubmit={handlecontactSubmit}>
+                    <fieldset>
+                        <legend>Contact Deatail</legend>
+                        <input type="text" value={contact} onChange={(e) => setcontact(e.target.value)} />
+                    </fieldset>
+                    <button type='submit'>Save</button>
+                </form>
                 <div id='quanititybox'>
                     <div id='quanititybox2'>
                         <button onClick={decrease}>-</button>
@@ -123,7 +147,7 @@ const buynow = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 
