@@ -387,16 +387,16 @@ app.post("/add-product", upload.single("image"), authMiddleware, async (req, res
   }
 });
 
-app.post("/createkey", authMiddleware, async (req, res) => {
+app.get("/createkey", authMiddleware, async (req, res) => {
   try {
-    console.log("API HIT ✅");
-
     const user = await User.findOne({ email: req.user.email });
     if (!user) {
       return res.status(404).json({ msg: "User not found" });
     }
 
-    console.log("USER DATA:", user);
+    // ✅ Generate key
+    const newPickup = "LOC_" + Math.random().toString(36).substring(2, 8);
+    user.pickup_location = newPickup;
 
     // 🔹 Shiprocket login
     const tokenRes = await axios.post(
@@ -408,13 +408,12 @@ app.post("/createkey", authMiddleware, async (req, res) => {
     );
 
     const token = tokenRes.data.token;
-    console.log("TOKEN ✅");
 
     // 🔹 Create pickup
-    const shiprocketRes = await axios.post(
+    await axios.post(
       "https://apiv2.shiprocket.in/v1/external/settings/company/addpickup",
       {
-        pickup_location: user.pickup_location,
+        pickup_location: newPickup,
         name: user.name,
         email: user.email,
         phone: user.phoneNo,
@@ -432,24 +431,17 @@ app.post("/createkey", authMiddleware, async (req, res) => {
       }
     );
 
-    console.log("SHIPROCKET:", shiprocketRes.data);
-
-    // ✅ SAVE IN DB (IMPORTANT)
+    // ✅ Save in DB
     await user.save();
-    console.log("DB SAVED ✅");
 
     res.json({
       success: true,
-      message: "Pickup created & saved",
-      shiprocket: shiprocketRes.data
+      pickup_location: newPickup
     });
 
   } catch (err) {
     console.log("ERROR:", err.response?.data || err.message);
-
-    res.status(500).json({
-      error: err.response?.data || err.message
-    });
+    res.status(500).json({ error: err.message });
   }
 });
 
