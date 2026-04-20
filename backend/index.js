@@ -390,6 +390,7 @@ app.post("/add-product", upload.single("image"), authMiddleware, async (req, res
 app.get("/createkey", authMiddleware, async (req, res) => {
   try {
     const user = await User.findOne({ email: req.user.email });
+    
     if (!user) {
       return res.status(404).json({ msg: "User not found" });
     }
@@ -418,11 +419,10 @@ app.get("/createkey", authMiddleware, async (req, res) => {
         email: user.email,
         phone: user.phoneNo,
         address: user.address,
-        address_2: "",
         city: user.district,
         state: user.state,
         country: user.country,
-        pin_code: user.pincode
+        pincode: user.pincode
       },
       {
         headers: {
