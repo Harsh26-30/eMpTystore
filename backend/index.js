@@ -122,6 +122,7 @@ app.post("/updateaddress", authMiddleware, async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
 app.post("/updatecontact", authMiddleware, async (req, res) => {
 
   try {
