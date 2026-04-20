@@ -102,49 +102,14 @@ app.post("/updateaddress", authMiddleware, async (req, res) => {
     const { address, country, state, district, pincode } = req.body;
 
     const format = (str) =>
-      (str || "")
-        .toLowerCase()
+      str
+        ?.toLowerCase()
         .trim()
         .replace(/[^a-z0-9\s]/g, "")
         .replace(/\s+/g, "_");
 
-    // pickup name
-    const pickup_location =
-      `${finduser._id}_${format(district)}`;
+    const pickup_location = `${format(finduser.name || "user")}_${format(state)}_${format(district)}_${finduser._id}`;
 
-    // 1️⃣ Get Shiprocket token
-    const tokenRes = await axios.post(
-      "https://apiv2.shiprocket.in/v1/external/auth/login",
-      {
-        email: process.env.SHIPROCKET_EMAIL,
-        password: process.env.SHIPROCKET_PASSWORD
-      }
-    );
-
-    const token = tokenRes.data.token;
-
-    // 2️⃣ Create pickup in Shiprocket
-    const shiprocketRes = await axios.post(
-      "https://apiv2.shiprocket.in/v1/external/settings/company/addpickup",
-      {
-        pickup_location,
-        name: finduser.name,
-        email: finduser.email,
-        phone: finduser.phoneNo || "9999999999",
-        address,
-        city: district,
-        state,
-        country,
-        pin_code: pincode
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
-    );
-
-    // 3️⃣ ONLY AFTER SUCCESS → save in DB
     const updatedUser = await User.findOneAndUpdate(
       { email: req.user.email },
       {
@@ -153,27 +118,65 @@ app.post("/updateaddress", authMiddleware, async (req, res) => {
         state,
         district,
         pincode,
-        pickup_location,
-        shiprocket_pickup_id: shiprocketRes.data.pickup_location_id
+        pickup_location   // ✅ IMPORTANT
       },
-      { new: true }
+      { returnDocument: 'after' }
     );
 
-    // 4️⃣ RESPONSE
+    const getShiprocketToken = async () => {
+      const res = await axios.post(
+        "https://apiv2.shiprocket.in/v1/external/auth/login",
+        {
+          email: process.env.SHIPROCKET_EMAIL,
+          password: process.env.SHIPROCKET_PASSWORD
+        }
+      );
+
+      return res.data.token;
+    };
+
+    const createPickupInShiprocket = async (user, addressData) => {
+      const token = await getShiprocketToken();
+
+      const pickup_location = `${user._id}_${addressData.district}`
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "_");
+
+      const response = await axios.post(
+        "https://apiv2.shiprocket.in/v1/external/settings/company/addpickup",
+        {
+          pickup_location,
+          name: user.name,
+          email: user.email,
+          phone: user.phoneNo,
+          address: addressData.address,
+          city: addressData.district,
+          state: addressData.state,
+          country: addressData.country,
+          pin_code: addressData.pincode
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        }
+      );
+
+      return {
+        pickup_location,
+        pickup_id: response.data.pickup_location_id
+      };
+    };
+
     res.json({
       success: true,
-      message: "Saved in DB + Shiprocket",
-      pickup_location,
-      shiprocket: shiprocketRes.data,
       user: updatedUser
     });
 
   } catch (err) {
-    console.log("SHIPROCKET ERROR:", err.response?.data || err.message);
-
-    res.status(500).json({
-      error: err.response?.data || err.message
-    });
+    console.log(err);
+    res.status(500).json({ error: err.message });
   }
 });
 
