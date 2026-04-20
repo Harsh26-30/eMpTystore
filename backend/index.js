@@ -385,11 +385,14 @@ app.post("/add-product", upload.single("image"), authMiddleware, async (req, res
 
 app.post("/createkey", authMiddleware, async (req, res) => {
   try {
-    // 🔹 get user
+    console.log("API HIT ✅");
+
     const user = await User.findOne({ email: req.user.email });
     if (!user) {
       return res.status(404).json({ msg: "User not found" });
     }
+
+    console.log("USER DATA:", user);
 
     // 🔹 Shiprocket login
     const tokenRes = await axios.post(
@@ -401,8 +404,9 @@ app.post("/createkey", authMiddleware, async (req, res) => {
     );
 
     const token = tokenRes.data.token;
+    console.log("TOKEN ✅");
 
-    // 🔹 Create pickup using USER DATA
+    // 🔹 Create pickup
     const shiprocketRes = await axios.post(
       "https://apiv2.shiprocket.in/v1/external/settings/company/addpickup",
       {
@@ -412,7 +416,7 @@ app.post("/createkey", authMiddleware, async (req, res) => {
         phone: user.phoneNo,
         address: user.address,
         address_2: "",
-        city: user.district,   // ⚠️ map correctly
+        city: user.district,
         state: user.state,
         country: user.country,
         pin_code: user.pincode
@@ -424,14 +428,21 @@ app.post("/createkey", authMiddleware, async (req, res) => {
       }
     );
 
+    console.log("SHIPROCKET:", shiprocketRes.data);
+
+    // ✅ SAVE IN DB (IMPORTANT)
+    await user.save();
+    console.log("DB SAVED ✅");
+
     res.json({
       success: true,
-      message: "Pickup created from user data",
-      data: shiprocketRes.data
+      message: "Pickup created & saved",
+      shiprocket: shiprocketRes.data
     });
 
   } catch (err) {
-    console.log("Pickup Error:", err.response?.data || err.message);
+    console.log("ERROR:", err.response?.data || err.message);
+
     res.status(500).json({
       error: err.response?.data || err.message
     });
