@@ -10,7 +10,7 @@ const Key = () => {
 
 
     useEffect(() => {
-        const fun1 = async (params) => {
+        const fun1 = async () => {
             const res = await axios.get(
                 `${import.meta.env.VITE_API_URL}/checkuserinfo`,
                 {
@@ -19,41 +19,38 @@ const Key = () => {
                     },
                 }
             );
-            setkey(res.data.pickup_location)
-
-        }
+            setkey(res.data.pickup_location);
+        };
 
         fun1();
-
-    })
+    }, []); // ✅ only runs once
 
     const handlerequestkey = async (e) => {
         const res = await axios.get(
-                `${import.meta.env.VITE_API_URL}/createkey`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            setkey(res.data.pickup_location)
+            `${import.meta.env.VITE_API_URL}/createkey`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        setkey(res.data.pickup_location)
     }
 
 
     return (
         <div id='mainboxkey'>
             <Header2 />
-             {key ? (
+            {key ? (
                 <div>
                     <p>Your Seller Key Is <span>{key}</span></p>
                 </div>
             ) : (
                 <div id='boxrequestkey'>
                     <h3>Request For Seller Key</h3>
-                    <button onClick={()=>{handlerequestkey}}>Request Key</button>
-                </div>
+                    <button onClick={() => handlerequestkey()}>Request Key</button>                </div>
             )}
-            
+
         </div>
     )
 }
