@@ -164,13 +164,17 @@ app.post("/updateaddress", authMiddleware, async (req, res) => {
       user: updatedUser
     });
 
-  } catch (err) {
-    console.log("SHIPROCKET ERROR:", err.response?.data || err.message);
+  }catch (err) {
+  console.log("🔥 UPDATEADDRESS ERROR FULL:");
+  console.log("MESSAGE:", err.message);
+  console.log("DATA:", err.response?.data);
+  console.log("STATUS:", err.response?.status);
+  console.log("FULL:", err);
 
-    res.status(500).json({
-      error: err.response?.data || err.message
-    });
-  }
+  return res.status(500).json({
+    error: err.response?.data || err.message
+  });
+}
 });
 
 app.post("/updatecontact", authMiddleware, async (req, res) => {
