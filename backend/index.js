@@ -141,7 +141,15 @@ app.post("/updateaddress", authMiddleware, async (req, res) => {
       const response = await axios.post(
         "https://apiv2.shiprocket.in/v1/external/settings/company/addpickup",
         {
-          pickup_location
+          pickup_location,
+          name: finduser.name,
+          email: finduser.email,
+          phone: finduser.phoneNo || "9999999999",
+          address: finduser.address,
+          city: finduser.district,
+          state: finduser.state,
+          country: finduser.country,
+          pin_code: finduser.pincode
         },
         {
           headers: {
