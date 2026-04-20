@@ -10,32 +10,47 @@ const Key = () => {
 
 
     useEffect(() => {
+        if (!token) return;
+
         const fun1 = async () => {
+            try {
+                const res = await axios.get(
+                    `${import.meta.env.VITE_API_URL}/checkuserinfo`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+
+                setkey(res.data.pickup_location);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+
+        fun1();
+    }, [token]);
+
+    const handlerequestkey = async () => {
+        try {
             const res = await axios.get(
-                `${import.meta.env.VITE_API_URL}/checkuserinfo`,
+                `${import.meta.env.VITE_API_URL}/createkey`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 }
             );
+
+            console.log(res.data);
             setkey(res.data.pickup_location);
-        };
 
-        fun1();
-    }, []); // ✅ only runs once
-
-    const handlerequestkey = async (e) => {
-        const res = await axios.get(
-            `${import.meta.env.VITE_API_URL}/createkey`,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
-        setkey(res.data.pickup_location)
-    }
+        } catch (err) {
+            console.log("ERROR:", err.response?.data || err.message);
+            alert(err.response?.data?.msg || "Failed to create key");
+        }
+    };
 
 
     return (
