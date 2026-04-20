@@ -390,16 +390,31 @@ app.post("/add-product", upload.single("image"), authMiddleware, async (req, res
 app.get("/createkey", authMiddleware, async (req, res) => {
   try {
     const user = await User.findOne({ email: req.user.email });
-    
+
     if (!user) {
       return res.status(404).json({ msg: "User not found" });
     }
 
-    // ✅ Generate key
+    // 🔴 Validate data
+    if (
+      !user.name ||
+      !user.phoneNo ||
+      !user.address ||
+      !user.district ||
+      !user.state ||
+      !user.country ||
+      !user.pincode
+    ) {
+      return res.status(400).json({
+        msg: "Complete your profile first"
+      });
+    }
+
+    // Generate pickup location
     const newPickup = "LOC_" + Math.random().toString(36).substring(2, 8);
     user.pickup_location = newPickup;
 
-    // 🔹 Shiprocket login
+    // Shiprocket login
     const tokenRes = await axios.post(
       "https://apiv2.shiprocket.in/v1/external/auth/login",
       {
@@ -410,7 +425,7 @@ app.get("/createkey", authMiddleware, async (req, res) => {
 
     const token = tokenRes.data.token;
 
-    // 🔹 Create pickup
+    // Create pickup
     await axios.post(
       "https://apiv2.shiprocket.in/v1/external/settings/company/addpickup",
       {
@@ -422,7 +437,7 @@ app.get("/createkey", authMiddleware, async (req, res) => {
         city: user.district,
         state: user.state,
         country: user.country,
-        pincode: user.pincode
+        pin_code: user.pincode   // ✅ FIXED
       },
       {
         headers: {
@@ -431,7 +446,6 @@ app.get("/createkey", authMiddleware, async (req, res) => {
       }
     );
 
-    // ✅ Save in DB
     await user.save();
 
     res.json({
@@ -441,7 +455,9 @@ app.get("/createkey", authMiddleware, async (req, res) => {
 
   } catch (err) {
     console.log("ERROR:", err.response?.data || err.message);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({
+      error: err.response?.data || err.message
+    });
   }
 });
 
