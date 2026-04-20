@@ -145,11 +145,11 @@ app.post("/updateaddress", authMiddleware, async (req, res) => {
           name: finduser.name,
           email: finduser.email,
           phone: finduser.phoneNo || "9999999999",
-          address: finduser.address,
-          city: finduser.district,
-          state: finduser.state,
-          country: finduser.country,
-          pin_code: finduser.pincode
+          address: address,
+          city: district,
+          state: state,
+          country: country,
+          pin_code: pincode
         },
         {
           headers: {
