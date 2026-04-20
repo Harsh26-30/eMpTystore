@@ -90,14 +90,23 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
     district: finduser.district,
     pincode: finduser.pincode,
     phoneNo: finduser.phoneNo,
-    role:finduser.role,
-    pickup_location:finduser.pickup_location
+    role: finduser.role,
+    pickup_location: finduser.pickup_location
   })
 });
 
 app.post("/updateaddress", authMiddleware, async (req, res) => {
   try {
-    const { address, country, state, district, pincode, pickup_location } = req.body;
+    const { address, country, state, district, pincode } = req.body;
+
+    const format = (str) =>
+      str
+        ?.toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9\s]/g, "")
+        .replace(/\s+/g, "_");
+
+    const pickup_location = `${format(req.user.name || "user")}_${format(state)}_${format(district)}_${req.user._id}`;
 
     const updatedUser = await User.findOneAndUpdate(
       { email: req.user.email },
