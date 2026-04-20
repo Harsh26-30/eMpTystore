@@ -97,6 +97,8 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
 
 app.post("/updateaddress", authMiddleware, async (req, res) => {
   try {
+      const finduser = await User.findOne({ email: req.user.email });
+
     const { address, country, state, district, pincode } = req.body;
 
     const format = (str) =>
@@ -106,7 +108,7 @@ app.post("/updateaddress", authMiddleware, async (req, res) => {
         .replace(/[^a-z0-9\s]/g, "")
         .replace(/\s+/g, "_");
 
-    const pickup_location = `${format(req.user.name || "user")}_${format(state)}_${format(district)}_${req.user._id}`;
+    const pickup_location = `${format(finduser.name || "user")}_${format(state)}_${format(district)}_${finduser._id}`;
 
     const updatedUser = await User.findOneAndUpdate(
       { email: req.user.email },
