@@ -96,29 +96,32 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
 });
 
 app.post("/updateaddress", authMiddleware, async (req, res) => {
-
   try {
-    const { address, country, state, district, pincode } = req.body;
+    const { address, country, state, district, pincode, pickup_location } = req.body;
+
     const updatedUser = await User.findOneAndUpdate(
-      { email: req.user.email },   // 🔍 find by email
+      { email: req.user.email },
       {
         address,
         country,
         state,
         district,
-        pincode
+        pincode,
+        pickup_location   // ✅ IMPORTANT
       },
-      { new: true } // ✅ return updated data
+      { returnDocument: 'after' }
     );
 
-    res.json({ Alright: true })
+    res.json({
+      success: true,
+      user: updatedUser
+    });
 
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: err.message });
   }
 });
-
 app.post("/updatecontact", authMiddleware, async (req, res) => {
 
   try {
