@@ -97,19 +97,19 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
 
 app.post("/updateaddress", authMiddleware, async (req, res) => {
   try {
-      const finduser = await User.findOne({ email: req.user.email });
+    const finduser = await User.findOne({ email: req.user.email });
 
     const { address, country, state, district, pincode } = req.body;
 
     const format = (str) =>
-      str
-        ?.toLowerCase()
+      str?.toLowerCase()
         .trim()
         .replace(/[^a-z0-9\s]/g, "")
         .replace(/\s+/g, "_");
 
-    const pickup_location = `${format(finduser.name || "user")}_${format(state)}_${format(district)}_${finduser._id}`;
+    const pickup_location = `${finduser._id}_${format(district)}`;
 
+    // 1️⃣ Update MongoDB first
     const updatedUser = await User.findOneAndUpdate(
       { email: req.user.email },
       {
@@ -118,18 +118,58 @@ app.post("/updateaddress", authMiddleware, async (req, res) => {
         state,
         district,
         pincode,
-        pickup_location   // ✅ IMPORTANT
+        pickup_location
       },
-      { returnDocument: 'after' }
+      { new: true }
     );
+
+    // 2️⃣ Shiprocket Login
+    const tokenRes = await axios.post(
+      "https://apiv2.shiprocket.in/v1/external/auth/login",
+      {
+        email: process.env.SHIPROCKET_EMAIL,
+        password: process.env.SHIPROCKET_PASSWORD
+      }
+    );
+
+    const token = tokenRes.data.token;
+
+    // 3️⃣ Create Pickup Address in Shiprocket
+    const shiprocketRes = await axios.post(
+      "https://apiv2.shiprocket.in/v1/external/settings/company/addpickup",
+      {
+        pickup_location,
+        name: finduser.name,
+        email: finduser.email,
+        phone: finduser.phoneNo || "9999999999",
+        address,
+        address_2: "",
+        city: district,
+        state,
+        country,
+        pin_code: pincode
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+
+    // 4️⃣ Save Shiprocket pickup_location_id
+    const pickup_id = shiprocketRes.data.pickup_location_id;
+
+    updatedUser.shiprocket_pickup_id = pickup_id;
+    await updatedUser.save();
 
     res.json({
       success: true,
-      user: updatedUser
+      user: updatedUser,
+      shiprocket: shiprocketRes.data
     });
 
   } catch (err) {
-    console.log(err);
+    console.log(err.response?.data || err.message);
     res.status(500).json({ error: err.message });
   }
 });
@@ -398,79 +438,6 @@ app.post("/add-product", upload.single("image"), authMiddleware, async (req, res
   }
 });
 
-app.get("/createkey", authMiddleware, async (req, res) => {
-  try {
-    const user = await User.findOne({ email: req.user.email });
-
-    if (!user) {
-      return res.status(404).json({ msg: "User not found" });
-    }
-
-    // 🔴 Validate data
-    if (
-      !user.name ||
-      !user.phoneNo ||
-      !user.address ||
-      !user.district ||
-      !user.state ||
-      !user.country ||
-      !user.pincode
-    ) {
-      return res.status(400).json({
-        msg: "Complete your profile first"
-      });
-    }
-
-    // Generate pickup location
-    const newPickup = "LOC_" + Math.random().toString(36).substring(2, 8);
-    user.pickup_location = newPickup;
-
-    // Shiprocket login
-    const tokenRes = await axios.post(
-      "https://apiv2.shiprocket.in/v1/external/auth/login",
-      {
-        email: process.env.SHIPROCKET_EMAIL,
-        password: process.env.SHIPROCKET_PASSWORD
-      }
-    );
-
-    const token = tokenRes.data.token;
-
-    // Create pickup
-    await axios.post(
-      "https://apiv2.shiprocket.in/v1/external/settings/company/addpickup",
-      {
-        pickup_location: newPickup,
-        name: user.name,
-        email: user.email,
-        phone: user.phoneNo,
-        address: user.address,
-        city: user.district,
-        state: user.state,
-        country: user.country,
-        pin_code: user.pincode   // ✅ FIXED
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
-    );
-
-    await user.save();
-
-    res.json({
-      success: true,
-      pickup_location: newPickup
-    });
-
-  } catch (err) {
-    console.log("ERROR:", err.response?.data || err.message);
-    res.status(500).json({
-      error: err.response?.data || err.message
-    });
-  }
-});
 
 app.post("/signup", async (req, res) => {
   try {
