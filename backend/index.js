@@ -308,7 +308,13 @@ app.post("/readyforshipment", authMiddleware, async (req, res) => {
         breadth: 10,
         height: 5,
         weight: order.weight || 0.5
-      }
+      } ,
+      {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
     );
 
     const shipment_id = shipmentRes.data.shipment_id;
