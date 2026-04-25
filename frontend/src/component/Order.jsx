@@ -119,7 +119,7 @@ const handlereadyforshipment = async (e) => {
     console.log("SUCCESS:", res.data);
 
   } catch (err) {
-    console.log("FRONTEND ERROR:", err.response?.data);
+    console.log("REAL ERROR:", err.response?.data); // 👈 IMPORTANT
   }
 };
 
