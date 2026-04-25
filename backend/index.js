@@ -267,6 +267,8 @@ app.post("/readyforshipment", authMiddleware, async (req, res) => {
       }
     );
 
+    console.log("TOKEN RESPONSE:", tokenRes.data);
+
     const token = tokenRes.data.token;
 
     // 🔹 Create shipment
