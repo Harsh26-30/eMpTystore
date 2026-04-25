@@ -325,8 +325,15 @@ app.post("/readyforshipment", authMiddleware, async (req, res) => {
     });
 
   } catch (err) {
-    console.log("ERROR:", err.response?.data || err.message);
-    res.status(500).json({ error: err.message });
+    console.log("FULL ERROR:", {
+      message: err.message,
+      data: err.response?.data,
+      status: err.response?.status
+    });
+
+    res.status(500).json({
+      error: err.response?.data || err.message
+    });
   }
 });
 
