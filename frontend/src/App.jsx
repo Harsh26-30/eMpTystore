@@ -14,6 +14,7 @@ import Order from './component/Order'
 import OrderStatus from './component/OrderStatus'
 import AddAddress from './component/addAddress'
 import Key from './component/Key'
+import Request from './component/Request'
 
 
 
@@ -123,20 +124,21 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/addAddress"
-          element={
-            <ProtectedRoute>
-              < AddAddress />
-            </ProtectedRoute>
-          }
-        />
 
         <Route
           path="/Key"
           element={
             <ProtectedRoute>
               < Key />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/Request"
+          element={
+            <ProtectedRoute>
+              < Request />
             </ProtectedRoute>
           }
         />

@@ -7,6 +7,9 @@ import Header2 from './header2';
 const Key = () => {
     const token = localStorage.getItem("token");
     const [key, setkey] = useState('')
+    const [msg, setmsg] = useState('')
+    const [userRole,setuserRole] = useState('')
+
 
 
     useEffect(() => {
@@ -22,7 +25,7 @@ const Key = () => {
                         },
                     }
                 );
-
+                setuserRole(res.data.role);
                 setkey(res.data.pickup_location);
             } catch (err) {
                 console.log(err);
@@ -34,8 +37,8 @@ const Key = () => {
 
     const handlerequestkey = async () => {
         try {
-            const res = await axios.get(
-                `${import.meta.env.VITE_API_URL}/createkey`,
+            const res = await axios.post(
+                `${import.meta.env.VITE_API_URL}/becomeseller`,{},
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -43,29 +46,27 @@ const Key = () => {
                 }
             );
 
-            console.log(res.data);
-            setkey(res.data.pickup_location);
+            alert(msg);
+            setmsg(res.data.msg);
 
         } catch (err) {
-            console.log("ERROR:", err.response?.data || err.message);
-            alert(err.response?.data?.msg || "Failed to create key");
-        }
+            console.log("ERROR:", err.response?.data || err.message);        }
     };
 
 
     return (
         <div id='mainboxkey'>
             <Header2 />
-            {key ? (
-                <div>
+            {key === 'seller' ? (
+                <div id='keybox'>
                     <p>Your Seller Key Is <span>{key}</span></p>
                 </div>
             ) : (
                 <div id='boxrequestkey'>
-                    <h3>Request For Seller Key</h3>
-                    <button onClick={() => handlerequestkey()}>Request Key</button>                </div>
+                    <h3>Request to be Seller</h3>
+                    <button onClick={() => handlerequestkey()}>Request</button>
+                </div>
             )}
-
         </div>
     )
 }
