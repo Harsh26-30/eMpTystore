@@ -7,7 +7,7 @@ import axios from 'axios'
 const Order = () => {
   const token = localStorage.getItem("token");
   const [orders, setrorders] = useState([])
-  const [visible, setvisible] = useState('Confirm')
+  const [visible, setvisible] = useState('Pending ')
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -121,7 +121,7 @@ const Order = () => {
       <div id='box1Order'>
         <h2>Manage Order</h2>
         <div id='box22Order'>
-          <button onClick={() => setvisible('pending')}>
+          <button onClick={() => setvisible('Pending')}>
             Confirm Order
           </button>
           <button onClick={() => setvisible('Confirm')}>
