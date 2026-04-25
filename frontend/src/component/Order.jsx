@@ -149,7 +149,7 @@ const Order = () => {
                 phoneNo:-{order.phoneNo}<br />
                 quantity:-{order.quantity}
               </p> : <></>}
-              {order.orderstatus === 'pending' ?
+              {order.orderstatus === 'Pending' ?
                 <button onClick={() => handleconfirm(order._id)}>Confirm</button> :
                 <></>}
               <div>
