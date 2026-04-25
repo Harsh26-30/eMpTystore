@@ -104,17 +104,24 @@ const Order = () => {
     win.print();
   };
 
-  const handlereadyforshipment = async (e) => {
-     const res = await axios.post(
+const handlereadyforshipment = async (e) => {
+  try {
+    const res = await axios.post(
       `${import.meta.env.VITE_API_URL}/readyforshipment`,
-      { orderid: e }, // empty body
+      { orderid: e },
       {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       }
     );
+
+    console.log("SUCCESS:", res.data);
+
+  } catch (err) {
+    console.log("FRONTEND ERROR:", err.response?.data);
   }
+};
 
   return (
     <div id='mainboxOrder'>
