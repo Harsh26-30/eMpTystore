@@ -7,7 +7,7 @@ import axios from 'axios'
 const Order = () => {
   const token = localStorage.getItem("token");
   const [orders, setrorders] = useState([])
-  const [visible, setvisible] = useState('Pending ')
+  const [visible, setvisible] = useState('Pending')
 
   useEffect(() => {
     const fetchOrders = async () => {
