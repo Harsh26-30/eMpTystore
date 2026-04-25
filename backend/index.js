@@ -275,14 +275,19 @@ app.post("/readyforshipment", authMiddleware, async (req, res) => {
     const shipmentRes = await axios.post(
       "https://apiv2.shiprocket.in/v1/external/orders/create/adhoc",
       {
-        order_id: order._id.toString(),
+        order_id: order._id + "_" + Date.now(),
         order_date: new Date().toISOString().split("T")[0],
         pickup_location: seller.pickup_location,
 
         billing_customer_name: order.customername,
-        billing_email: order.customeremail,
+        billing_last_name: " ",
         billing_address: order.address,
+        billing_address_2: "",
+        billing_city: order.city || "Delhi",
         billing_pincode: order.pincode,
+        billing_state: order.state || "Delhi",
+        billing_country: "India",
+        billing_email: order.customeremail,
         billing_phone: order.phoneNo,
 
         shipping_is_billing: true,
@@ -290,7 +295,7 @@ app.post("/readyforshipment", authMiddleware, async (req, res) => {
         order_items: [
           {
             name: order.productname,
-            sku: order.productid,
+            sku: order.productid.toString(),
             units: order.quantity,
             selling_price: product.price
           }
@@ -303,43 +308,10 @@ app.post("/readyforshipment", authMiddleware, async (req, res) => {
         breadth: 10,
         height: 5,
         weight: order.weight || 0.5
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
       }
     );
 
     const shipment_id = shipmentRes.data.shipment_id;
-
-    // // 🔹 Assign courier
-    // const courierRes = await axios.post(
-    //   "https://apiv2.shiprocket.in/v1/external/courier/assign/awb",
-    //   { shipment_id },
-    //   {
-    //     headers: {
-    //       Authorization: `Bearer ${token}`
-    //     }
-    //   }
-    // );
-
-    // const data = courierRes.data.response.data;
-
-    // // 🔹 Save in DB
-    // order.orderstatus = "Shipped";
-    // order.shipment_id = shipment_id;
-    // order.awb_code = data.awb_code;
-    // order.courier_name = data.courier_name;
-    // order.tracking_url = data.tracking_url;
-
-    // await order.save();
-
-    // res.json({
-    //   success: true,
-    //   awb: data.awb_code,
-    //   courier: data.courier_name
-    // });
 
     order.orderstatus = "readyforshipment";
     order.shipment_id = shipment_id;
