@@ -351,13 +351,10 @@ app.post("/readyforshipment", authMiddleware, async (req, res) => {
     });
 
   } catch (err) {
-  console.log("FULL ERROR:", err);
-  console.log("SHIPROCKET ERROR:", err.response?.data);
-
-  res.status(500).json({
-    error: err.response?.data || err.message
-  });
-  };
+    console.log("ERROR:", err.response?.data || err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
 
 app.post("/Orders", authMiddleware, async (req, res) => {
   try {
