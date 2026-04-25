@@ -258,16 +258,18 @@ app.post("/readyforshipment", authMiddleware, async (req, res) => {
       return res.status(400).json({ msg: "Seller pickup location missing" });
     }
 
-    // 🔹 Get Shiprocket token
-    const tokenRes = await axios.post(
-      "https://apiv2.shiprocket.in/v1/external/auth/login",
-      {
-        email: process.env.SHIPROCKET_EMAIL,
-        password: process.env.SHIPROCKET_PASSWORD
-      }
-    );
 
-    console.log("TOKEN RESPONSE:", tokenRes.data);
+
+    axios.post("https://apiv2.shiprocket.in/v1/external/auth/login", {
+      email: process.env.SHIPROCKET_EMAIL,
+      password: process.env.SHIPROCKET_PASSWORD
+    })
+      .then(res => {
+        console.log("LOGIN SUCCESS:", res.data);
+      })
+      .catch(err => {
+        console.log("LOGIN ERROR:", err.response?.data || err.message);
+      });
 
     const token = tokenRes.data.token;
 
