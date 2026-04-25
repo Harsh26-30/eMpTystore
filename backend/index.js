@@ -278,6 +278,7 @@ app.post("/readyforshipment", authMiddleware, async (req, res) => {
         pickup_location: seller.pickup_location,
 
         billing_customer_name: order.customername,
+        billing_email: order.customeremail,
         billing_address: order.address,
         billing_pincode: order.pincode,
         billing_phone: order.phoneNo,
