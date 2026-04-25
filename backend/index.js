@@ -273,48 +273,48 @@ app.post("/readyforshipment", authMiddleware, async (req, res) => {
 
     // 🔹 Create shipment
     const shipmentRes = await axios.post(
-  "https://apiv2.shiprocket.in/v1/external/orders/create/adhoc",
-  {
-    order_id: order._id + "_" + Date.now(),
-    order_date: new Date().toISOString().split("T")[0],
-    pickup_location: seller.pickup_location,
-
-    billing_customer_name: order.customername,
-    billing_last_name: " ",
-    billing_address: order.address,
-    billing_address_2: "",
-    billing_city: order.city || "Delhi",
-    billing_pincode: order.pincode,
-    billing_state: order.state || "Delhi",
-    billing_country: "India",
-    billing_email: order.customeremail,
-    billing_phone: order.phoneNo,
-
-    shipping_is_billing: true,
-
-    order_items: [
+      "https://apiv2.shiprocket.in/v1/external/orders/create/adhoc",
       {
-        name: order.productname,
-        sku: order.productid.toString(),
-        units: order.quantity,
-        selling_price: product.price
+        order_id: order._id + "_" + Date.now(),
+        order_date: new Date().toISOString().split("T")[0],
+        pickup_location: seller.pickup_location,
+
+        billing_customer_name: order.customername,
+        billing_last_name: " ",
+        billing_address: order.address,
+        billing_address_2: "",
+        billing_city: order.city || "Delhi",
+        billing_pincode: order.pincode,
+        billing_state: order.state || "Delhi",
+        billing_country: "India",
+        billing_email: order.customeremail,
+        billing_phone: order.phoneNo,
+
+        shipping_is_billing: true,
+
+        order_items: [
+          {
+            name: order.productname,
+            sku: order.productid.toString(),
+            units: order.quantity,
+            selling_price: product.price
+          }
+        ],
+
+        payment_method: "Prepaid",
+        sub_total: product.price * order.quantity,
+
+        length: 10,
+        breadth: 10,
+        height: 5,
+        weight: order.weight || 0.5
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       }
-    ],
-
-    payment_method: "Prepaid",
-    sub_total: product.price * order.quantity,
-
-    length: 10,
-    breadth: 10,
-    height: 5,
-    weight: order.weight || 0.5
-  },
-  {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  }
-);
+    );
 
     const shipment_id = shipmentRes.data.shipment_id;
 
