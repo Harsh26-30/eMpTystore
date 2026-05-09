@@ -6,29 +6,31 @@ import Searchresult from "./searchresult";
 
 const SearchBox = () => {
     const [userinput, setUserInput] = useState("");
-    const [products, setProducts] = useState([]);
+    const [shops, setshops] = useState([]);
 
     const token = localStorage.getItem("token");
 
-    const handleClickSearch = async (e) => {
-        e.preventDefault();
-        if (!userinput) return;
+const handleClickSearch = async (e) => {
+    e.preventDefault();
 
-        try {
-            const res = await axios.post(
-                `${import.meta.env.VITE_API_URL}/search`,
-                { userinput },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            setProducts(res.data); // <-- FIXED here
-        } catch (err) {
-            console.log("Search error:", err);
-        }
-    };
+    if (!userinput || !token) return;
+
+    try {
+        const res = await axios.post(
+            `${import.meta.env.VITE_API_URL}/search`,
+            { userinput },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+
+        setshops(res.data.shop);
+    } catch (err) {
+        console.log("Search error:", err);
+    }
+};
 
     
 
@@ -38,7 +40,7 @@ const SearchBox = () => {
             <div id="box2">
                 <input
                     type="text"
-                    placeholder="Search product..."
+                    placeholder="Search Shop..."
                     value={userinput}
                     onChange={(e) => setUserInput(e.target.value)}
                 />
@@ -47,7 +49,7 @@ const SearchBox = () => {
                 </button>
             </div>
 
-            <Searchresult products={products}/>
+            <Searchresult shops={shops}/>
         </div>
     );
 };

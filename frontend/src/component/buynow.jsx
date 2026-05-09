@@ -15,12 +15,7 @@ const buynow = () => {
     const [district, setdistrict] = useState('')
     const [pincode, setpincode] = useState('')
     const [quantity, setquantity] = useState(1)
-    const [contact, setcontact] = useState()
-
-
-
-
-
+    const [contact, setcontact] = useState();
     const token = localStorage.getItem("token");
     useEffect(() => {
         if (!token) return;
@@ -40,7 +35,7 @@ const buynow = () => {
                 setstate(res.data.state);
                 setdistrict(res.data.district);
                 setpincode(res.data.pincode);
-                setcontact(res.data.phoneNo)
+                setcontact(res.data.phoneNo);
 
             } catch (err) {
                 console.log("Error:", err);

@@ -28,6 +28,12 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    totalstock:{
+        type:Number
+    },
+    unitsold:{
+        type:Number
+    }
 });
 
 module.exports = mongoose.model("productdata", productSchema);

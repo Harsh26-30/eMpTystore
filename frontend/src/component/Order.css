@@ -7,78 +7,84 @@
     justify-content: flex-start;
 }
 
-#box1Order {
-    background-color: black;
-    height: 10vh;
+#box2OrderConfirm {
+    margin-top: 15px;
+    width: 95%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: flex-start;
+    border-radius: 20px;
+    background-color:#dadada ;
+
+}
+
+#box2OrderConfirm h3 {
     width: 100%;
-}
-
-#box22Order {
-    width: 100%;
-    height: 50%;
-}
-
-#box22Order button{
-    width: 50%;
-    height: 100%;
-    border: none;
-    background-color: black;
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
-}
-
-#box22Order button:focus{
-    border-top: 2px solid white;
-    background-color: rgba(255, 255, 255, 0.398);
+    height: 50px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: sans-serif;
+    font-size: 30px;
+    border-radius: 20px;
+    /* border-top-right-radius: 20px; */
+    box-shadow: 3px 2px 8px 2px #000;
 
 }
 
-#box2Order{
-    width: 100%;
+#box2OrderPreparing {
+    margin-top: 15px;
+    width: 95%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-start;
+    border-radius: 20px;
+    background-color:#dadada ;
+
 }
 
-.box3Order{
-    background-color: white;
-    /* width:390px;
-    height: 140px; */
-    margin-top: 10px;
-    border-radius: 10px;
-    /* padding: 7px; */
-    /* box-shadow: 1px 1px 8px 3px #000; */
+#box2OrderPreparing h3 {
+    width: 100%;
+    height: 50px;
+    text-align: center;
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: center;
+    font-family: sans-serif;
+    font-size: 30px;
+    border-radius: 20px;
+    /* border-top-right-radius: 20px; */
+    box-shadow: 3px 2px 8px 2px #000;
+
 }
 
-.box3Order div{
+#box2OrderOutshipment {
+    margin-top: 15px;
+    width: 95%;
     display: flex;
     flex-direction: column;
-    height: 70%;
-    width: 25%;
+    align-items: center;
+    justify-content: flex-start;
+    border-radius: 20px;
+    background-color:#dadada ;
+
 }
 
-.box3Order div button{
-    height: 100%;
+#box2OrderOutshipment h3 {
     width: 100%;
-    border-radius: 10px;
-    color: #fff;
-    background-color: #000;
+    height: 50px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: sans-serif;
+    font-size: 30px;
+    border-radius: 20px;
+    /* border-top-right-radius: 20px; */
+    box-shadow: 3px 2px 8px 2px #000;
+
 }
 
-#pd{
-    height: 90%;
-    width: 70%;
-    border-radius: 10px;
-    color: #fff;
-    background-color: #000;
-    margin: 20px;
-    font-size: 20px;
-}

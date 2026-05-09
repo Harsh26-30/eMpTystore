@@ -59,7 +59,11 @@ const Menu = () => {
                 </button>)}
 
                 {( userRole === 'Admin' ) && (<button id='logoutbutton2' onClick={() => navigate("/Request")}>
-                    Request
+                    Requests
+                </button>)}
+
+                {( userRole === 'Admin' ) && (<button id='logoutbutton2' onClick={() => navigate("/Uploadcomponent")}>
+                    Upload Component
                 </button>)}
 
                 <button id='logoutbutton' onClick={logout}>

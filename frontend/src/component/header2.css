@@ -1,46 +1,54 @@
-#mainboxheader2{
+#mainboxheader2 {
     background-color: #000;
-    width: 100%;
     height: 15%;
+    padding: 4px;
+}
+
+#mainboxheader2 #box2header2 {
+    height: 70%;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    /* position: fixed;
-    z-index: 20; */
-}
-
-#mainboxheader3{
     background-color: #000;
-    width: 50%;
-    height: 100%;
+}
+
+#mainboxheader2 #box2header2 img {
+    width: 30%;
+    border-radius: 20px;
+}
+
+#mainboxheader2 #box2header2 #box23header2 {
+    width: 35%;
+    height: 60%;
     display: flex;
+    flex-direction: row;
     align-items: center;
-    justify-content:flex-end;
-    /* position: fixed;
-    z-index: 20; */
+    justify-content: space-evenly;
 }
 
-#mainboxheader2 img{
-    width: 100px;
-    height: 70px;
-    border-radius: 20px;
-}
-
-#mainboxheader3 button img{
-    width: 40%;
-    height: 90px;
-    border-radius: 20px;
-}
-
-#mainboxheader2 button{
-    width: 25%;
-    height: 50%;
-    background-color: transparent;
+#mainboxheader2 #box2header2 #box23header2 button {
+    width: 80%;
+    height: 100%;
+    background-color: #000;
     border: none;
-    margin: 10px;
 }
 
-#mainboxheader2 button img{
-    width: 90%;
-    height: 70%;
+#mainboxheader2 #box2header2 #box23header2 button img{
+    width: 40px;
+}
+
+#box3header2{
+    height: 30%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#box3header2 button{
+    width: 30%;
+    height: 100%;
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #000;
+    border: none;
 }

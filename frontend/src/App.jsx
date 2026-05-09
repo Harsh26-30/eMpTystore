@@ -15,6 +15,8 @@ import OrderStatus from './component/OrderStatus'
 import AddAddress from './component/addAddress'
 import Key from './component/Key'
 import Request from './component/Request'
+import Uploadcomponent from './component/uploadcomponent'
+import Shopnox from './component/Shopnox'
 
 
 
@@ -143,6 +145,23 @@ function App() {
           }
         />
 
+        <Route
+          path="/Uploadcomponent"
+          element={
+            <ProtectedRoute>
+              < Uploadcomponent />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/Shopnox"
+          element={
+            <ProtectedRoute>
+              < Shopnox />
+            </ProtectedRoute>
+          }
+        />
 
       </Routes>
 

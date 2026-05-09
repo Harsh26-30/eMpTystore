@@ -33,12 +33,11 @@ const orderSchema = new mongoose.Schema({
 
     payment_method: {
         type: String,
-        default: "Prepaid"
+        default: "COD"
     },
 
     weight: {
         type: Number,
-        default: 0.5
     }
 });
 

@@ -1,0 +1,34 @@
+#mainboxconnections {
+  width: 100%;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 20px;
+}
+
+#Shopnoxs {
+    width: 90%;
+    height: 10%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content:center;
+    padding-left: 10px;
+    text-transform: capitalize;
+    box-shadow: 2px 2px 10px 2px #000;
+    border-radius: 20px;
+}
+
+
+
+#Shopnoxs h3 {
+    color: #000;
+    font-size: 30px;
+    font-family: sans-serif;
+}
+
+#Shopnoxs p {
+    text-transform: lowercase;
+}

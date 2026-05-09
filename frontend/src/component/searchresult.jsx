@@ -1,29 +1,64 @@
-import React from 'react'
-import './searchresult.css'
+import React from 'react';
+import './searchresult.css';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import axios from 'axios';
 
-const searchresult = ({ products }) => {
-        const navigate = useNavigate();
+const Searchresult = ({ shops }) => {
+    const token = localStorage.getItem("token");
+    const navigate = useNavigate();
+
+    const handleadd = async (e, id) => {
+        e.stopPropagation(); // prevent navigation
+
+        try {
+            const res = await axios.post(
+                `${import.meta.env.VITE_API_URL}/buildconnection`,
+                { connectionid: id },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            console.log(res.data);
+
+        } catch (err) {
+            console.log("Search error:", err);
+        }
+    };
 
     return (
         <div id='bossbox'>
-            {Array.isArray(products) && products.length > 0 ? (
-                products.map((product) => (
-                    <div key={product._id} id='mainboxsearchresult' onClick={(e)=>{navigate("/productview",{ state: product });}}>
+            {Array.isArray(shops) && shops.length > 0 ? (
+                shops.map((shop) => (
+                    <div
+                        key={shop._id || shop.id}
+                        id='mainboxsearchresult'
+                        onClick={() => navigate(`/shop/${shop._id || shop.id}`)}
+                    >
                         <div id='box2searchresult'>
-                            <img id='imgsearchresult' src={product.productimage} alt={product.productname} />
                             <div id='h3searchresult'>
-                                <h3>Product_Nmae:{product.productname}</h3>
-                                <h3>Product_Price:₹{product.productprice}</h3>
+                                <h3>
+                                    {shop?.ui?.generalinfo?.BusinessName || "No Name"}
+                                </h3>
+
+                                <p>by:- {shop?.email}</p>
                             </div>
+
+                            <button onClick={(e) => handleadd(e, shop?.email)}>
+                                Add
+                            </button>
+
                         </div>
                     </div>
                 ))
             ) : (
-                <p>No products found</p>
+                <p>No shops found</p>
             )}
         </div>
-    )
-}
+    );
+};
 
-export default searchresult
+export default Searchresult;

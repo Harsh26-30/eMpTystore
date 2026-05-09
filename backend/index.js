@@ -10,6 +10,7 @@ const User = require("./userdata");
 const Product = require("./productdata");
 const Order = require("./orderdata");
 const Request = require("./request");
+const Ui = require("./Uidata");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const SECRET = process.env.JWT_SECRET || "secretkey";
@@ -56,6 +57,27 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
+const createSlug = (text) => {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/[^\w-]+/g, "");
+};
+
+const generateUniqueSlug = async (name) => {
+  let baseSlug = createSlug(name);
+  let slug = baseSlug;
+
+  let count = 1;
+  while (await User.findOne({ slug })) {
+    slug = `${baseSlug}-${count}`;
+    count++;
+  }
+
+  return slug;
+};
+
 app.get("/profile", authMiddleware, (req, res) => {
   res.json({
     message: "Profile data",
@@ -65,11 +87,51 @@ app.get("/profile", authMiddleware, (req, res) => {
 });
 
 app.get("/checkuserinfo", authMiddleware, async (req, res) => {
-
-
   const finduser = await User.findOne({ email: req.user.email });
+  const finduser2 = await User.find({
+    _id: { $in: finduser.shoporseller }
+  });
+
+
+  const findproduct = await Product.find({
+    _id: { $in: finduser.myproductid }
+  });
+
+  const findproductid1 = finduser.ui.productbox.productbox1id
+    ? await Product.findById(finduser.ui.productbox.productbox1id)
+    : null;
+
+  const findproductid2 = finduser.ui.productbox.productbox2id
+    ? await Product.findById(finduser.ui.productbox.productbox2id)
+    : null;
+
+  const findproductid3 = finduser.ui.productbox.productbox3id
+    ? await Product.findById(finduser.ui.productbox.productbox3id)
+    : null;
+
+  const findproductid4 = finduser.ui.productbox.productbox4id
+    ? await Product.findById(finduser.ui.productbox.productbox4id)
+    : null;
+
+  const findproductid5 = finduser.ui.productbox.productbox5id
+    ? await Product.findById(finduser.ui.productbox.productbox5id)
+    : null;
+
+  const findproductid6 = finduser.ui.productbox.productbox6id
+    ? await Product.findById(finduser.ui.productbox.productbox6id)
+    : null;
+
+  const findproductid7 = finduser.ui.productbox.productbox7id
+    ? await Product.findById(finduser.ui.productbox.productbox7id)
+    : null;
+
+  const findproductid8 = finduser.ui.productbox.productbox8id
+    ? await Product.findById(finduser.ui.productbox.productbox8id)
+    : null;
 
   res.json({
+    id: finduser._id,
+    slug: finduser.slug,
     role: finduser.role,
     address: finduser.address,
     country: finduser.country,
@@ -77,9 +139,25 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
     district: finduser.district,
     pincode: finduser.pincode,
     phoneNo: finduser.phoneNo,
-    role: finduser.role,
-    pickup_location: finduser.pickup_location
-  })
+    pickup_location: finduser.pickup_location,
+    useruidata: finduser.ui,
+    productbox: {
+
+      BusinessName: finduser.ui.generalinfo.BusinessName,
+      productbox1: findproductid1,
+      productbox2: findproductid2,
+      productbox3: findproductid3,
+      productbox4: findproductid4,
+      productbox5: findproductid5,
+      productbox6: findproductid6,
+      productbox7: findproductid7,
+      productbox8: findproductid8
+
+    },
+    myproductdata: findproduct,
+    shops: finduser2
+  });
+
 });
 
 app.post("/updateaddress", authMiddleware, async (req, res) => {
@@ -148,7 +226,6 @@ app.post("/updatecontact", authMiddleware, async (req, res) => {
 });
 
 app.post("/search", authMiddleware, async (req, res) => {
-
   try {
     const { userinput } = req.body;
 
@@ -156,15 +233,63 @@ app.post("/search", authMiddleware, async (req, res) => {
       return res.status(400).json({ error: "userinput is required" });
     }
 
-    const products = await Product.find({
-      productname: { $regex: userinput, $options: "i" }
+    const shop = await User.find({
+      email: { $regex: userinput, $options: "i" }
     });
-    res.json(products); // send array to frontend
 
-    console.log(products);
+    res.json({ shop });
+
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: err.message });
+  }
+});
+
+app.post("/buildconnection", authMiddleware, async (req, res) => {
+  try {
+    const { connectionid } = req.body;
+
+    const customer = await User.findOne({
+      email: req.user.email,
+    });
+
+    const seller = await await User.findOne({
+      email: connectionid
+    });
+
+
+    if (!customer || !seller) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    if (customer !== seller) {
+
+      // add seller to customer
+      await User.findByIdAndUpdate(customer._id, {
+        $addToSet: {
+          shoporseller: seller._id,
+        },
+      });
+
+      // add customer to seller
+      await User.findByIdAndUpdate(seller._id, {
+        $addToSet: {
+          customer: customer._id,
+        },
+      });
+    }
+
+    res.json({
+      message: "Connection successful",
+    });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      error: err.message,
+    });
   }
 });
 
@@ -181,7 +306,6 @@ app.get("/Request", authMiddleware, async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
 
 app.post("/becomeseller", authMiddleware, async (req, res) => {
   try {
@@ -216,14 +340,193 @@ app.post("/becomeseller", authMiddleware, async (req, res) => {
   }
 });
 
+app.post("/updateproducttoui", authMiddleware, async (req, res) => {
+  try {
+    const { businessname, Color } = req.body;
+
+    const updates = {};
+
+    // business name
+    if (businessname) {
+      updates["ui.generalinfo.BusinessName"] = businessname;
+    }
+
+    if (Color) {
+      updates["ui.generalinfo.Color"] = Color;
+    }
+
+    // products
+    for (let index = 1; index <= 12; index++) {
+      const value = req.body[`Product${index}`];
+
+      if (value !== undefined && value !== null && value !== "") {
+        updates[`ui.productbox.productbox${index}id`] = value;
+      }
+    }
+
+    // nothing to update
+    if (Object.keys(updates).length === 0) {
+      return res.json({ message: "Nothing to update" });
+    }
+
+    const updatedUser = await User.updateOne(
+      { email: req.user.email },
+      { $set: updates }
+    );
+
+    return res.json(updatedUser);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+app.get("/shop/:slug", async (req, res) => {
+  try {
+    const { slug } = req.params;
+
+    const user = await User.findOne({ slug: slug });
+
+    if (!user) {
+      return res.status(404).json({ message: "Shop not found" });
+    }
+
+    res.json({
+      _id: user._id,
+      slug: user.slug,
+      businessName: user.ui?.generalinfo?.BusinessName || "No Shop Name"
+    });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+app.post("/updateshoplistcustomerlist", authMiddleware, async (req, res) => {
+  try {
+    const finduser = await User.findOne({ email: req.user.email });
+
+    const currentUserId = finduser._id;   // YOU
+    const { shopOwnerId } = req.body;     // OTHER
+
+    if (!shopOwnerId) {
+      return res.status(400).json({ message: "shopOwnerId required" });
+    }
+
+    if (currentUserId.toString() === shopOwnerId) {
+      return res.status(400).json({ message: "Cannot add yourself" });
+    }
+
+    // ✅ Update YOUR shop list
+    await User.findByIdAndUpdate(currentUserId, {
+      $addToSet: { shoporseller: shopOwnerId }
+    });
+
+    // ✅ Update THEIR customer list
+    await User.findByIdAndUpdate(shopOwnerId, {
+      $addToSet: { customer: currentUserId }
+    });
+
+    res.json({ message: "Shop added successfully" });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+app.get("/get-user-products", authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.user.email });
+
+    const products = await Product.find({ _id: { $in: user.myproductid } });
+
+    res.json(products);
+
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 app.post("/confirmOrders", authMiddleware, async (req, res) => {
+
+  const { orderid } = req.body;
+
+  try {
+
+    // 1. Find order first
+    const order = await Order.findById(orderid);
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // 2. Find product
+    const product = await Product.findById(order.productid);
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    // 3. Update order status
+    const updatedOrder = await Order.findByIdAndUpdate(
+      orderid,
+      { orderstatus: "Confirm" },
+      { new: true }
+    );
+
+    // 4. Reduce stock properly
+    await Product.findByIdAndUpdate(
+      order.productid,
+      {
+        $inc: {
+          totalstock: -Number(order.quantity),
+          unitsold: Number(order.quantity)
+        }
+      },
+      { new: true }
+    );
+
+    res.json({ orders: updatedOrder });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post("/readyforDelivary", authMiddleware, async (req, res) => {
   const { orderid } = req.body
   try {
 
     const updatedOrder = await Order.findOneAndUpdate(
       { _id: orderid },   // 🔍 find by email
       {
-        orderstatus: "Confirm"
+        orderstatus: "RFD"
+      },
+      { new: true } // ✅ return updated data
+    );
+
+    res.json({ orders: updatedOrder });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post("/Outfordelivary", authMiddleware, async (req, res) => {
+  const { orderid } = req.body
+  try {
+
+    const updatedOrder = await Order.findOneAndUpdate(
+      { _id: orderid },   // 🔍 find by email
+      {
+        orderstatus: "OFD"
       },
       { new: true } // ✅ return updated data
     );
@@ -234,113 +537,6 @@ app.post("/confirmOrders", authMiddleware, async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: err.message });
-  }
-});
-
-app.post("/readyforshipment", authMiddleware, async (req, res) => {
-  const { orderid } = req.body;
-
-  try {
-    const order = await Order.findById(orderid);
-    if (!order) {
-      return res.status(404).json({ msg: "Order not found" });
-    }
-
-    const product = await Product.findById(order.productid);
-    if (!product) {
-      return res.status(404).json({ msg: "Product not found" });
-    }
-
-    // 🔹 Get seller
-    const seller = await User.findById(order.sellerid);
-
-    if (!seller || !seller.pickup_location) {
-      return res.status(400).json({ msg: "Seller pickup location missing" });
-    }
-
-
-
-    axios.post("https://apiv2.shiprocket.in/v1/external/auth/login", {
-      email: process.env.SHIPROCKET_EMAIL,
-      password: process.env.SHIPROCKET_PASSWORD
-    })
-      .then(res => {
-        console.log("LOGIN SUCCESS:", res.data);
-      })
-      .catch(err => {
-        console.log("LOGIN ERROR:", err.response?.data || err.message);
-      });
-
-    const token = tokenRes.data.token;
-
-    // 🔹 Create shipment
-    const shipmentRes = await axios.post(
-      "https://apiv2.shiprocket.in/v1/external/orders/create/adhoc",
-      {
-        order_id: order._id + "_" + Date.now(),
-        order_date: new Date().toISOString().split("T")[0],
-        pickup_location: seller.pickup_location,
-
-        billing_customer_name: order.customername,
-        billing_last_name: " ",
-        billing_address: order.address,
-        billing_address_2: "",
-        billing_city: order.city || "Delhi",
-        billing_pincode: order.pincode,
-        billing_state: order.state || "Delhi",
-        billing_country: "India",
-        billing_email: order.customeremail,
-        billing_phone: order.phoneNo,
-
-        shipping_is_billing: true,
-
-        order_items: [
-          {
-            name: order.productname,
-            sku: order.productid.toString(),
-            units: order.quantity,
-            selling_price: product.price
-          }
-        ],
-
-        payment_method: "Prepaid",
-        sub_total: product.price * order.quantity,
-
-        length: 10,
-        breadth: 10,
-        height: 5,
-        weight: order.weight || 0.5
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
-    );
-
-    const shipment_id = shipmentRes.data.shipment_id;
-
-    order.orderstatus = "readyforshipment";
-    order.shipment_id = shipment_id;
-
-    await order.save();
-
-    res.json({
-      success: true,
-      shipment_id: shipment_id,
-      message: "Order created in Shiprocket. Awaiting manual shipment."
-    });
-
-  } catch (err) {
-    console.log("FULL ERROR:", {
-      message: err.message,
-      data: err.response?.data,
-      status: err.response?.status
-    });
-
-    res.status(500).json({
-      error: err.response?.data || err.message
-    });
   }
 });
 
@@ -414,10 +610,13 @@ app.post("/add-product", upload.single("image"), authMiddleware, async (req, res
       productcategory,
       productcolor,
       productprice,
-      productextrainfo
+      productextrainfo,
+      productstock
     } = req.body;
 
     const finduser = await User.findOne({ email: req.user.email });
+
+
 
     // ✅ Create new product instance with exact schema fields
     const newProduct = new Product({
@@ -428,11 +627,23 @@ app.post("/add-product", upload.single("image"), authMiddleware, async (req, res
       productprice,
       productsellername: finduser.name,
       productsellerid: finduser._id,
-      productextrainfo
+      productextrainfo,
+      totalstock: productstock,
+      unitsold: 0
     });
 
     // ✅ Save to MongoDB
-    await newProduct.save();
+    const savedProduct = await newProduct.save();
+
+    const updatedaddproducttouserdata = await User.findOneAndUpdate(
+      { email: req.user.email },
+      {
+        $push: {
+          myproductid: savedProduct._id
+        }
+      },
+      { new: true }
+    );
 
     res.json({
       message: "Product added successfully",
@@ -445,6 +656,207 @@ app.post("/add-product", upload.single("image"), authMiddleware, async (req, res
   }
 });
 
+app.post("/update-stock", authMiddleware, async (req, res) => {
+
+  try {
+
+    const { UpdateInputvalue, productid } = req.body;
+
+    if (!UpdateInputvalue) {
+      return res.status(400).json({
+        message: "Stock value missing"
+      });
+    }
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productid,
+      {
+        $inc: {
+          totalstock: Number(UpdateInputvalue)
+        }
+      },
+      { new: true }
+    );
+
+    res.json({
+      message: "Stock updated successfully",
+      updatedProduct
+    });
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      error: err.message
+    });
+
+  }
+});
+
+app.post("/addui", authMiddleware, async (req, res) => {
+  try {
+    const { uiid } = req.body;
+    const type = uiid.split("_")[0]; // header / body / footer
+
+    const user = await User.findOneAndUpdate(
+      { email: req.user.email },
+      {
+        $set: {
+          [`ui.componentid.${type}`]: uiid
+        }
+      },
+      { new: true }
+    );
+
+    const finduser = await User.findOne({ email: req.user.email });
+    const findui = await Ui.findOne({
+      Componentid: finduser.ui.componentid.header
+    });
+    res.json({ uicode: findui.Componentcode });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post("/uidatas", authMiddleware, async (req, res) => {
+  try {
+    const allUi = await Ui.find();
+    res.json(allUi);
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching UI data" });
+  }
+});
+
+app.post("/uidata", authMiddleware, async (req, res) => {
+  const { id } = req.body;
+  try {
+
+    if (id) {
+      const finduserid = await User.findOne({ _id: id });
+      const component = finduserid.ui?.componentid || {};
+
+      const finduiheader = component.header
+        ? await Ui.findOne({ Componentid: component.header })
+        : null;
+
+      const finduibody = component.body
+        ? await Ui.findOne({ Componentid: component.body })
+        : null;
+
+      const finduifooter = component.footer
+        ? await Ui.findOne({ Componentid: component.footer })
+        : null;
+
+      const findproductid1 = finduserid.ui.productbox.productbox1id
+        ? await Product.findById(finduserid.ui.productbox.productbox1id)
+        : null;
+
+      const findproductid2 = finduserid.ui.productbox.productbox2id
+        ? await Product.findById(finduserid.ui.productbox.productbox2id)
+        : null;
+
+      const findproductid3 = finduserid.ui.productbox.productbox3id
+        ? await Product.findById(finduserid.ui.productbox.productbox3id)
+        : null;
+
+      const findproductid4 = finduserid.ui.productbox.productbox4id
+        ? await Product.findById(finduserid.ui.productbox.productbox4id)
+        : null;
+
+      const findproductid5 = finduserid.ui.productbox.productbox5id
+        ? await Product.findById(finduserid.ui.productbox.productbox5id)
+        : null;
+
+      const findproductid6 = finduserid.ui.productbox.productbox6id
+        ? await Product.findById(finduserid.ui.productbox.productbox6id)
+        : null;
+
+      const findproductid7 = finduserid.ui.productbox.productbox7id
+        ? await Product.findById(finduserid.ui.productbox.productbox7id)
+        : null;
+
+      const findproductid8 = finduserid.ui.productbox.productbox8id
+        ? await Product.findById(finduserid.ui.productbox.productbox8id)
+        : null;
+
+      return res.json({
+        uiheader: finduiheader?.Componentcode || "",
+        uibody: finduibody?.Componentcode || "",
+        uifooter: finduifooter?.Componentcode || "",
+        ui: finduserid.ui || {},
+        productbox: {
+
+          BusinessName: finduserid.ui.generalinfo.BusinessName,
+          productbox1: findproductid1,
+          productbox2: findproductid2,
+          productbox3: findproductid3,
+          productbox4: findproductid4,
+          productbox5: findproductid5,
+          productbox6: findproductid6,
+          productbox7: findproductid7,
+          productbox8: findproductid8
+
+        },
+      });
+    }
+
+    const finduser = await User.findOne({ email: req.user.email });
+
+    if (!finduser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const component = finduser.ui?.componentid || {};
+
+    const finduiheader = component.header
+      ? await Ui.findOne({ Componentid: component.header })
+      : null;
+
+    const finduibody = component.body
+      ? await Ui.findOne({ Componentid: component.body })
+      : null;
+
+    const finduifooter = component.footer
+      ? await Ui.findOne({ Componentid: component.footer })
+      : null;
+
+    res.json({
+      uiheader: finduiheader?.Componentcode || "",
+      uibody: finduibody?.Componentcode || "",
+      uifooter: finduifooter?.Componentcode || "",
+      ui: finduser.ui || {}
+    });
+
+  } catch (err) {
+    console.log("❌ ERROR:", err);
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// uploadui
+app.post("/uploadui", authMiddleware, async (req, res) => {
+
+  try {
+    const { Componentid, Componentcode } = req.body
+
+    if (!Componentid || !Componentcode) {
+      return res.json({ message: `Your code has not uploaded ${Componentid, Componentcode}` })
+    }
+
+    const findui = await Ui.insertOne({
+      Componentid: Componentid,
+      Componentcode: Componentcode
+    });
+
+    res.json({ message: `your id:${Componentid} code has recorded` })
+
+  } catch (err) {
+    console.log(" ERROR:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 app.post("/signup", async (req, res) => {
   try {
@@ -467,6 +879,8 @@ app.post("/signup", async (req, res) => {
       return res.json({ valid: "false", msg: "Email already used" });
     }
 
+    const slug = await generateUniqueSlug(name);
+
     const hashedPassword = await bcrypt.hash(pass, 10);
 
     const newUser = new User({
@@ -476,7 +890,8 @@ app.post("/signup", async (req, res) => {
       gender,
       phoneNo,
       email,
-      pass: hashedPassword
+      pass: hashedPassword,
+      slug
     });
 
     await newUser.save();
@@ -488,8 +903,6 @@ app.post("/signup", async (req, res) => {
     );
 
     res.json({ valid: "true", token });
-
-    console.log("Sign up api caalled");
 
 
   } catch (err) {

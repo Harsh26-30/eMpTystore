@@ -89,19 +89,19 @@ const signupcard = ({ setvalid }) => {
 
                     <fieldset style={{width:"90%",height:'50px',border:"none"}}>
                         <legend>Contact</legend>
-                        <input className='inputbox' type="text" onChange={(e) => { setuserContact(e.target.value) }} />
+                        <input required className='inputbox' type="text" onChange={(e) => { setuserContact(e.target.value) }} />
                     </fieldset>
 
                     {/* Email input */}
                     <fieldset style={{width:"90%",height:'50px',border:"none"}}>
                         <legend>Email</legend>
-                        <input className='inputbox' type="text" onChange={(e) => { setuseremail(e.target.value) }} />
+                        <input required className='inputbox' type="text" onChange={(e) => { setuseremail(e.target.value) }} />
                     </fieldset>
 
                     {/* Password input */}
                     <fieldset style={{width:"90%",height:'50px',border:"none"}}>
                         <legend>Password</legend>
-                        <input className='inputbox' type="text" onChange={(e) => { setuserpass(e.target.value) }} />
+                        <input required className='inputbox' type="text" onChange={(e) => { setuserpass(e.target.value) }} />
                     </fieldset>
                     <button id='submitbtn' type='Submit'>submit</button>
                 </form>

@@ -1,0 +1,53 @@
+#addproducttoui {
+    width: 95%;
+    height: 88%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 50px;
+}
+
+#box2addproducttoui {
+    width: 95%;
+    height: 80%;
+}
+
+#addproducttoui #box2addproducttoui form {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+#addproducttoui #box2addproducttoui form fieldset {
+    width: 100%;
+    height: 8%;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#addproducttoui #box2addproducttoui form fieldset select {
+    width: 100%;
+    height: 120%;
+    border-radius: 20px;
+    background-color: rgb(236, 236, 236);
+}
+
+#addproducttoui #box2addproducttoui form fieldset input{
+        width: 100%;
+    height: 120%;
+    border-radius: 20px;
+    background-color: rgb(236, 236, 236);
+}
+
+#addproducttoui button{
+background-color: #000;
+color: #fff;
+width: 30%;
+height: 8%;
+border-radius: 20px;
+font-size: 20px;
+}

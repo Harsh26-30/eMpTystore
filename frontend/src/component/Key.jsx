@@ -57,7 +57,7 @@ const Key = () => {
     return (
         <div id='mainboxkey'>
             <Header2 />
-            {key === 'seller' ? (
+            {key !== 'Seller' ? (
                 <div id='keybox'>
                     <p>Your Seller Key Is <span>{key}</span></p>
                 </div>

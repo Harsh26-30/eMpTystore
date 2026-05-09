@@ -5,6 +5,8 @@
     display: flex;
     flex-direction: column;
     background-color: #d8080822;
+      justify-content: flex-start;
+    align-items: center;
 }
 
 #mainboxsearch #box2{

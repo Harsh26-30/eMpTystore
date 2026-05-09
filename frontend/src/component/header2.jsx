@@ -7,7 +7,7 @@ import axios from 'axios'
 
 
 
-const header2 = () => {
+const header2 = ({ setmanagehomepagevisible, managehomepagevisible }) => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const [userRole, setuserRole] = useState('')
@@ -38,15 +38,37 @@ const header2 = () => {
   }, [token]);
   return (
     <div id='mainboxheader2'>
-      <img src="\E.png" alt="logo" />
-      <div id='mainboxheader3'>
-        {(userRole === 'Seller') && (<button onClick={(e) => { navigate("/Order"); }}>
-          <img src="\list_alt_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="More" />
-        </button>)}
-        <button onClick={(e) => { navigate("/Menu"); }}>
-          <img src="\menu_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="More" />
-        </button>
+      <div id='box2header2'>
+        <img src="\E.png" alt="logo" />
+        <div id='box23header2'>
+          <button onClick={(e) => { navigate("/searchbox"); }}>
+                <img src="\search_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="Search" />
+            </button>
+          <button onClick={(e) => { navigate("/Menu"); }}>
+            <img src="\menu_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="More" />
+          </button>
+        </div>
       </div>
+      {(userRole === 'Seller') && (
+        <div id='box3header2'>
+          <button
+            style={{
+              color: managehomepagevisible === 'Order' ? 'grey' : 'white'
+            }}
+            onClick={(e) => { setmanagehomepagevisible('Order') }}>Orders</button>
+          <button
+            style={{
+              color: managehomepagevisible === 'Product' ? 'grey' : 'white'
+            }}
+             onClick={(e) => { setmanagehomepagevisible('Product') }}
+            >Product</button>
+          <button   style={{
+              color: managehomepagevisible === 'UI' ? 'grey' : 'white'
+            }}
+             onClick={(e) => { setmanagehomepagevisible('UI') }}
+            >UI</button>
+        </div>
+      )}
     </div>
   )
 }

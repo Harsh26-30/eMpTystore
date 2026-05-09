@@ -7,7 +7,7 @@ import axios from 'axios'
 const Order = () => {
   const token = localStorage.getItem("token");
   const [orders, setrorders] = useState([])
-  const [visible, setvisible] = useState('Pending')
+  const [userRole, setuserRole] = useState('')
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -29,18 +29,39 @@ const Order = () => {
     };
 
     fetchOrders();
+
+    const fun1 = async () => {
+      try {
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_URL}/checkuserinfo`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setuserRole(res.data.role);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fun1();
   }, [token]);
 
   const handleconfirm = async (e) => {
-    const res = await axios.post(
-      `${import.meta.env.VITE_API_URL}/confirmOrders`,
-      { orderid: e }, // empty body
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const result = window.confirm("Do you want to continue?");
+    if (result) {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/confirmOrders`,
+        { orderid: e }, // empty body
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    }
   }
 
   const printAllOrders = (orders) => {
@@ -104,71 +125,180 @@ const Order = () => {
     win.print();
   };
 
-const handlereadyforshipment = async (e) => {
-  try {
-    const res = await axios.post(
-      `${import.meta.env.VITE_API_URL}/readyforshipment`,
-      { orderid: e },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+  const handlereadyforshipment = async (e) => {
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/readyforDelivary`,
+        { orderid: e },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-    console.log("SUCCESS:", res.data);
+    } catch (err) {
+      console.log("REAL ERROR:", err.response?.data); // 👈 IMPORTANT
+    }
+  };
 
-  } catch (err) {
-    console.log("REAL ERROR:", err.response?.data); // 👈 IMPORTANT
-  }
-};
+  const handleOutfordelivary = async (e) => {
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/Outfordelivary`,
+        { orderid: e },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+    } catch (err) {
+      console.log("REAL ERROR:", err.response?.data); // 👈 IMPORTANT
+    }
+  };
 
   return (
     <div id='mainboxOrder'>
-      <div id='box1Order'>
-        <h2>Manage Order</h2>
-        <div id='box22Order'>
-          <button onClick={() => setvisible('Pending')}>
-            Confirm Order
-          </button>
-          <button onClick={() => setvisible('Confirm')}>
-            Prepairing Order
-          </button>
-          
-        </div>
-      </div>
+      {userRole === "Seller" &&
+        <div id='box2OrderConfirm'>
 
-      <div id='box2Order'>
-
-{  visible === 'Confirm'  &&  <button id='pd' onClick={() => printAllOrders(
-  orders.filter(o => o.orderstatus === 'Confirm')
-)}>Print Deatails</button>}      
-  {Array.isArray(orders) && orders.length > 0 ? (
-          orders.map((order) => (
-            <div key={order._id} style={order.orderstatus === visible ? {
-              width: "390px", height: "140px", padding: "7px", boxShadow: '1px 1px 8px 3px #000'
-            } : {}} className='box3Order' >
-              {order.orderstatus === visible ? <p>
-                productid:-{order.productid}<br />
-                productname:-{order.productname}<br />
-                customeremail:-{order.customeremail} <br />
-                customerid:-{order.customerid}<br />
-                phoneNo:-{order.phoneNo}<br />
-                quantity:-{order.quantity}
-              </p> : <></>}
-              {order.orderstatus === 'Pending' ?
-                <button onClick={() => handleconfirm(order._id)}>Confirm</button> :
-                <></>}
-              <div>
-                {order.orderstatus === 'Confirm' && order.orderstatus === visible ?
-                  <button onClick={() => handlereadyforshipment(order._id)}>Ready for Shipment</button> :
+          <h3>Confirm Order</h3>
+          {Array.isArray(orders) && orders.length > 0 ? (
+            orders.map((order) => (
+              <div key={order._id} style={order.orderstatus === 'Pending' ? {
+                padding: "4px",
+                boxShadow: '1px 1px 8px 3px #000',
+                width: "80%",
+                borderRadius: "20px",
+                marginTop: "5px",
+                height: "160px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                textTransform: "capitalize",
+                fontFamily: "sans-serif"
+              } : { display: "none" }} className='box3Order' >
+                <p>
+                  productid:-{order.productid}<br />
+                  productname:-{order.productname}<br />
+                  customeremail:-{order.customeremail} <br />
+                  phoneNo:-{order.phoneNo}<br />
+                  quantity:-{order.quantity}
+                </p>
+                {order.orderstatus === 'Pending' ?
+                  <button style={{
+                    backgroundColor: "#000",
+                    color: "#fff",
+                    width: "30%",
+                    height: "30%",
+                    borderRadius: "10px"
+                  }} onClick={() => handleconfirm(order._id)}>Confirm</button> :
                   <></>}
+
               </div>
-            </div>
-          ))
-        ) : (
-          <p>No orders found</p>
-        )}        </div>
+            ))
+          ) : (
+            <p>No orders found</p>
+          )}        </div>
+      }
+      {userRole === "Seller" &&
+        <div id='box2OrderPreparing'>
+
+          <h3>Preparing Order</h3>
+          {Array.isArray(orders) && orders.length > 0 ? (
+            orders.map((order) => (
+              <div key={order._id} style={order.orderstatus === 'Confirm' ? {
+                padding: "4px",
+                boxShadow: '1px 1px 8px 3px #000',
+
+                width: "80%",
+                borderRadius: "20px",
+                marginTop: "5px",
+                height: "160px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                textTransform: "capitalize",
+                fontFamily: "sans-serif"
+              } : { display: "none" }} className='box3Order' >
+                <p>
+                  productid:-{order.productid}<br />
+                  productname:-{order.productname}<br />
+                  customeremail:-{order.customeremail} <br />
+                  customerid:-{order.customerid}<br />
+                  phoneNo:-{order.phoneNo}<br />
+                  quantity:-{order.quantity}
+                </p>
+                {order.orderstatus === 'Confirm' ?
+                  <button style={{
+                    backgroundColor: "#000",
+                    color: "#fff",
+                    width: "30%",
+                    height: "30%",
+                    borderRadius: "10px"
+                  }} onClick={() => handlereadyforshipment(order._id)}>Ready for Delivary</button> :
+                  <></>}
+
+                <div>
+
+
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>No orders found</p>
+          )}        </div>
+      }
+      {userRole === "Seller" &&
+        <div id='box2OrderPreparing'>
+
+          <h3>Out For Delivary</h3>
+          {Array.isArray(orders) && orders.length > 0 ? (
+            orders.map((order) => (
+              <div key={order._id} style={order.orderstatus === 'RFD' ? {
+                padding: "4px",
+                boxShadow: '1px 1px 8px 3px #000',
+
+                width: "80%",
+                borderRadius: "20px",
+                marginTop: "5px",
+                height: "160px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                textTransform: "capitalize",
+                fontFamily: "sans-serif"
+              } : { display: "none" }} className='box3Order' >
+                <p>
+                  productid:-{order.productid}<br />
+                  productname:-{order.productname}<br />
+                  customeremail:-{order.customeremail} <br />
+                  customerid:-{order.customerid}<br />
+                  phoneNo:-{order.phoneNo}<br />
+                  quantity:-{order.quantity}
+                </p>
+                {order.orderstatus === 'RFD' ?
+                  <button style={{
+                    backgroundColor: "#000",
+                    color: "#fff",
+                    width: "30%",
+                    height: "30%",
+                    borderRadius: "10px"
+                  }} onClick={() => handleOutfordelivary(order._id)}>Out For Delivary</button> :
+                  <></>}
+
+                <div>
+
+
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>No orders found</p>
+          )}        </div>
+      }
     </div>
   )
 }

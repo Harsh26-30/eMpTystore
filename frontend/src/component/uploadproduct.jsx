@@ -11,6 +11,7 @@ const uploadproduct = () => {
     const [productcolor, setproductcolor] = useState('')
     const [productprice, setproductprice] = useState('')
     const [productextrainfo, setproductextrainfo] = useState('')
+    const [productstock, setproductstock] = useState('')
     const [preview, setPreview] = useState("");
 
     const token = localStorage.getItem("token");
@@ -24,6 +25,7 @@ const uploadproduct = () => {
         formData.append("productcolor", productcolor);
         formData.append("productprice", productprice);
         formData.append("productextrainfo", productextrainfo);
+        formData.append("productstock", productstock);
         await axios.post(`${import.meta.env.VITE_API_URL}/add-product`, formData, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -48,12 +50,13 @@ const uploadproduct = () => {
         <div id='mainboxuploadproduct'>
             <img id='imgmainboxuploadproduct' src={preview === '' ? '/src/assets/react.svg' : preview} alt="preview" />
             <form id='formmainboxuploadproduct' onSubmit={handlesumit}>
-                <input id='fileinput' type="file" onChange={handleFileChange} />
-                <input type="text" onChange={(e) => { setproductname(e.target.value) }} placeholder='Product name' />
-                <input type="text" onChange={(e) => { setproductcategory(e.target.value) }} placeholder='Product category' />
-                <input type="text" onChange={(e) => { setproductcolor(e.target.value) }} placeholder='Product color' />
-                <input type="number" onChange={(e) => { setproductprice(e.target.value) }} placeholder='Product price' />
-                <input type="text" onChange={(e) => { setproductextrainfo(e.target.value) }} placeholder='Product extrainfo' />
+                <input required id='fileinput' type="file" onChange={handleFileChange} />
+                <input required type="text" onChange={(e) => { setproductname(e.target.value) }} placeholder='Product name' />
+                <input required type="text" onChange={(e) => { setproductcategory(e.target.value) }} placeholder='Product category' />
+                <input required type="text" onChange={(e) => { setproductcolor(e.target.value) }} placeholder='Product color' />
+                <input required type="number" onChange={(e) => { setproductprice(e.target.value) }} placeholder='Product price' />
+                <input required type="text" onChange={(e) => { setproductextrainfo(e.target.value) }} placeholder='Product extrainfo' />
+                <input required type="number" onChange={(e) => { setproductstock(e.target.value) }} placeholder='Product Stock' />
                 <button type='submit'>procedd</button>
             </form>
         </div>
