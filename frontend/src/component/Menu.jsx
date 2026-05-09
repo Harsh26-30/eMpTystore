@@ -25,7 +25,6 @@ const Menu = () => {
                     }
                 );
                 setuserRole(res.data.role);
-                setkey(res.data.pickup_location);
             } catch (err) {
                 console.log(err);
             }
@@ -63,7 +62,7 @@ const Menu = () => {
                 </button>)}
 
                 {( userRole === 'Admin' ) && (<button id='logoutbutton2' onClick={() => navigate("/Uploadcomponent")}>
-                    Upload Component
+                    Upload_Component
                 </button>)}
 
                 <button id='logoutbutton' onClick={logout}>
