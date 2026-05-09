@@ -28,7 +28,6 @@ const header2 = ({ setmanagehomepagevisible, managehomepagevisible }) => {
           }
         );
         setuserRole(res.data.role);
-        setkey(res.data.pickup_location);
       } catch (err) {
         console.log(err);
       }

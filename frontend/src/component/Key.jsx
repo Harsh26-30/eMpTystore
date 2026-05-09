@@ -26,7 +26,7 @@ const Key = () => {
                     }
                 );
                 setuserRole(res.data.role);
-                setkey(res.data.pickup_location);
+                setkey(res.data.role);
             } catch (err) {
                 console.log(err);
             }
@@ -46,7 +46,7 @@ const Key = () => {
                 }
             );
 
-            alert(msg);
+            alert("Your Request has been recorded within 24 hour your \n account will be updated");
             setmsg(res.data.msg);
 
         } catch (err) {
@@ -57,7 +57,7 @@ const Key = () => {
     return (
         <div id='mainboxkey'>
             <Header2 />
-            {key !== 'Seller' ? (
+            {key === 'Seller' ? (
                 <div id='keybox'>
                     <p>Your Seller Key Is <span>{key}</span></p>
                 </div>
@@ -67,6 +67,7 @@ const Key = () => {
                     <button onClick={() => handlerequestkey()}>Request</button>
                 </div>
             )}
+
         </div>
     )
 }

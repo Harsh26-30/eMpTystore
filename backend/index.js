@@ -33,7 +33,7 @@ mongoose.connect(process.env.MONGO_URI)
 // }));
 
 app.use(cors({
-  origin: "http://localhost:5173", // or your frontend port
+  origin: "http://localhost:5174", // or your frontend port
   credentials: true
 }));
 
