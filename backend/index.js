@@ -951,16 +951,15 @@ app.post("/updatepassword", async (req, res) => {
       return res.json({ valid: "false", msg: "User not found" });
     }
 
-    if(user.email === email && user.dob === dob){
+    if (user.email === email && user.dob === dob) {
 
-    const hashedPassword = await bcrypt.hash(newpassword, 10);
-    user.pass = hashedPassword;
-    await user.save();
-    }else{
+      const hashedPassword = await bcrypt.hash(newpassword, 10);
+      user.pass = hashedPassword;
+      await user.save();
+      res.json({ valid: "true", msg: "Password updated successfully" });
+    } else {
       return res.json({ valid: "false", msg: "Email and DOB do not match" });
     }
-
-    res.json({ valid: "true", msg: "Password updated successfully" });
   } catch (err) {
     console.log("UPDATE PASSWORD ERROR:", err);
     res.status(500).json({ error: err.message });

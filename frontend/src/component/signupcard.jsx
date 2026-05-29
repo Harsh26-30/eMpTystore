@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useNavigate } from "react-router-dom";
 import './signupcard.css'
 
-const signupcard = ({ setvalid }) => {
+const Signupcard = ({ setvalid }) => {
     const [username, setusername] = useState('')
     const [userdob, setuserdob] = useState('')
     const [usergender, setusergender] = useState('')
@@ -111,4 +111,4 @@ const signupcard = ({ setvalid }) => {
     )
 }
 
-export default signupcard
+export default Signupcard
