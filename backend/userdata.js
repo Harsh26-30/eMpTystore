@@ -54,11 +54,10 @@ const userSchema = new mongoose.Schema({
     generalinfo: {
       logo: { type: String },
       BusinessName: { type: String },
-      BackgroundColor:{types:String},
-      TextColor:{types:String},
-      backgroundimage: {
+      BackgroundColor:{type:String},
+      TextColor:{type:String},
+      Backgroundimage: {
         type: String,
-        required: true
     }
     },
     componentid: {

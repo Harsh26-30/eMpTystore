@@ -76,7 +76,6 @@ const Updateproductuiid = ({ setvisibilityval, onclicksave }) => {
                 )
             );
 
-            console.log("Sending:", filteredPayload);
 
             const res = await axios.post(
                 `${import.meta.env.VITE_API_URL}/updateproducttoui`,

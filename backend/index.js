@@ -340,22 +340,18 @@ app.post("/becomeseller", authMiddleware, async (req, res) => {
   }
 });
 
-app.post("/updateproducttoui", authMiddleware, async (req, res) => {
+app.post("/updateproducttoui", upload.single("image"), authMiddleware, async (req, res) => {
   try {
     const { businessname, TextColor, BackgroundColor, Backgroundimage } = req.body;
 
     const updates = {};
-
-    let backgroundImageUrl;
 
     if (req.file) {
       const result = await cloudinary.uploader.upload(req.file.path, {
         folder: "ui-backgrounds"
       });
 
-      const backgroundImageUrl = result.secure_url;
-
-      updates["ui.generalinfo.backgroundimage"] = backgroundImageUrl;
+      updates["ui.generalinfo.Backgroundimage"] = result.secure_url;
     }
 
     // business name
