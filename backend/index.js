@@ -346,6 +346,18 @@ app.post("/updateproducttoui", authMiddleware, async (req, res) => {
 
     const updates = {};
 
+    let backgroundImageUrl;
+
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: "ui-backgrounds"
+      });
+
+      const backgroundImageUrl = result.secure_url;
+
+      updates["ui.generalinfo.Backgroundimage"] = backgroundImageUrl;
+    }
+
     // business name
     if (businessname) {
       updates["ui.generalinfo.BusinessName"] = businessname;
@@ -355,9 +367,6 @@ app.post("/updateproducttoui", authMiddleware, async (req, res) => {
       updates["ui.generalinfo.BackgroundColor"] = BackgroundColor;
     }
 
-    if (Backgroundimage) {
-      updates["ui.generalinfo.Backgroundimage"] = Backgroundimage;
-    }
 
     //textcolor
     if (TextColor) {
