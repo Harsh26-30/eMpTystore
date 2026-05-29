@@ -19,6 +19,8 @@ const Logincard = () => {
     })
     if (res.data.valid === 'true') {
       navigate("/home");
+    }else{
+      alert(res.data.msg);
     }
     localStorage.setItem("token", res.data.token);
 

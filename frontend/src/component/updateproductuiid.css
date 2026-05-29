@@ -51,3 +51,29 @@ height: 8%;
 border-radius: 20px;
 font-size: 20px;
 }
+
+#headeraddproducttoui{
+    background-color: #000;
+    height: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 5px;
+    font-family: sans-serif;
+    width: 100%;
+    color: #fff;
+}
+
+#headeraddproducttoui button{
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    height: 100%;
+    width: 40%;
+}
+
+#headeraddproducttoui button:hover{
+   color: grey;
+   user-select: none;
+   
+}

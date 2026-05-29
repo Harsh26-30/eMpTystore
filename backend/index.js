@@ -33,7 +33,7 @@ mongoose.connect(process.env.MONGO_URI)
 // }));
 
 app.use(cors({
-  origin: "http://localhost:5174", // or your frontend port
+  origin: "http://localhost:5173", // or your frontend port
   credentials: true
 }));
 
@@ -342,7 +342,7 @@ app.post("/becomeseller", authMiddleware, async (req, res) => {
 
 app.post("/updateproducttoui", authMiddleware, async (req, res) => {
   try {
-    const { businessname, Color } = req.body;
+    const { businessname, TextColor, BackgroundColor, Backgroundimage } = req.body;
 
     const updates = {};
 
@@ -351,9 +351,19 @@ app.post("/updateproducttoui", authMiddleware, async (req, res) => {
       updates["ui.generalinfo.BusinessName"] = businessname;
     }
 
-    if (Color) {
-      updates["ui.generalinfo.Color"] = Color;
+    if (BackgroundColor) {
+      updates["ui.generalinfo.BackgroundColor"] = BackgroundColor;
     }
+
+    if (Backgroundimage) {
+      updates["ui.generalinfo.Backgroundimage"] = Backgroundimage;
+    }
+
+    //textcolor
+    if (TextColor) {
+      updates["ui.generalinfo.TextColor"] = TextColor;
+    }
+
 
     // products
     for (let index = 1; index <= 12; index++) {
@@ -922,11 +932,13 @@ app.post("/login", async (req, res) => {
     } else {
       return res.json({ valid: "fasle", msg: "Inappropriate Email Typed" });
     }
-    const user = await User.findOne({ email: email });
-    const isMatch = await bcrypt.compare(pass, user.pass);
-    if (email) {
-      if (isMatch) {
 
+    const user = await User.findOne({ email: email });
+
+    if (user) {
+      const isMatch = await bcrypt.compare(pass, user.pass);
+
+      if (isMatch) {
         const token = jwt.sign(
           { email },
           process.env.JWT_SECRET || "secretkey",
@@ -934,8 +946,10 @@ app.post("/login", async (req, res) => {
         );
         res.json({ valid: "true", token });
       } else {
-        res.json({ msg: "Wrong Password" });
+        res.json({ msg: "Wrong Password Entered" });
       }
+    } else {
+      res.json({ msg: "User Not Found" });
     }
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -953,11 +967,11 @@ app.post("/updatepassword", async (req, res) => {
     }
 
     const dbDob = new Date(user.dob).toISOString().split("T")[0];
-const inputDob = new Date(dob).toISOString().split("T")[0];
+    const inputDob = new Date(dob).toISOString().split("T")[0];
 
-if (dbDob !== inputDob) {
-  return res.json({ success: false, message: "DOB does not match" });
-}
+    if (dbDob !== inputDob) {
+      return res.json({ success: false, message: "DOB does not match" });
+    }
 
     const hashedPassword = await bcrypt.hash(newpassword, 10);
 

@@ -15,10 +15,10 @@ const UI = () => {
   const [uidatas, setUidatas] = useState([]);
   const [header, setheader] = useState('');
   const [body, setbody] = useState('');
-  const [footer, setfooter] = useState('');
+  // const [footer, setfooter] = useState('');
   const [visibilityval, setvisibilityval] = useState(false);
-  const [productbox, setproductbox] = useState('')
-  const [myuiproducts, setmyuiproducts] = useState('')
+  // const [productbox, setproductbox] = useState('')
+  // const [myuiproducts, setmyuiproducts] = useState('')
 
 
 
@@ -53,6 +53,7 @@ const UI = () => {
         }
       );
 
+      alert(res.data.msg);
       // Append new component instead of replacing
       setOptionvisibility(false);
 
@@ -70,7 +71,7 @@ const UI = () => {
 
           setheader(res.data.uiheader);
           setbody(res.data.uibody);
-          setfooter(res.data.uifooter);
+          // setfooter(res.data.uifooter);
 
         } catch (err) {
           console.log(err);
@@ -102,7 +103,7 @@ const UI = () => {
 
         setheader(res.data.uiheader);
         setbody(res.data.uibody);
-        setfooter(res.data.uifooter);
+        //  setfooter(res.data.uifooter);
 
 
       } catch (err) {
