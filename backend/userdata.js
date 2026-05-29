@@ -50,6 +50,10 @@ const userSchema = new mongoose.Schema({
   shoporseller: {
     type: [String]
   },
+  shopOpenOrNot: {
+    type: String,
+    default: "Closed"
+  },
   ui: {
     generalinfo: {
       logo: { type: String },

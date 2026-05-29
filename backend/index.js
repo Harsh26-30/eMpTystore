@@ -155,7 +155,8 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
 
     },
     myproductdata: findproduct,
-    shops: finduser2
+    shops: finduser2,
+    shopOpenOrNot: finduser.shopOpenOrNot
   });
 
 });
@@ -340,8 +341,7 @@ app.post("/becomeseller", authMiddleware, async (req, res) => {
   }
 });
 
-app.post(
-  "/updateproducttoui",
+app.post("/updateproducttoui",
   upload.single("Backgroundimage"),
   authMiddleware,
   async (req, res) => {
@@ -951,7 +951,7 @@ app.post("/login", async (req, res) => {
         const token = jwt.sign(
           { email },
           process.env.JWT_SECRET || "secretkey",
-          { expiresIn: "1d" }
+          { expiresIn: "365d" }
         );
         res.json({ valid: "true", token });
       } else {
@@ -962,6 +962,29 @@ app.post("/login", async (req, res) => {
     }
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+});
+
+app.post("/toggleShopOpenOrNot", authMiddleware, async (req, res) => {
+  try {
+    const finduser = await User.findOne({ email: req.user.email });
+
+    if (!finduser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const newShopOpenOrNot = finduser.shopOpenOrNot === "Open" ? "Closed" : "Open";
+
+    await User.updateOne(
+      { email: req.user.email },
+      { shopOpenOrNot: newShopOpenOrNot }
+    );
+
+    res.json({ shopOpenOrNot: newShopOpenOrNot });
+
+  } catch (err) {
+    console.log("TOGGLE SHOP OPEN OR NOT ERROR:", err);
+    res.status(500).json({ message: "Server error" });
   }
 });
 

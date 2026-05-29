@@ -18,7 +18,7 @@
 }
 
 #mainboxheader2 #box2header2 #box23header2 {
-    width: 35%;
+    width: 50%;
     height: 60%;
     display: flex;
     flex-direction: row;
@@ -51,4 +51,30 @@
     color: #fff;
     background-color: #000;
     border: none;
+}
+
+.ShopOpenornotbox1{
+    width: 30%;
+    height: 100%;
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    background-color: red;
+    border: none;
+    border-radius: 20px;
+}
+
+button #ShopOpenornotbox2{
+    width: 100%;
+    height: 60%;
+    border-radius: 20px;
+    background-color: rgb(236, 236, 236);
+}
+
+
+button #ShopOpenornotbox2 #ShopOpenornotcircle{
+    width: 50%;
+    height: 100%;
+    background-color: grey;  
+    border-radius: 30px; 
 }
