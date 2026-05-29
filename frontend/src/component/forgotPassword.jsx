@@ -19,7 +19,6 @@ const ForgotPassword = () => {
     navigate(-1);
   }
 
-
   return (
     <div id='mainboxforgotPassword'>
       <div id='box2forgotPassword'>
