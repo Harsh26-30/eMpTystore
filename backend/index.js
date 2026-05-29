@@ -952,9 +952,12 @@ app.post("/updatepassword", async (req, res) => {
       return res.json({ success: false, message: "User not found" });
     }
 
-    if (user.dob !== dob) {
-      return res.json({ success: false, message: "DOB does not match" });
-    }
+    const dbDob = new Date(user.dob).toISOString().split("T")[0];
+const inputDob = new Date(dob).toISOString().split("T")[0];
+
+if (dbDob !== inputDob) {
+  return res.json({ success: false, message: "DOB does not match" });
+}
 
     const hashedPassword = await bcrypt.hash(newpassword, 10);
 
