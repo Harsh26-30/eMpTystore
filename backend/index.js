@@ -942,6 +942,31 @@ app.post("/login", async (req, res) => {
   }
 });
 
+app.post("/updatepassword", async (req, res) => {
+  try {
+    const { email, dob, newpassword } = req.body;
+
+    const user = await User.findOne({ email: email, dob: dob });
+    if (!user) {
+      return res.json({ valid: "false", msg: "User not found" });
+    }
+
+    if(user.email === email && user.dob === dob){
+
+    const hashedPassword = await bcrypt.hash(newpassword, 10);
+    user.pass = hashedPassword;
+    await user.save();
+    }else{
+      return res.json({ valid: "false", msg: "Email and DOB do not match" });
+    }
+
+    res.json({ valid: "true", msg: "Password updated successfully" });
+  } catch (err) {
+    console.log("UPDATE PASSWORD ERROR:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.get(/.*/, (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
 });

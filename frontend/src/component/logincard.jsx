@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import './logincard.css'
 
 
-const logincard = ({ setvalid }) => {
+const Logincard = () => {
   const [useremail, setuseremail] = useState('')
   const [userpass, setuserpass] = useState('')
   const navigate = useNavigate();
@@ -22,6 +22,12 @@ const logincard = ({ setvalid }) => {
     }
     localStorage.setItem("token", res.data.token);
 
+  }
+
+    const handleforgotpassword = async (e) => {
+    e.preventDefault();
+    navigate("/ForgotPassword")
+    alert("Click")
   }
   return (
     <div id='mainboxlogin'>
@@ -40,10 +46,16 @@ const logincard = ({ setvalid }) => {
 
           <button id='submitbtn2' type='Submit'>submit</button>
         </form>
+
+        <button style={{backgroundColor:"black",
+          color:"white",
+          textDecoration:"Underline",
+          border:"none"}} 
+          onClick={handleforgotpassword}>Forgot Password</button>
       </div>
 
     </div>
   )
 }
 
-export default logincard
+export default Logincard

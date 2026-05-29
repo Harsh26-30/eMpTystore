@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react'
 import Auth from './component/auth'
 import Homepage from './component/homepage'
-import axios from 'axios'
 import './App.css'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import ProtectedRoute from './component/ProtectedRoute'
@@ -17,28 +15,29 @@ import Key from './component/Key'
 import Request from './component/Request'
 import Uploadcomponent from './component/uploadcomponent'
 import Shopnox from './component/Shopnox'
+import ForgotPassword from './component/forgotPassword'
 
 
 
 function App() {
-  const [valid, setvalid] = useState('')
-  const token = localStorage.getItem("token");
+  // const [valid, setvalid] = useState('')
+  // const token = localStorage.getItem("token");
 
-  useEffect(() => {
-    const checkUser = async () => {
-      try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/profile`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setvalid(res.data.valid)
-      } catch (err) {
-        setvalid("false");
-      }
-    };
-    checkUser();
-  }, []); // ✅ IMPORTANT
+  // useEffect(() => {
+  //   const checkUser = async () => {
+  //     try {
+  //       const res = await axios.get(`${import.meta.env.VITE_API_URL}/profile`, {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       });
+  //       setvalid(res.data.valid)
+  //     } catch (err) {
+  //       setvalid("false");
+  //     }
+  //   };
+  //   checkUser();
+  // }, []); // ✅ IMPORTANT
 
   return (
     <BrowserRouter>
@@ -160,6 +159,15 @@ function App() {
             <ProtectedRoute>
               < Shopnox />
             </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/ForgotPassword"
+          element={
+           
+              < ForgotPassword />
+            
           }
         />
 
