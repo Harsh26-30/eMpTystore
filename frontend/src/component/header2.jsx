@@ -55,7 +55,7 @@ const Header2 = ({ setmanagehomepagevisible, managehomepagevisible }) => {
       <div id='box2header2'>
         <img src="\E.png" alt="logo" />
         <div id='box23header2'>
-          {/* {userRole === 'Seller' && ( */}
+          {userRole === 'Seller' && (
           <button onClick={handleShopOpenOrNotToggle} className='ShopOpenornotbox1'>
             <div style={{ backgroundColor: shopOpenOrNot === 'Open' ? 'lightgreen' : 'rgb(208, 114, 114)', display: 'flex', alignItems: 'center', justifyContent: shopOpenOrNot === 'Open' ? 'flex-start' : 'flex-end' }} id='ShopOpenornotbox2'>
               <div style={{ backgroundColor: shopOpenOrNot === 'Open' ? 'green' : 'red' }} id='ShopOpenornotcircle'></div><br />
@@ -63,7 +63,7 @@ const Header2 = ({ setmanagehomepagevisible, managehomepagevisible }) => {
             <h5 style={{ color: shopOpenOrNot === 'Open' ? 'Green' : 'Red' }} id='ShopOpenornottext'>{shopOpenOrNot === 'Open' ? 'Open' : 'Closed'}</h5>
 
           </button>
-          {/* )} */}
+           )} 
           <button onClick={() => { navigate("/searchbox"); }}>
             <img src="\search_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="Search" />
           </button>
