@@ -33,11 +33,17 @@ const Connections = () => {
     <div id='mainboxconnections'>
 
       {shops.length > 0 ? (shops.map((shop, index) => (
-        <div id='Shopnoxs' style={{ backgroundColor: shop.ui.generalinfo.BackgroundColor,
-           backgroundImage: shop.ui.generalinfo.Backgroundimage
-      ? `url(${shop.ui.generalinfo.Backgroundimage})`
-      : "none", 
-    }} key={index} onClick={() => {
+        <div id='Shopnoxs' 
+        style={{
+  backgroundColor: shop.ui.generalinfo.BackgroundColor || "transparent",
+  backgroundImage: shop.ui.generalinfo.Backgroundimage
+    ? `url(${shop.ui.generalinfo.Backgroundimage})`
+    : "none",
+  backgroundSize: "cover",
+  backgroundPosition: "center",
+  backgroundRepeat: "no-repeat"
+}}
+  key={index} onClick={() => {
           navigate("/Shopnox", {
             state: {
               id: shop._id
