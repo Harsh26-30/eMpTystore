@@ -33,25 +33,25 @@ const Connections = () => {
     <div id='mainboxconnections'>
 
       {shops.length > 0 ? (shops.map((shop, index) => (
-        <div id='Shopnoxs' 
-        style={{
-          opacity: shop.shopOpenOrNot === 'open' ? 'none' : 0.5,
-  backgroundColor: shop.ui.generalinfo.BackgroundColor || "transparent",
-  backgroundImage: shop.ui.generalinfo.Backgroundimage
-    ? `url(${shop.ui.generalinfo.Backgroundimage})`
-    : "none",
-  backgroundSize: "cover",
-  backgroundPosition: "center",
-  backgroundRepeat: "no-repeat"
-}}
-  key={index} onClick={() => {
-          navigate("/Shopnox", {
-            state: {
-              id: shop._id
-            }
-          })
-        }}>
-          <h3 style={{color:shop.ui.generalinfo.TextColor}}>{shop.ui.generalinfo.BusinessName}</h3>
+        <div id='Shopnoxs'
+          style={{
+            opacity: shop.shopOpenOrNot === 'open' ? 1 : 0.5,
+            backgroundColor: shop.ui.generalinfo.BackgroundColor || "transparent",
+            backgroundImage: shop.ui.generalinfo.Backgroundimage
+              ? `url(${shop.ui.generalinfo.Backgroundimage})`
+              : "none",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat"
+          }}
+          key={index} onClick={() => {
+            navigate("/Shopnox", {
+              state: {
+                id: shop._id
+              }
+            })
+          }}>
+          <h3 style={{ color: shop.ui.generalinfo.TextColor }}>{shop.ui.generalinfo.BusinessName}</h3>
         </div>
       ))) : (
         <div id='addshop'>
