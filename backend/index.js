@@ -355,7 +355,7 @@ app.post("/updateproducttoui", authMiddleware, async (req, res) => {
 
       const backgroundImageUrl = result.secure_url;
 
-      updates["ui.generalinfo.Backgroundimage"] = backgroundImageUrl;
+      updates["ui.generalinfo.backgroundimage"] = backgroundImageUrl;
     }
 
     // business name
