@@ -963,7 +963,7 @@ if (dbDob !== inputDob) {
 
     await User.updateOne(
       { email },
-      { password: hashedPassword }
+      { pass: hashedPassword }
     );
 
     return res.json({
