@@ -296,7 +296,7 @@ const UI = () => {
         </button> */}
         <button onClick={() => { setvisibilityval(true) }}>
           <img src="\article_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="header" />
-          <p>Add Product</p>
+          <p>Update Info</p>
         </button>
       </div>
     </div>
