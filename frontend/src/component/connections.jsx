@@ -35,7 +35,7 @@ const Connections = () => {
       {shops.length > 0 ? (shops.map((shop, index) => (
         <div id='Shopnoxs' 
         style={{
-          opacity: shop.shopOpenOrNot === 'open' ? 1 : 0.5,
+          opacity: shop.shopOpenOrNot === 'open' ? 'none' : 0.5,
   backgroundColor: shop.ui.generalinfo.BackgroundColor || "transparent",
   backgroundImage: shop.ui.generalinfo.Backgroundimage
     ? `url(${shop.ui.generalinfo.Backgroundimage})`
