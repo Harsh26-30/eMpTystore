@@ -50,56 +50,66 @@ const Updateproductuiid = ({ setvisibilityval, onclicksave }) => {
 
 
 
-    const handlesaveproduct = async (e) => {
-        e.preventDefault();
+  const handlesaveproduct = async (e) => {
+  e.preventDefault();
 
-        try {
-            const payload = {
-                Product1,
-                Product2,
-                Product3,
-                Product4,
-                Product5,
-                Product6,
-                Product7,
-                Product8,
-                Product9,
-                Product10,
-                Product11,
-                Product12,
-            };
-
-            // ✅ remove empty / null / undefined
-            const filteredPayload = Object.fromEntries(
-                Object.entries(payload).filter(
-                    ([_, value]) => value !== '' && value !== null && value !== undefined
-                )
-            );
-
-
-            const res = await axios.post(
-                `${import.meta.env.VITE_API_URL}/updateproducttoui`,
-                {
-                    ...filteredPayload,
-                    businessname,
-                    TextColor,
-                    BackgroundColor,
-                    backgroundimage
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-
-            setvisibilityval(false);
-            onclicksave();
-            alert(res.data.msg);
-        } catch (err) {
-            console.log(err);
-        }
+  try {
+    const payload = {
+      Product1,
+      Product2,
+      Product3,
+      Product4,
+      Product5,
+      Product6,
+      Product7,
+      Product8,
+      Product9,
+      Product10,
+      Product11,
+      Product12,
     };
+
+    // remove empty values
+    const filteredPayload = Object.fromEntries(
+      Object.entries(payload).filter(
+        ([_, value]) => value !== '' && value !== null && value !== undefined
+      )
+    );
+
+    const formData = new FormData();
+
+    formData.append("businessname", businessname || "");
+    formData.append("TextColor", TextColor || "");
+    formData.append("BackgroundColor", BackgroundColor || "");
+
+    // IMPORTANT: must match backend multer field name
+    if (backgroundimage) {
+      formData.append("Backgroundimage", backgroundimage);
+    }
+
+    // append products
+    Object.entries(filteredPayload).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_URL}/updateproducttoui`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    setvisibilityval(false);
+    onclicksave();
+    alert(res.data.message || "Updated successfully");
+  } catch (err) {
+    console.log(err);
+  }
+};
 
     return (
 

@@ -340,62 +340,66 @@ app.post("/becomeseller", authMiddleware, async (req, res) => {
   }
 });
 
-app.post("/updateproducttoui", upload.single("image"), authMiddleware, async (req, res) => {
-  try {
-    const { businessname, TextColor, BackgroundColor, Backgroundimage } = req.body;
+app.post(
+  "/updateproducttoui",
+  upload.single("Backgroundimage"),
+  authMiddleware,
+  async (req, res) => {
+    try {
+      const { businessname, TextColor, BackgroundColor } = req.body;
 
-    const updates = {};
+      const updates = {};
 
-    if (req.file) {
-      const result = await cloudinary.uploader.upload(req.file.path, {
-        folder: "ui-backgrounds"
-      });
+      // IMAGE
+      if (req.file) {
+        const result = await cloudinary.uploader.upload(req.file.path, {
+          folder: "ui-backgrounds",
+        });
 
-      updates["ui.generalinfo.Backgroundimage"] = result.secure_url;
-    }
-
-    // business name
-    if (businessname) {
-      updates["ui.generalinfo.BusinessName"] = businessname;
-    }
-
-    if (BackgroundColor) {
-      updates["ui.generalinfo.BackgroundColor"] = BackgroundColor;
-    }
-
-
-    //textcolor
-    if (TextColor) {
-      updates["ui.generalinfo.TextColor"] = TextColor;
-    }
-
-
-    // products
-    for (let index = 1; index <= 12; index++) {
-      const value = req.body[`Product${index}`];
-
-      if (value !== undefined && value !== null && value !== "") {
-        updates[`ui.productbox.productbox${index}id`] = value;
+        updates["ui.generalinfo.Backgroundimage"] = result.secure_url;
       }
+
+      // TEXT FIELDS
+      if (businessname?.trim()) {
+        updates["ui.generalinfo.BusinessName"] = businessname.trim();
+      }
+
+      if (BackgroundColor) {
+        updates["ui.generalinfo.BackgroundColor"] = BackgroundColor;
+      }
+
+      if (TextColor) {
+        updates["ui.generalinfo.TextColor"] = TextColor;
+      }
+
+      // PRODUCTS
+      for (let i = 1; i <= 12; i++) {
+        const value = req.body[`Product${i}`];
+
+        if (value) {
+          updates[`ui.productbox.productbox${i}id`] = value;
+        }
+      }
+
+      if (Object.keys(updates).length === 0) {
+        return res.json({ message: "Nothing to update" });
+      }
+
+      const updatedUser = await User.updateOne(
+        { email: req.user.email },
+        { $set: updates }
+      );
+
+      return res.json({
+        message: "UI updated successfully",
+        result: updatedUser,
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Server error" });
     }
-
-    // nothing to update
-    if (Object.keys(updates).length === 0) {
-      return res.json({ message: "Nothing to update" });
-    }
-
-    const updatedUser = await User.updateOne(
-      { email: req.user.email },
-      { $set: updates }
-    );
-
-    return res.json(updatedUser);
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
   }
-});
+);
 
 app.get("/shop/:slug", async (req, res) => {
   try {
