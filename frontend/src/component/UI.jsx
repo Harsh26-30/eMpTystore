@@ -295,7 +295,7 @@ const UI = () => {
           <p>Footer</p>
         </button> */}
         <button onClick={() => { setvisibilityval(true) }}>
-          <img src="\public\article_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="header" />
+          <img src="\article_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="header" />
           <p>Add Product</p>
         </button>
       </div>
