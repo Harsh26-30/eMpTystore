@@ -15,7 +15,7 @@ const ForgotPassword = () => {
     const res = await axios.post(`${import.meta.env.VITE_API_URL}/updatepassword`, {
       email, dob, newpassword
     });
-    alert(res.data.msg);
+    alert(res.data.message);
     navigate(-1);
   }
 
