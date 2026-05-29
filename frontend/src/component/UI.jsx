@@ -283,19 +283,19 @@ const UI = () => {
 
       <div id='box2Ui'>
         <button onClick={() => { setcomponent('header'); setOptionvisibility(true); }}>
-          <img src="\src\assets\top_panel_close_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="header1" />
+          <img src="\top_panel_close_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="header1" />
           <p>Header</p>
         </button>
         <button onClick={() => { setcomponent('body'); setOptionvisibility(true); }}>
-          <img src="\src\assets\top_panel_close_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="header" />
+          <img src="\top_panel_close_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="header" />
           <p>Body</p>
         </button>
         <button>
-          <img src="\src\assets\top_panel_close_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="header" />
+          <img src="\top_panel_close_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="header" />
           <p>Footer</p>
         </button>
         <button onClick={() => { setvisibilityval(true) }}>
-          <img src="\src\assets\top_panel_close_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="header" />
+          <img src="\top_panel_close_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="header" />
           <p>Add Product</p>
         </button>
       </div>
