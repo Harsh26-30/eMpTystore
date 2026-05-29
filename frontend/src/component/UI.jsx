@@ -287,15 +287,15 @@ const UI = () => {
           <p>Header</p>
         </button>
         <button onClick={() => { setcomponent('body'); setOptionvisibility(true); }}>
-          <img src="\top_panel_close_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="header" />
+          <img src="\splitscreen_portrait_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="header" />
           <p>Body</p>
         </button>
-        <button>
+        {/* <button>
           <img src="\top_panel_close_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="header" />
           <p>Footer</p>
-        </button>
+        </button> */}
         <button onClick={() => { setvisibilityval(true) }}>
-          <img src="\top_panel_close_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="header" />
+          <img src="\public\article_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="header" />
           <p>Add Product</p>
         </button>
       </div>
