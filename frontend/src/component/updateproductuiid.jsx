@@ -149,8 +149,10 @@ const Updateproductuiid = ({ setvisibilityval, onclicksave }) => {
                     </fieldset>
                     <fieldset style={{ display: inputvisibility === 'generalinfo' ? 'initial' : 'none' }}>
                         <legend>Background Image</legend>
-                        <input type="file" onChange={(e) => { setbackgroundimage(e.target.value) }} />
-                    </fieldset>
+                        <input
+                            type="file"
+                            onChange={(e) => setbackgroundimage(e.target.files[0])}
+                        />                    </fieldset>
 
                     <fieldset style={{ display: inputvisibility === 'productinfo' ? 'initial' : 'none' }}>
                         <legend>Product 1</legend>
