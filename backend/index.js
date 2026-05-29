@@ -956,7 +956,7 @@ app.post("/updatepassword", async (req, res) => {
       const hashedPassword = await bcrypt.hash(newpassword, 10);
       user.pass = hashedPassword;
       await user.save();
-      res.json({ valid: "true", msg: "Password updated successfully" });
+      return res.json({ valid: "true", msg: "Password updated successfully" });
     } else {
       return res.json({ valid: "false", msg: "Email and DOB do not match" });
     }
