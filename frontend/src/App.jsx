@@ -16,7 +16,7 @@ import Request from './component/Request'
 import Uploadcomponent from './component/uploadcomponent'
 import Shopnox from './component/Shopnox'
 import ForgotPassword from './component/forgotPassword'
-
+import RouteLoader from './component/Routeloder'
 
 
 function App() {
@@ -41,139 +41,140 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Auth />} />
+      <RouteLoader>
+        <Routes>
+          <Route path="/" element={<Auth />} />
 
-        <Route
-          path="/home"
-          element={
-            <ProtectedRoute>
-              <Homepage />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
+                <Homepage />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/searchbox"
-          element={
-            <ProtectedRoute>
-              < SearchBox />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/searchbox"
+            element={
+              <ProtectedRoute>
+                < SearchBox />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/uploadproduct"
-          element={
-            <ProtectedRoute>
-              < Uploadproduct />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/uploadproduct"
+            element={
+              <ProtectedRoute>
+                < Uploadproduct />
+              </ProtectedRoute>
+            }
+          />
 
 
-        <Route
-          path="/productview"
-          element={
-            <ProtectedRoute>
-              < Productview />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/productview"
+            element={
+              <ProtectedRoute>
+                < Productview />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/buynow"
-          element={
-            <ProtectedRoute>
-              < Buynow />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/buynow"
+            element={
+              <ProtectedRoute>
+                < Buynow />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/Menu"
-          element={
-            <ProtectedRoute>
-              < Menu />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/Menu"
+            element={
+              <ProtectedRoute>
+                < Menu />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/Order"
-          element={
-            <ProtectedRoute>
-              < Order />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/Order"
+            element={
+              <ProtectedRoute>
+                < Order />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/OrderStatus"
-          element={
-            <ProtectedRoute>
-              < OrderStatus />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/OrderStatus"
+            element={
+              <ProtectedRoute>
+                < OrderStatus />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/addAddress"
-          element={
-            <ProtectedRoute>
-              < AddAddress />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/addAddress"
+            element={
+              <ProtectedRoute>
+                < AddAddress />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/Key"
-          element={
-            <ProtectedRoute>
-              < Key />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/Key"
+            element={
+              <ProtectedRoute>
+                < Key />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/Request"
-          element={
-            <ProtectedRoute>
-              < Request />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/Request"
+            element={
+              <ProtectedRoute>
+                < Request />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/Uploadcomponent"
-          element={
-            <ProtectedRoute>
-              < Uploadcomponent />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/Uploadcomponent"
+            element={
+              <ProtectedRoute>
+                < Uploadcomponent />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/Shopnox"
-          element={
-            <ProtectedRoute>
-              < Shopnox />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/Shopnox"
+            element={
+              <ProtectedRoute>
+                < Shopnox />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/ForgotPassword"
-          element={
-           
+          <Route
+            path="/ForgotPassword"
+            element={
+
               < ForgotPassword />
-            
-          }
-        />
 
-      </Routes>
+            }
+          />
 
+        </Routes>
 
+      </RouteLoader>
     </BrowserRouter>
   )
 }
