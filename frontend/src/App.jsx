@@ -183,9 +183,9 @@ function App() {
 
 
           <Route path="/profile/:seller_key" element={
-            <ProtectedRoute>
+         
               < Shoporsellerprofile />
-            </ProtectedRoute>} />
+          } />
 
         </Routes>
       </RouteLoader>

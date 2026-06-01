@@ -25,7 +25,6 @@ const Shoporsellerprofile = () => {
                         },
                     }
                 );
-
                 setBussinessName(res3.data.BusinessName);
                 setAboutUs(res3.data.Aboutus);
                 setProfilePicture(res3.data.profilePicture);
