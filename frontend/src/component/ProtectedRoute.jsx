@@ -1,10 +1,19 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("token");
+  const location = useLocation();
 
   if (!token) {
-    return <Navigate to="/" />;
+    return (
+      <Navigate
+        to="/"
+        state={{
+          redirectTo: location.pathname
+        }}
+        replace
+      />
+    );
   }
 
   return children;
