@@ -183,8 +183,8 @@ function App() {
 
 
           <Route path="/profile/:seller_key" element={
-         
-              < Shoporsellerprofile />
+
+            < Shoporsellerprofile />
           } />
 
         </Routes>

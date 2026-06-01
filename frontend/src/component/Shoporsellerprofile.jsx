@@ -89,7 +89,7 @@ const Shoporsellerprofile = () => {
             <div className="box2shoporsellerprofilebox">
                 <div className="profiledetails">
                     <div onClick={handleprofileimgclick} className="profilepicture">
-                        <img src={profilePicture} alt="Profile" />
+                        <img src={profilePicture || "/E.png"} alt="Profile" />
                     </div>
                     <div className="shoporsellername">
                         <h2>{bussinessname}</h2>
