@@ -34,7 +34,7 @@ const Shoporsellerprofile = () => {
                         headers: { Authorization: `Bearer ${token}` },
                     }
                 );
-
+                console.log("🔥 PROFILE ROUTE HIT - NEW CODE LOADED");
                 console.log("PROFILE API RESPONSE:", res3.data);
 
 
