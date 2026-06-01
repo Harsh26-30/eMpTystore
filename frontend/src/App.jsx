@@ -179,12 +179,14 @@ function App() {
               </ProtectedRoute>
             }
           />
-        </Routes>
 
-        <Route path="/profile/:seller_key" element={
-          <ProtectedRoute>
-            < UserProfile />
-          </ProtectedRoute>} />
+
+          <Route path="/profile/:seller_key" element={
+            <ProtectedRoute>
+              < UserProfile />
+            </ProtectedRoute>} />
+            
+        </Routes>
       </RouteLoader>
     </BrowserRouter>
   )
