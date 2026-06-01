@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import './Shoporsellerprofile.css'; // Import CSS for styling
+import './Shoporsellerprofile.css';
 import axios from 'axios';
 import { useParams } from "react-router-dom";
+import defaultImg from "../assets/E.png";
 
 const Shoporsellerprofile = () => {
     const token = localStorage.getItem("token");
@@ -13,30 +14,24 @@ const Shoporsellerprofile = () => {
     const [profilePicture, setProfilePicture] = useState('');
 
     useEffect(() => {
-        if (!seller_key) return;   // 🚨 STOP undefined calls
+        if (!seller_key) return;
 
         const fetchshoporsellerProfile = async () => {
             try {
-                // const res3 = await axios.get(
-                //     `${import.meta.env.VITE_API_URL}/profile/${seller_key}`,
-                //     {
-                //         headers: {
-                //             Authorization: `Bearer ${token}`,
-                //         },
-                //     }
-                // );
-                // setBussinessName(res3.data.BusinessName);
-                // setAboutUs(res3.data.Aboutus);
-                // setProfilePicture(res3.data.profilePicture);
-                const res3 = await axios.get(
+                const res = await axios.get(
                     `${import.meta.env.VITE_API_URL}/profile/${seller_key}`,
                     {
-                        headers: { Authorization: `Bearer ${token}` },
+                        headers: token
+                            ? { Authorization: `Bearer ${token}` }
+                            : {}
                     }
                 );
-                console.log("🔥 PROFILE ROUTE HIT - NEW CODE LOADED");
-                console.log("PROFILE API RESPONSE:", res3.data);
 
+                console.log("PROFILE API RESPONSE:", res.data);
+
+                setBussinessName(res.data.BusinessName || "");
+                setAboutUs(res.data.Aboutus?.trim() || "About Us");
+                setProfilePicture(res.data.profilePicture || "");
 
             } catch (err) {
                 console.error("Error fetching profile:", err);
@@ -44,40 +39,54 @@ const Shoporsellerprofile = () => {
         };
 
         fetchshoporsellerProfile();
-    }, [token, seller_key]); // ✅ IMPORTANT: Add dependencies
+    }, [seller_key, token]);
 
     const handleblurAboutus = async () => {
         try {
-            await axios.put(`${import.meta.env.VITE_API_URL}/updateprofileAboutus`, { Aboutus: AboutUs }, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            await axios.put(
+                `${import.meta.env.VITE_API_URL}/updateprofileAboutus`,
+                { Aboutus: AboutUs },
+                {
+                    headers: token
+                        ? { Authorization: `Bearer ${token}` }
+                        : {}
+                }
+            );
         } catch (err) {
-            console.error("Error updating shoporseller profile:", err);
+            console.error("Error updating About Us:", err);
         }
     };
 
-    const handleprofileimgclick = async () => {
-        // Logic to handle profile image click (e.g., open file dialog, upload new image, etc.)
+    const handleprofileimgclick = () => {
         setchangeProfilePicformvissible(true);
-    }
+    };
 
     const handleChangeProfilePicSubmit = async (e) => {
         e.preventDefault();
+
         try {
             const fileInput = document.getElementById('profilePictureInput');
+
+            if (!fileInput?.files?.length) return;
+
             const formData = new FormData();
             formData.append('profilePicture', fileInput.files[0]);
-            await axios.put(`${import.meta.env.VITE_API_URL}/updateprofilePicture`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+
+            await axios.put(
+                `${import.meta.env.VITE_API_URL}/updateprofilePicture`,
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                        Authorization: token ? `Bearer ${token}` : ""
+                    },
+                }
+            );
+
         } catch (err) {
             console.error("Error updating profile picture:", err);
         }
+
         setchangeProfilePicformvissible(false);
     };
 
@@ -85,48 +94,83 @@ const Shoporsellerprofile = () => {
         const shareLink = `${window.location.origin}/profile/${seller_key}`;
 
         try {
-            await navigator.share({
-                title: "Check out my profile",
-                url: shareLink,
-            });
+            if (navigator.share) {
+                await navigator.share({
+                    title: "Check out my profile",
+                    url: shareLink,
+                });
+            } else {
+                navigator.clipboard.writeText(shareLink);
+                alert("Link copied to clipboard!");
+            }
         } catch (err) {
-            console.log(err);
+            console.log("Share failed:", err);
         }
     };
+
     return (
         <div className="shoporsellerprofilemainbox">
+
             <div className="box2shoporsellerprofilebox">
+
                 <div className="profiledetails">
-                    <div onClick={handleprofileimgclick} className="profilepicture">
-                        <img src={profilePicture || "/public/E.png"} alt="Profile" />
+                    <div
+                        onClick={handleprofileimgclick}
+                        className="profilepicture"
+                    >
+                        <img
+                            src={profilePicture || defaultImg}
+                            alt="Profile"
+                        />
                     </div>
+
                     <div className="shoporsellername">
                         <h2>{bussinessname}</h2>
                     </div>
                 </div>
+
                 <div className="contactsandaboutmesection">
-                    <textarea type="text" value={AboutUs} onChange={(e) => { setAboutUs(e.target.value) }} onBlur={handleblurAboutus} />
+                    <textarea
+                        value={AboutUs}
+                        onChange={(e) => setAboutUs(e.target.value)}
+                        onBlur={handleblurAboutus}
+                    />
                 </div>
+
             </div>
 
             <div className="profilebuttonsection">
-                <button onClick={handleclickShare} className="ShareProfileButton">Share Profile</button>
+                <button
+                    onClick={handleclickShare}
+                    className="ShareProfileButton"
+                >
+                    Share Profile
+                </button>
             </div>
-
 
             <div className="profilebuttonsection">
-                <button className="ShareProfileButton">Connect To Shop</button>
+                <button className="ShareProfileButton">
+                    Connect To Shop
+                </button>
             </div>
 
-            {changeProfilePicformvisible === true && (
+            {changeProfilePicformvisible && (
                 <div className="changeprofilepicturesection">
                     <form onSubmit={handleChangeProfilePicSubmit}>
-                        <input type="file" id="profilePictureInput" name="profilePicture" accept="image/*" />
-                        <button type="submit">Change Profile Picture</button>
+                        <input
+                            type="file"
+                            id="profilePictureInput"
+                            accept="image/*"
+                        />
+                        <button type="submit">
+                            Change Profile Picture
+                        </button>
                     </form>
                 </div>
             )}
-            <p className="end">---End of these page---</p>
+
+            <p className="end">---End of this page---</p>
+
         </div>
     );
 };
