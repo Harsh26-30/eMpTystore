@@ -8,7 +8,12 @@ const userSchema = new mongoose.Schema({
   },
   name: {
     type: String,
-  }, dob: {
+  },
+  profile:{
+    profilepic: { type: String },
+    Aboutus: { type: String },
+  },
+   dob: {
     type: Date,
   }, gender: {
     type: String,
@@ -38,7 +43,7 @@ const userSchema = new mongoose.Schema({
   pincode: {
     type: String
   },
-  pickup_location: {
+  seller_key: {
     type: String
   },
   myproductid: {

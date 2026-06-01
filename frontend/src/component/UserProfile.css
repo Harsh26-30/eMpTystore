@@ -1,0 +1,170 @@
+.userprofilemainbox {
+    width: 100%;
+    height: 100vh;
+    background-color: rgb(217, 215, 215);
+}
+
+.userprofilemainbox .box2userprofilebox {
+    width: 100%;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background-color: white;
+    border-radius: 30px;
+}
+
+
+.userprofilemainbox .box2userprofilebox .profiledetails {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 2px;
+}
+
+.userprofilemainbox .box2userprofilebox .profiledetails .profilepicture {
+    width: 120px;
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid black;
+    top: 1%;
+}
+
+.userprofilemainbox .box2userprofilebox .profiledetails .profilepicture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.userprofilemainbox .box2userprofilebox .profiledetails .username {
+    text-align: center;
+}
+
+.userprofilemainbox .box2userprofilebox .profiledetails .username h2 {
+    font-size: 30px;
+    font-weight: bold;
+    color: black;
+}
+
+.userprofilemainbox .contactsandaboutmesection {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.userprofilemainbox .contactsandaboutmesection textarea {
+    width: 100%;
+    min-height: 120px;
+    font-size: 15px;
+    font-family: Arial, sans-serif;
+    border: none;
+    outline: none;
+    resize: vertical;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.userprofilemainbox .contactsandaboutmesection textarea:focus {
+    border-bottom: 2px solid red;
+    background-color: rgb(247, 212, 212);
+}
+
+.userprofilemainbox .profilebuttonsection {
+    width: 100%;
+    height: 8%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.userprofilemainbox .profilebuttonsection .ShareProfileButton {
+    width: 90%;
+    height: 40px;
+    background-color: #000;
+    border: none;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #fff;
+
+}
+
+.changeprofilepicturesection {
+    width: 70%;
+    height: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(242, 236, 236);
+    border-radius: 30px;
+    border: 3px solid black;
+    position: absolute;
+    z-index: 5;
+    top:100px;
+    right: 60px;
+}
+
+.changeprofilepicturesection form {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.changeprofilepicturesection form input[type="file"] {
+    width: 80%;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    background-color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.changeprofilepicturesection form button {
+    width: 90%;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    background-color: #000;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.changeprofilepicturesection form button:hover {
+    background-color: grey;
+    color: white;
+}
+
+.end {
+    width: 100%;
+    height: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #000;
+    font-size: 15px;
+    font-family: Arial, sans-serif;
+}

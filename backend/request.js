@@ -28,7 +28,7 @@ const requestSchema = new mongoose.Schema({
     pincode: {
         type: String
     },
-    pickup_location: {
+    seller_key: {
         type: String
     },
     requestof: {

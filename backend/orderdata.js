@@ -29,7 +29,7 @@ const orderSchema = new mongoose.Schema({
     courier_name: { type: String },
     tracking_url: { type: String },
 
-    pickup_location: { type: String },
+    seller_key: { type: String },
 
     payment_method: {
         type: String,

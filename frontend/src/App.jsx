@@ -17,6 +17,7 @@ import Uploadcomponent from './component/uploadcomponent'
 import Shopnox from './component/Shopnox'
 import ForgotPassword from './component/forgotPassword'
 import RouteLoader from './component/Routeloder'
+import UserProfile from './component/UserProfile'
 
 
 function App() {
@@ -166,12 +167,18 @@ function App() {
           <Route
             path="/ForgotPassword"
             element={
-
               < ForgotPassword />
-
             }
           />
 
+          <Route
+            path="/UserProfile"
+            element={
+               <ProtectedRoute>
+                < UserProfile />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
 
       </RouteLoader>

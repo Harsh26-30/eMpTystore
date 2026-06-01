@@ -45,7 +45,7 @@ const Request = () => {
                             { (<p>
                                 Current_Role :- {request.role} <br />
                                 Email :-  {request.email} <br />
-                                pickup_location :- {request.pickup_location}<br />
+                                seller_key :- {request.seller_key}<br />
                                 PhoneNo :- {request.phoneNo} <br />
                                 Country :- {request.country} <br />
                                 State. :-  {request.state} <br />

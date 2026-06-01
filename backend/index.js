@@ -78,12 +78,39 @@ const generateUniqueSlug = async (name) => {
   return slug;
 };
 
-app.get("/profile", authMiddleware, (req, res) => {
+app.get("/myprofile", authMiddleware, async (req, res) => {
+  const finduser = await User.findOne({ email: req.user.email });
   res.json({
     message: "Profile data",
-    user: req.user,
+    BusinessName: finduser.ui.generalinfo.BusinessName,
+    Aboutus: finduser.profile.Aboutus,
+    profilePicture: finduser.profile.profilepic,
     valid: "true"
   });
+});
+
+app.put("/updateprofileAboutus", authMiddleware, async (req, res) => {
+  const finduser = await User.findOne({ email: req.user.email });
+  const { Aboutus } = req.body;
+  await User.findOneAndUpdate(
+    { email: req.user.email },
+    { "profile.Aboutus": Aboutus },
+    { new: true }
+  );
+  res.json({ message: "Profile updated successfully" });
+});
+
+app.put("/updateprofilePicture", upload.single("profilePicture"), authMiddleware, async (req, res) => {
+  const finduser = await User.findOne({ email: req.user.email });
+  const result = await cloudinary.uploader.upload(req.file.path, {
+    folder: "ui-backgrounds",
+  });
+
+   await finduser.updateOne({
+      "profile.profilepic": result.secure_url
+    });
+ 
+  res.json({ message: "Profile updated successfully" });  
 });
 
 app.get("/checkuserinfo", authMiddleware, async (req, res) => {
@@ -131,7 +158,6 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
 
   res.json({
     id: finduser._id,
-    slug: finduser.slug,
     role: finduser.role,
     address: finduser.address,
     country: finduser.country,
@@ -139,7 +165,7 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
     district: finduser.district,
     pincode: finduser.pincode,
     phoneNo: finduser.phoneNo,
-    pickup_location: finduser.pickup_location,
+    seller_key: finduser.seller_key,
     useruidata: finduser.ui,
     productbox: {
 
@@ -178,7 +204,7 @@ app.post("/updateaddress", authMiddleware, async (req, res) => {
         .replace(/[^a-z0-9\s]/g, "")
         .replace(/\s+/g, "_");
 
-    const pickup_location = `${user._id}_${format(district)}`;
+    const seller_key = `${user._id}_${format(user.ui.genralinfo.BusinessName)})}`;
 
     const updatedUser = await User.findOneAndUpdate(
       { email: user.email },
@@ -188,7 +214,7 @@ app.post("/updateaddress", authMiddleware, async (req, res) => {
         state,
         district,
         pincode,
-        pickup_location
+        seller_key
       },
       { new: true }
     );
@@ -327,7 +353,7 @@ app.post("/becomeseller", authMiddleware, async (req, res) => {
       state: finduser.state,
       district: finduser.district,
       pincode: finduser.pincode,
-      pickup_location: finduser.pickup_location,
+      seller_key: finduser.seller_key,
       requestof: "seller"
     });
 
@@ -401,22 +427,11 @@ app.post("/updateproducttoui",
   }
 );
 
-app.get("/shop/:slug", async (req, res) => {
+app.get("/profile/:seller_key",authMiddleware, async (req, res) => {
   try {
-    const { slug } = req.params;
-
-    const user = await User.findOne({ slug: slug });
-
-    if (!user) {
-      return res.status(404).json({ message: "Shop not found" });
-    }
-
-    res.json({
-      _id: user._id,
-      slug: user.slug,
-      businessName: user.ui?.generalinfo?.BusinessName || "No Shop Name"
-    });
-
+    const finduser = await User.findOne({ email: req.user.email });
+    const sharelink = `${window.location.origin}/shop/${finduser.seller}`;
+    res.json({sharelink: sharelink});
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Server error" });

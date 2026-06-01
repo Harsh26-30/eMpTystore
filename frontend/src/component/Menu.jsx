@@ -65,6 +65,12 @@ const Menu = () => {
                     Upload_Component
                 </button>)}
 
+                {(userRole === 'Seller' || userRole === 'Admin' ) && (
+                    <button id='logoutbutton2' onClick={() => navigate("/UserProfile")}>
+                        Profile
+                    </button>
+                )}
+
                 <button id='logoutbutton' onClick={logout}>
                     Logout
                 </button>
