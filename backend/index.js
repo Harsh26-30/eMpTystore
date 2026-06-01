@@ -446,7 +446,7 @@ app.get("/profile/:seller_key", async (req, res) => {
   res.json({
     id: seller._id,
     BusinessName: seller.ui.generalinfo.BusinessName,
-    Aboutus: seller.profile.Aboutus,
+    Aboutus: seller.profile.Aboutus || " ",
     profilePicture: seller.profile.profilepic
   });
 });
