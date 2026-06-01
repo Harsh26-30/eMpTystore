@@ -18,6 +18,7 @@ import Shopnox from './component/Shopnox'
 import ForgotPassword from './component/forgotPassword'
 import RouteLoader from './component/Routeloder'
 import UserProfile from './component/UserProfile'
+import Shoporsellerprofile from './component/Shoporsellerprofile'
 
 
 function App() {
@@ -183,9 +184,9 @@ function App() {
 
           <Route path="/profile/:seller_key" element={
             <ProtectedRoute>
-              < UserProfile />
+              < Shoporsellerprofile />
             </ProtectedRoute>} />
-            
+
         </Routes>
       </RouteLoader>
     </BrowserRouter>

@@ -427,7 +427,7 @@ app.post("/updateproducttoui",
   }
 );
 
-app.get("/profile/:seller_key", authMiddleware, async (req, res) => {
+app.get("/profile/:seller_key", async (req, res) => {
   const seller = await User.findOne({
     seller_key: req.params.seller_key
   });

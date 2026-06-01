@@ -1,46 +1,42 @@
 import React, { useEffect, useState } from 'react';
-import './UserProfile.css'; // Import CSS for styling
+import './Shoporsellerprofile.css'; // Import CSS for styling
 import axios from 'axios';
+import { useParams } from "react-router-dom";
 
-
-const UserProfile = () => {
+const Shoporsellerprofile = () => {
     const token = localStorage.getItem("token");
+    const { seller_key } = useParams();
 
     const [bussinessname, setBussinessName] = useState('');
     const [AboutUs, setAboutUs] = useState('About Us');
-    const [userRole, setuserRole] = useState('');
     const [changeProfilePicformvisible, setchangeProfilePicformvissible] = useState(false);
     const [profilePicture, setProfilePicture] = useState('');
-    const [sellerKey, setSellerKey] = useState('');
 
     useEffect(() => {
-        // Fetch user profile data from the backend API
-        const fetchUserProfile = async () => {
-            try {
-                const res = await axios.get(`${import.meta.env.VITE_API_URL}/myprofile`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                setBussinessName(res.data.BusinessName);
-                setAboutUs(res.data.Aboutus);
-                setProfilePicture(res.data.profilePicture);
-                const res2 = await axios.get(`${import.meta.env.VITE_API_URL}/checkuserinfo`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
+        if (!seller_key) return;   // 🚨 STOP undefined calls
 
-                setuserRole(res2.data.role);
-                setSellerKey(res2.data.seller_key);
+        const fetchshoporsellerProfile = async () => {
+            try {
+                const res3 = await axios.get(
+                    `${import.meta.env.VITE_API_URL}/profile/${seller_key}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+
+                setBussinessName(res3.data.BusinessName);
+                setAboutUs(res3.data.Aboutus);
+                setProfilePicture(res3.data.profilePicture);
 
             } catch (err) {
-                console.error("Error fetching user profile:", err);
+                console.error("Error fetching profile:", err);
             }
         };
 
-        fetchUserProfile();
-    }, []);
+        fetchshoporsellerProfile();
+    }, [token, seller_key]); // ✅ IMPORTANT: Add dependencies
 
     const handleblurAboutus = async () => {
         try {
@@ -50,7 +46,7 @@ const UserProfile = () => {
                 },
             });
         } catch (err) {
-            console.error("Error updating user profile:", err);
+            console.error("Error updating shoporseller profile:", err);
         }
     };
 
@@ -78,7 +74,7 @@ const UserProfile = () => {
     };
 
     const handleclickShare = async () => {
-        const shareLink = `${window.location.origin}/profile/${sellerKey}`;
+        const shareLink = `${window.location.origin}/profile/${seller_key}`;
 
         try {
             await navigator.share({
@@ -90,13 +86,13 @@ const UserProfile = () => {
         }
     };
     return (
-        <div className="userprofilemainbox">
-            <div className="box2userprofilebox">
+        <div className="shoporsellerprofilemainbox">
+            <div className="box2shoporsellerprofilebox">
                 <div className="profiledetails">
                     <div onClick={handleprofileimgclick} className="profilepicture">
                         <img src={profilePicture} alt="Profile" />
                     </div>
-                    <div className="username">
+                    <div className="shoporsellername">
                         <h2>{bussinessname}</h2>
                     </div>
                 </div>
@@ -104,11 +100,16 @@ const UserProfile = () => {
                     <textarea type="text" value={AboutUs} onChange={(e) => { setAboutUs(e.target.value) }} onBlur={handleblurAboutus} />
                 </div>
             </div>
-            {userRole === "Seller" && (
-                <div className="profilebuttonsection">
-                    <button onClick={handleclickShare} className="ShareProfileButton">Share Profile</button>
-                </div>
-            )}
+
+            <div className="profilebuttonsection">
+                <button onClick={handleclickShare} className="ShareProfileButton">Share Profile</button>
+            </div>
+
+
+            <div className="profilebuttonsection">
+                <button className="ShareProfileButton">Connect To Shop</button>
+            </div>
+
             {changeProfilePicformvisible === true && (
                 <div className="changeprofilepicturesection">
                     <form onSubmit={handleChangeProfilePicSubmit}>
@@ -122,4 +123,4 @@ const UserProfile = () => {
     );
 };
 
-export default UserProfile;
+export default Shoporsellerprofile;
