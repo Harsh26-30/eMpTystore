@@ -65,18 +65,18 @@ const createSlug = (text) => {
     .replace(/[^\w-]+/g, "");
 };
 
-const generateUniqueSlug = async (name) => {
-  let baseSlug = createSlug(name);
-  let slug = baseSlug;
+// const generateUniqueSlug = async (name) => {
+//   let baseSlug = createSlug(name);
+//   let slug = baseSlug;
 
-  let count = 1;
-  while (await User.findOne({ slug })) {
-    slug = `${baseSlug}-${count}`;
-    count++;
-  }
+//   let count = 1;
+//   while (await User.findOne({ slug })) {
+//     slug = `${baseSlug}-${count}`;
+//     count++;
+//   }
 
-  return slug;
-};
+//   return slug;
+// };
 
 app.get("/myprofile", authMiddleware, async (req, res) => {
   const finduser = await User.findOne({ email: req.user.email });
@@ -86,6 +86,57 @@ app.get("/myprofile", authMiddleware, async (req, res) => {
     Aboutus: finduser.profile.Aboutus,
     profilePicture: finduser.profile.profilepic,
     valid: "true"
+  });
+});
+
+app.put("/shoporsellerprofile", authMiddleware, async (req, res) => {
+  try {
+    const { id } = req.body;
+
+    if (!id) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+
+    const finduser = await User.findById(id);
+
+    if (!finduser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.json({
+      BusinessName: finduser.ui?.generalinfo?.BusinessName || "",
+      Aboutus: finduser.profile?.Aboutus || "",
+      profilePicture: finduser.profile?.profilepic || "",
+      valid: true
+    });
+
+  } catch (err) {
+    console.error("shoporsellerprofile error:", err);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+app.get("/profile/:id", async (req, res) => {
+  const user = await User.findOne({
+    _id: req.params.id
+  });
+
+  if (!user) {
+    return res.status(404).json({ message: "user not found" });
+  }
+
+  console.log("user PROFILE:", {
+    id: user._id,
+    BusinessName: user.ui.generalinfo.BusinessName,
+    Aboutus: user.profile.Aboutus,
+    profilePicture: user.profile.profilepic
+  });
+
+  res.json({
+    id: user._id,
+    BusinessName: user.ui.generalinfo.BusinessName || "",
+    Aboutus: user.profile.Aboutus || "",
+    profilePicture: user.profile.profilepic || ""
   });
 });
 
@@ -427,29 +478,6 @@ app.post("/updateproducttoui",
   }
 );
 
-app.get("/profile/:seller_key", async (req, res) => {
-  const seller = await User.findOne({
-    seller_key: req.params.seller_key
-  });
-
-  if (!seller) {
-    return res.status(404).json({ message: "Seller not found" });
-  }
-
-  console.log("SELLER PROFILE:", {
-    id: seller._id,
-    BusinessName: seller.ui.generalinfo.BusinessName,
-    Aboutus: seller.profile.Aboutus,
-    profilePicture: seller.profile.profilepic
-  });
-
-  res.json({
-    id: seller._id,
-    BusinessName: seller.ui.generalinfo.BusinessName,
-    Aboutus: seller.profile.Aboutus || " ",
-    profilePicture: seller.profile.profilepic
-  });
-});
 
 app.post("/updateshoplistcustomerlist", authMiddleware, async (req, res) => {
   try {

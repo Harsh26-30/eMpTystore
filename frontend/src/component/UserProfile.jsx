@@ -1,22 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import './UserProfile.css'; // Import CSS for styling
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 
 const UserProfile = () => {
     const token = localStorage.getItem("token");
+    const data = useParams();
+
 
     const [bussinessname, setBussinessName] = useState('');
     const [AboutUs, setAboutUs] = useState('About Us');
     const [userRole, setuserRole] = useState('');
     const [changeProfilePicformvisible, setchangeProfilePicformvissible] = useState(false);
     const [profilePicture, setProfilePicture] = useState('');
-    const [sellerKey, setSellerKey] = useState('');
+    const [sellerId, setSellerId] = useState('');
+    const [currentUserId, setcurrentUserId] = useState('');
+
+
 
     useEffect(() => {
         // Fetch user profile data from the backend API
         const fetchUserProfile = async () => {
             try {
+
                 const res = await axios.get(`${import.meta.env.VITE_API_URL}/myprofile`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -25,14 +32,30 @@ const UserProfile = () => {
                 setBussinessName(res.data.BusinessName);
                 setAboutUs(res.data.Aboutus);
                 setProfilePicture(res.data.profilePicture);
+
+
+
                 const res2 = await axios.get(`${import.meta.env.VITE_API_URL}/checkuserinfo`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-
                 setuserRole(res2.data.role);
-                setSellerKey(res2.data.seller_key);
+                setcurrentUserId(res2.data.id);
+
+
+                if (data) {
+                    const resParam = await axios.put(`${import.meta.env.VITE_API_URL}/shoporsellerprofile`, { id: data.id }, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+                    setSellerId(resParam.data.id || "");
+                    setBussinessName(resParam.data.BusinessName || "");
+                    setAboutUs(resParam.data.Aboutus || "");
+                    setProfilePicture(resParam.data.profilePicture || "");
+                }
+
 
             } catch (err) {
                 console.error("Error fetching user profile:", err);
@@ -78,7 +101,7 @@ const UserProfile = () => {
     };
 
     const handleclickShare = async () => {
-        const shareLink = `${window.location.origin}/profile/${sellerKey}`;
+        const shareLink = `${window.location.origin}/profile/${currentUserId}`;
 
         try {
             await navigator.share({
@@ -89,12 +112,34 @@ const UserProfile = () => {
             console.log(err);
         }
     };
+
+    const handleclickConnectToShop = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await axios.post(
+                `${import.meta.env.VITE_API_URL}/buildconnection`,
+                { id: sellerId },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            console.log(res.data);
+
+        } catch (err) {
+            console.log("Search error:", err);
+        }
+
+    };
+
     return (
         <div className="userprofilemainbox">
             <div className="box2userprofilebox">
                 <div className="profiledetails">
                     <div onClick={handleprofileimgclick} className="profilepicture">
-                        <img src={profilePicture} alt="Profile" />
+                        <img src={profilePicture || "/E.png"} alt="Profile" />
                     </div>
                     <div className="username">
                         <h2>{bussinessname}</h2>
@@ -107,6 +152,12 @@ const UserProfile = () => {
             {userRole === "Seller" && (
                 <div className="profilebuttonsection">
                     <button onClick={handleclickShare} className="ShareProfileButton">Share Profile</button>
+                </div>
+            )}
+
+            {currentUserId !== sellerId && (
+                <div className="profilebuttonsection">
+                    <button onClick={handleclickConnectToShop} className="ConnectToShopButton">Connect To Shop</button>
                 </div>
             )}
             {changeProfilePicformvisible === true && (
