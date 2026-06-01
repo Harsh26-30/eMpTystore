@@ -427,7 +427,7 @@ app.post("/updateproducttoui",
   }
 );
 
-app.get("/profile/:seller_key",authMiddleware, async (req, res) => {
+app.get("/profile/:seller_key", async (req, res) => {
   try {
     const finduser = await User.findOne({ email: req.user.email });
     const sharelink = `${window.location.origin}/shop/${finduser.seller}`;
