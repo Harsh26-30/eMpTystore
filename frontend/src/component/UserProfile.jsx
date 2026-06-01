@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import './UserProfile.css'; // Import CSS for styling
 import axios from 'axios';
+import { useParams } from "react-router-dom";
 
 const UserProfile = () => {
     const token = localStorage.getItem("token");
+    const { seller_key } = useParams();
 
     const [bussinessname, setBussinessName] = useState('');
     const [AboutUs, setAboutUs] = useState('About Us');
@@ -29,8 +31,21 @@ const UserProfile = () => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                setuserRole(res2.data.role);
-                setSellerKey(res2.data.seller_key);
+                if (res2.data.role === "Seller") {
+                    setuserRole(res2.data.role);
+                    setSellerKey(res2.data.seller_key);
+                }
+                const res3 = await axios.get(
+                    `${import.meta.env.VITE_API_URL}/profile/${seller_key}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+                setBussinessName(res3.data.BusinessName);
+                setAboutUs(res3.data.Aboutus);
+                setProfilePicture(res3.data.profilePicture);
             } catch (err) {
                 console.error("Error fetching user profile:", err);
             }
