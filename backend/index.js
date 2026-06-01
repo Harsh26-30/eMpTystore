@@ -429,12 +429,27 @@ app.post("/updateproducttoui",
 
 app.get("/profile/:seller_key", async (req, res) => {
   try {
-    const finduser = await User.findOne({ email: req.user.email });
-    const sharelink = `${window.location.origin}/shop/${finduser.seller_key}`;
-    res.json({sharelink: sharelink});
+    const user = await User.findOne({
+      seller_key: req.params.seller_key
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        message: "Profile not found"
+      });
+    }
+
+    res.json({
+      id: user._id,
+      BusinessName: user.ui.generalinfo.BusinessName,
+      Aboutus: user.profile.Aboutus,
+      profilePicture: user.profile.profilepic
+    });
+
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({
+      message: "Server Error"
+    });
   }
 });
 
