@@ -436,6 +436,13 @@ app.get("/profile/:seller_key", async (req, res) => {
     return res.status(404).json({ message: "Seller not found" });
   }
 
+  console.log("SELLER PROFILE:", {
+    id: seller._id,
+    BusinessName: seller.ui.generalinfo.BusinessName,
+    Aboutus: seller.profile.Aboutus,
+    profilePicture: seller.profile.profilepic
+  });
+
   res.json({
     id: seller._id,
     BusinessName: seller.ui.generalinfo.BusinessName,
