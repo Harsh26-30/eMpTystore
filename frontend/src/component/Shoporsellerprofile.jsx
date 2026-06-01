@@ -28,6 +28,8 @@ const Shoporsellerprofile = () => {
                 setBussinessName(res3.data.BusinessName);
                 setAboutUs(res3.data.Aboutus);
                 setProfilePicture(res3.data.profilePicture);
+                console.log("seller_key:", seller_key);
+console.log("API URL:", `${import.meta.env.VITE_API_URL}/profile/${seller_key}`);
 
             } catch (err) {
                 console.error("Error fetching profile:", err);
