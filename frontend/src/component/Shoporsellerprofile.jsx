@@ -17,17 +17,25 @@ const Shoporsellerprofile = () => {
 
         const fetchshoporsellerProfile = async () => {
             try {
+                // const res3 = await axios.get(
+                //     `${import.meta.env.VITE_API_URL}/profile/${seller_key}`,
+                //     {
+                //         headers: {
+                //             Authorization: `Bearer ${token}`,
+                //         },
+                //     }
+                // );
+                // setBussinessName(res3.data.BusinessName);
+                // setAboutUs(res3.data.Aboutus);
+                // setProfilePicture(res3.data.profilePicture);
                 const res3 = await axios.get(
                     `${import.meta.env.VITE_API_URL}/profile/${seller_key}`,
                     {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
+                        headers: { Authorization: `Bearer ${token}` },
                     }
                 );
-                setBussinessName(res3.data.BusinessName);
-                setAboutUs(res3.data.Aboutus);
-                setProfilePicture(res3.data.profilePicture);
+
+                console.log("PROFILE API RESPONSE:", res3.data);
 
 
             } catch (err) {
