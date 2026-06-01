@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './Shoporsellerprofile.css';
 import axios from 'axios';
 import { useParams } from "react-router-dom";
-import defaultImg from "../assets/E.png";
+import defaultImg from "/src/assets/logo.png";
 
 const Shoporsellerprofile = () => {
     const token = localStorage.getItem("token");
