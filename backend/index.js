@@ -430,7 +430,7 @@ app.post("/updateproducttoui",
 app.get("/profile/:seller_key", async (req, res) => {
   try {
     const finduser = await User.findOne({ email: req.user.email });
-    const sharelink = `${window.location.origin}/shop/${finduser.seller}`;
+    const sharelink = `${window.location.origin}/shop/${finduser.seller_key}`;
     res.json({sharelink: sharelink});
   } catch (err) {
     console.log(err);
