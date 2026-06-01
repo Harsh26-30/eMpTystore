@@ -427,30 +427,21 @@ app.post("/updateproducttoui",
   }
 );
 
-app.get("/profile/:seller_key", async (req, res) => {
-  try {
-    const user = await User.findOne({
-      seller_key: req.params.seller_key
-    });
+app.get("/profile/:seller_key", authMiddleware, async (req, res) => {
+  const seller = await User.findOne({
+    seller_key: req.params.seller_key
+  });
 
-    if (!user) {
-      return res.status(404).json({
-        message: "Profile not found"
-      });
-    }
-
-    res.json({
-      id: user._id,
-      BusinessName: user.ui.generalinfo.BusinessName,
-      Aboutus: user.profile.Aboutus,
-      profilePicture: user.profile.profilepic
-    });
-
-  } catch (err) {
-    res.status(500).json({
-      message: "Server Error"
-    });
+  if (!seller) {
+    return res.status(404).json({ message: "Seller not found" });
   }
+
+  res.json({
+    id: seller._id,
+    BusinessName: seller.ui.generalinfo.BusinessName,
+    Aboutus: seller.profile.Aboutus,
+    profilePicture: seller.profile.profilepic
+  });
 });
 
 app.post("/updateshoplistcustomerlist", authMiddleware, async (req, res) => {
