@@ -174,13 +174,17 @@ function App() {
           <Route
             path="/UserProfile"
             element={
-               <ProtectedRoute>
+              <ProtectedRoute>
                 < UserProfile />
               </ProtectedRoute>
             }
           />
         </Routes>
 
+        <Route path="/profile/:seller_key" element={
+          <ProtectedRoute>
+            < UserProfile />
+          </ProtectedRoute>} />
       </RouteLoader>
     </BrowserRouter>
   )
