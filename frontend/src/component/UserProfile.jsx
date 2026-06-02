@@ -168,13 +168,13 @@ const UserProfile = () => {
                     {userRole === "Customer" && <p className="contactdetails">{AboutUs}</p>}
                 </div>
             </div>
-            {userRole === "Seller" && (
+            {userRole === "Seller" || userRole === "Customer" && (
                 <div className="profilebuttonsection">
                     <button onClick={handleclickShare} className="ShareProfileButton">Share Profile</button>
                 </div>
             )}
 
-            { currentUserId && currentUserId !== SellerId && (
+            { currentUserId && currentUserId !== SellerId && userRole === "Customer" && (
                  <div className="profilebuttonsection">
                     <button onClick={handleclickConnectToShop} className="ConnectToShopButton">Connect To Shop</button>
                     </div>
