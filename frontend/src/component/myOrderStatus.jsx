@@ -6,11 +6,8 @@ import Header2 from './header2'
 
 const myOrderStatus = () => {
   const token = localStorage.getItem("token");
-  const [orderStatus, setOrderStatus] = useState('');
-  const [orderName, setOrderName] = useState('');
-  const [sellerOrShopName, setSellerOrShopName] = useState('');
-  const [customerName, setCustomerName] = useState('');
-  const [customerContact, setCustomerContact] = useState('');
+  const [Orders, setOrders] = useState([]);
+  
   useEffect(() => {
     if (!token) return; 
     const fetchOrderStatus = async () => {
@@ -20,11 +17,7 @@ const myOrderStatus = () => {
             Authorization: `Bearer ${token}`
           }
         });
-        setOrderStatus(res.data.orders.orderStatus);
-        setOrderName(res.data.orders.orderName);
-        setSellerOrShopName(res.data.orders.sellerOrShopName);
-        setCustomerName(res.data.orders.customerName);
-        setCustomerContact(res.data.orders.customerContact);
+        setOrders(res.data.orders);
 
       } catch (error) {
         console.error("Error fetching order status:", error);
@@ -42,14 +35,14 @@ const myOrderStatus = () => {
           <img src="\E.png" alt="Search" />
         </div>
         <div id='orderdetailmyorderstatus'>
-          <h3>Odered Item: {orderName || "Not mentioned"}</h3>
-          <h3>Seller Name: {sellerOrShopName || "Not mentioned"}</h3>
-          <h3>Customer Name: {customerName || "Not mentioned"}</h3>
-          <h3>Customer Contact: {customerContact || "Not mentioned"}</h3>
+          <h3>Odered Item: {Orders.orderName || "Not mentioned"}</h3>
+          <h3>Seller Name: {Orders.sellerOrShopName || "Not mentioned"}</h3>
+          <h3>Customer Name: {Orders.customerName || "Not mentioned"}</h3>
+          <h3>Customer Contact: {Orders.customerContact || "Not mentioned"}</h3>
         </div>
         <h3>Order Status</h3>
-        <div style={{ backgroundColor: orderStatus === 'pending' ? 'grey' : orderStatus === 'Confirm' ? 'Green' : orderStatus === 'preparing' ? 'Blue' : orderStatus === 'OFD' ? 'Yellow' : '' }} id='orderstatusmyorderstatus'>
-          <h4>{orderStatus || "Analysing..."}</h4>
+        <div style={{ backgroundColor: Orders.orderStatus === 'pending' ? 'grey' : Orders.orderStatus === 'Confirm' ? 'Green' : Orders.orderStatus === 'preparing' ? 'Blue' : Orders.orderStatus === 'OFD' ? 'Yellow' : '' }} id='orderstatusmyorderstatus'>
+          <h4>{Orders.orderStatus || "Analysing..."}</h4>
         </div>
       </div>
     </div>
