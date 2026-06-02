@@ -89,59 +89,59 @@ app.get("/myprofile", authMiddleware, async (req, res) => {
   });
 });
 
-app.put("/shoporsellerprofile", authMiddleware, async (req, res) => {
-  try {
-    const { id } = req.body;
+// app.put("/shoporsellerprofile", authMiddleware, async (req, res) => {
+//   try {
+//     const { id } = req.body;
 
-    if (!id) {
-      return res.status(400).json({ message: "User ID is required" });
-    }
+//     if (!id) {
+//       return res.status(400).json({ message: "User ID is required" });
+//     }
 
-    const finduser = await User.findById({ _id: id });
+//     const finduser = await User.findById({ _id: id });
 
-    if (!finduser) {
-      return res.status(404).json({ message: "User not found" });
-    }
+//     if (!finduser) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
 
-    console.log("shoporsellerprofile - found user:", finduser._id);
+//     console.log("shoporsellerprofile - found user:", finduser._id);
 
-    return res.json({
-      id: finduser._id,
-      BusinessName: finduser.ui?.generalinfo?.BusinessName || "",
-      Aboutus: finduser.profile?.Aboutus || "",
-      profilePicture: finduser.profile?.profilepic || "",
-      valid: true
-    });
+//     return res.json({
+//       id: finduser._id,
+//       BusinessName: finduser.ui?.generalinfo?.BusinessName || "",
+//       Aboutus: finduser.profile?.Aboutus || "",
+//       profilePicture: finduser.profile?.profilepic || "",
+//       valid: true
+//     });
 
-  } catch (err) {
-    console.error("shoporsellerprofile error:", err);
-    return res.status(500).json({ message: "Internal Server Error" });
-  }
-});
-
-// app.get("/profile/:id", async (req, res) => {
-//   const user = await User.findOne({
-//     _id: req.params.id
-//   });
-
-//   if (!user) {
-//     return res.status(404).json({ message: "user not found" });
+//   } catch (err) {
+//     console.error("shoporsellerprofile error:", err);
+//     return res.status(500).json({ message: "Internal Server Error" });
 //   }
-
-//   console.log("user PROFILE:", {
-//     id: user._id,
-//     BusinessName: user.ui.generalinfo.BusinessName,
-//     Aboutus: user.profile.Aboutus,
-//     profilePicture: user.profile.profilepic
-//   });
-
-//   res.json({
-//     id: user._id,
-//     BusinessName: user.ui.generalinfo.BusinessName || "",
-//     Aboutus: user.profile.Aboutus || "",
-//     profilePicture: user.profile.profilepic || ""
-//   });
 // });
+
+app.get("/shoporsellerprofile/:id", async (req, res) => {
+  const user = await User.findOne({
+    _id: req.params.id
+  });
+
+  if (!user) {
+    return res.status(404).json({ message: "user not found" });
+  }
+
+  console.log("user PROFILE:", {
+    id: user._id,
+    BusinessName: user.ui.generalinfo.BusinessName,
+    Aboutus: user.profile.Aboutus,
+    profilePicture: user.profile.profilepic
+  });
+
+  res.json({
+    id: user._id,
+    BusinessName: user.ui.generalinfo.BusinessName || "",
+    Aboutus: user.profile.Aboutus || "",
+    profilePicture: user.profile.profilepic || ""
+  });
+});
 
 app.put("/updateprofileAboutus", authMiddleware, async (req, res) => {
   const finduser = await User.findOne({ email: req.user.email });

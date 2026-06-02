@@ -53,7 +53,7 @@ const UserProfile = () => {
         useEffect(() => {
         async function fetchProfileData() {
             if (id) {
-                const resParam = await axios.put(`${import.meta.env.VITE_API_URL}/shoporsellerprofile`, { id }, {
+                const resParam = await axios.put(`${import.meta.env.VITE_API_URL}/shoporsellerprofile/${id}`, { id }, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
