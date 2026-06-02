@@ -5,9 +5,6 @@ import './auth.css'
 
 
 const auth = ({ setvalid }) => {
-  useEffect(() => {
-    localStorage.removeItem("token");
-  }, []);
   const [visibilty, setvisibilty] = useState('signup')
   return (
     <div id='authpage'>
