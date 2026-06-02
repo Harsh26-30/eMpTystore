@@ -174,7 +174,7 @@ const UserProfile = () => {
                 </div>
             )}
 
-            { currentUserId && currentUserId !== SellerId && userRole === "Customer" && (
+            { userRole === "Customer" && (
                  <div className="profilebuttonsection">
                     <button onClick={handleclickConnectToShop} className="ConnectToShopButton">Connect To Shop</button>
                     </div>
