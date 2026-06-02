@@ -123,8 +123,6 @@ const UserProfile = () => {
     };
 
     const handleclickConnectToShop = async (e) => {
-        e.preventDefault();
-
         try {
             // not logged in → send to login with state
             if (!token) {
@@ -143,7 +141,8 @@ const UserProfile = () => {
                     },
                 }
             );
-            console.log(res.data);
+            alert(res.data.message);
+            navigate(-1);
 
         } catch (err) {
             console.log("Search error:", err);
@@ -174,7 +173,7 @@ const UserProfile = () => {
                 </div>
             )}
 
-            {SellerId && currentUserId && currentUserId !== SellerId && (
+            { currentUserId && currentUserId !== SellerId && (
                     <button onClick={handleclickConnectToShop} className="ConnectToShopButton">Connect To Shop</button>
             )}
             {changeProfilePicformvisible === true && userRole && (
