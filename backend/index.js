@@ -222,6 +222,18 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
 
 });
 
+app.get("/myOrderStatus", authMiddleware, async (req, res) => {
+  try {
+    const finduser = await User.findOne({ email: req.user.email });
+    const orders = await Order.find({customerid: finduser._id});
+    res.json({ orders });
+  } catch (error) {
+    console.error("Error fetching order status:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+
+});
+
 app.post("/updateaddress", authMiddleware, async (req, res) => {
   try {
     const user = await User.findOne({ email: req.user.email });

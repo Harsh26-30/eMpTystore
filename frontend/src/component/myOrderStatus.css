@@ -1,0 +1,64 @@
+#mainboxmyorderstatus{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#mainboxmyorderstatus #boxmyorderstatus{
+    width: 90%;
+    height: 55%;
+    margin-top: 20px;
+    border-radius: 20px;
+    border: 2px solid #000;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    font-family: sans-serif;
+    box-shadow: 2px 2px 10px 10px rgba(0, 0, 0, 0.1);
+}
+
+#mainboxmyorderstatus #boxmyorderstatus #box1myorderstatus{
+    width: 90%;
+    height: 45%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+    border-radius: 20px;
+}
+
+#mainboxmyorderstatus #boxmyorderstatus #box1myorderstatus img{
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+}
+
+#mainboxmyorderstatus #boxmyorderstatus #orderdetailmyorderstatus{
+    width: 90%;
+    height: 25%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+#mainboxmyorderstatus #boxmyorderstatus #orderstatusmyorderstatus {
+   width: 90%;
+   height: 12%;
+   border-radius: 10px;
+   display: flex;
+   justify-content: center;
+    align-items: center;
+   background-color: rgb(6, 174, 6);
+}
+
+#mainboxmyorderstatus #boxmyorderstatus #orderstatusmyorderstatus h4{
+    font-size: 30px;
+    color: #104f0a;
+    font-family: sans-serif;
+    
+}

@@ -33,6 +33,13 @@
     border: none;
 }
 
+#mainboxheader2 #box2header2 #box23header2 button:hover {
+    width: 80%;
+    height: 100%;
+    background-color: rgb(161, 154, 154);
+    border-radius: 20px;
+}
+
 #mainboxheader2 #box2header2 #box23header2 button img{
     width: 40px;
 }
