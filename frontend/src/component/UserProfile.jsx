@@ -134,14 +134,13 @@ const UserProfile = () => {
 
             const res = await axios.post(
                 `${import.meta.env.VITE_API_URL}/buildconnection`,
-                { id: SellerId },
+                { connectionid: SellerId },
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 }
             );
-
             console.log(res.data);
 
         } catch (err) {
