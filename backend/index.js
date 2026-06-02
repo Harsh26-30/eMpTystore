@@ -249,7 +249,7 @@ app.get("/myOrderStatus", authMiddleware, async (req, res) => {
       sellerOrShopName: seller?.name || "Unknown Seller",
       customerName: finduser.name,
       customerContact: finduser.phoneNo,
-      productImg: productInfo.productimage
+      productImage: productInfo.productimage
     });
 
   } catch (error) {
