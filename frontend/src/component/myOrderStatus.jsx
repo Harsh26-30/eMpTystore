@@ -29,7 +29,8 @@ const MyOrderStatus = () => {
   return (
     <div id='mainboxmyorderstatus'>
       <Header2 />
-      <div id='boxmyorderstatus'>
+      {Orders.map((order) => (
+      <div  key={order._id} id='boxmyorderstatus'>
         <div id='box1myorderstatus'>
           <img src="\E.png" alt="Search" />
         </div>
@@ -44,6 +45,7 @@ const MyOrderStatus = () => {
           <h4>{Orders.orderStatus || "Analysing..."}</h4>
         </div>
       </div>
+      ))}
     </div>
   )
 }
