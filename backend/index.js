@@ -225,11 +225,11 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
 
 app.post("/myOrderStatus", authMiddleware, async (req, res) => {
   try {
-    const finduser = await User.findOne({
+    const finduser = await User.find({
       email: req.user.email
     });
 
-    const order = await Order.findOne({
+    const order = await Order.find({
       customerid: finduser._id
     });
 
@@ -243,14 +243,24 @@ app.post("/myOrderStatus", authMiddleware, async (req, res) => {
 
     const productInfo = await Product.findById(order.productid);
 
-    res.json({
-      orderStatus: order.orderstatus,
-      orderName: order.productname,
-      sellerOrShopName: seller?.name || "Unknown Seller",
-      customerName: finduser.name,
-      customerContact: finduser.phoneNo,
-      productImage: productInfo.productimage
-    });
+      const orderData = await Promise.all(
+      orders.map(async (order) => {
+        const seller = await User.findById(order.sellerid);
+        const product = await Product.findById(order.productid);
+
+        return {
+          _id: order._id,
+          orderStatus: order.orderstatus,
+          orderName: order.productname,
+          sellerOrShopName: seller?.name || "Unknown Seller",
+          customerName: finduser.name,
+          customerContact: finduser.phoneNo,
+          productImage: product?.productimage || ""
+        };
+      })
+    );
+
+    res.json(orderData);
 
   } catch (error) {
     console.error("Error fetching order status:", error);

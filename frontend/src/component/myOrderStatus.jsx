@@ -7,12 +7,7 @@ import Header2 from './header2'
 const MyOrderStatus = () => {
   const token = localStorage.getItem("token");
 
-  const [orderStatus, setOrderStatus] = useState('');
-  const [orderName, setOrderName] = useState('');
-  const [sellerOrShopName, setSellerOrShopName] = useState('');
-  const [customerName, setCustomerName] = useState('');
-  const [customerContact, setCustomerContact] = useState('');
-  const [productImage, setProductImage] = useState('');
+  const [orders, setOrders] = useState([]);
   useEffect(() => {
     if (!token) return; 
     const fetchOrderStatus = async () => {
@@ -26,12 +21,7 @@ const MyOrderStatus = () => {
                     },
                 }
             );
-        setOrderStatus(res.data.orderStatus);
-        setOrderName(res.data.orderName);
-        setSellerOrShopName(res.data.sellerOrShopName);
-        setCustomerName(res.data.customerName);
-        setCustomerContact(res.data.customerContact);
-        setProductImage(res.data.productImage);
+        setOrders(res.data);
 
       } catch (error) {
         console.error("Error fetching order status:", error);
@@ -44,28 +34,30 @@ const MyOrderStatus = () => {
   return (
     <div id='mainboxmyorderstatus'>
       <Header2 />
-      <div id='boxmyorderstatus'>
+      {orders.map((order) => (
+      <div  key={order._id} id='boxmyorderstatus'>
         <div id='box1myorderstatus'>
-          <img src={productImage} alt="Product Image" />
+          <img src={order.productImage} alt="Product Image" />
         </div>
         <div id='orderdetailmyorderstatus'>
-          <h3>Odered Item: {orderName || "Not mentioned"}</h3>
-          <h3>Seller Name: {sellerOrShopName || "Not mentioned"}</h3>
-          <h3>Customer Name: {customerName || "Not mentioned"}</h3>
-          <h3>Customer Contact: {customerContact || "Not mentioned"}</h3>
+          <h3>Odered Item: {order.orderName || "Not mentioned"}</h3>
+          <h3>Seller Name: {order.sellerOrShopName || "Not mentioned"}</h3>
+          <h3>Customer Name: {order.customerName || "Not mentioned"}</h3>
+          <h3>Customer Contact: {order.customerContact || "Not mentioned"}</h3>
         </div>
         <h3>Order Status</h3>
-        <div style={{ backgroundColor: orderStatus === 'pending' ?
-           'grey' : orderStatus === 'Confirm' ?
-            'Green' : orderStatus === 'preparing' ?
-             'Blue' : orderStatus === 'OFD' ? 'Yellow' : '' }} 
+        <div style={{ backgroundColor: order.orderStatus === 'pending' ?
+           'grey' : order.orderStatus === 'Confirm' ?
+            'Green' : order.orderStatus === 'preparing' ?
+             'Blue' : order.orderStatus === 'OFD' ? 'Yellow' : '' }} 
              id='orderstatusmyorderstatus'>
-          <h4 style={{color: orderStatus === 'pending' ?
-           'grey' : orderStatus === 'Confirm' ?
-            'DarkGreen' : orderStatus === 'preparing' ?
-             'DarkBlue' : orderStatus === 'OFD' ? 'Orange' : '' }} >{orderStatus || "Analysing..."}</h4>
+          <h4 style={{color: order.orderStatus === 'pending' ?
+           'grey' : order.orderStatus === 'Confirm' ?
+            'DarkGreen' : order.orderStatus === 'preparing' ?
+             'DarkBlue' : order.orderStatus === 'OFD' ? 'Orange' : '' }} >{order.orderStatus || "Analysing..."}</h4>
         </div>
       </div>
+      ))}
     </div>
   )
 }
