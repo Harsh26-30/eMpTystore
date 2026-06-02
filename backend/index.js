@@ -360,10 +360,11 @@ app.post("/buildconnection", authMiddleware, async (req, res) => {
           customer: customer._id,
         },
       });
+    }
 
-      res.json({
-        message: "Connection successful",
-      });
+    res.json({
+      message: "Connection successful",
+    });
 
   } catch (err) {
     console.log(err);

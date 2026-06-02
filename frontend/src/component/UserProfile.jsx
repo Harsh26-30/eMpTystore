@@ -123,6 +123,7 @@ const UserProfile = () => {
     };
 
     const handleclickConnectToShop = async (e) => {
+        e.preventDefault();
         try {
             // not logged in → send to login with state
             if (!token) {
