@@ -7,6 +7,7 @@ import Header2 from './header2'
 const MyOrderStatus = () => {
   const token = localStorage.getItem("token");
   const [Orders, setOrders] = useState([]);
+  const [userId, setUserId] = useState('');
   
   useEffect(() => {
     const fetchOrderStatus = async () => {
@@ -17,6 +18,13 @@ const MyOrderStatus = () => {
           }
         });
         setOrders(res.data.orders);
+
+        const res2 = await axios.get(`${import.meta.env.VITE_API_URL}/checkuserinfo`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setUserId(res2.data.id);
 
       } catch (error) {
         console.error("Error fetching order status:", error);
@@ -30,7 +38,7 @@ const MyOrderStatus = () => {
     <div id='mainboxmyorderstatus'>
       <Header2 />
       {Orders.map((order) => (
-      <div  key={order._id} id='boxmyorderstatus'>
+      <div  key={order._id} style={{display:order.customerid === userId ? 'block' : 'none'}} id='boxmyorderstatus'>
         <div id='box1myorderstatus'>
           <img src="\E.png" alt="Search" />
         </div>
