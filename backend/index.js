@@ -226,7 +226,12 @@ app.get("/myOrderStatus", authMiddleware, async (req, res) => {
   try {
     const finduser = await User.findOne({ email: req.user.email });
     const orders = await Order.findById({customerid: finduser._id});
-    res.json({ orders });
+    const sellerOrShopName = await User.findById(orders.sellerid);
+    res.json({ orderStatus: orders.orderStatus,
+       orderName: orders.productname,
+        sellerOrShopName: sellerOrShopName.name,
+         customerName: finduser.name,
+          customerContact: finduser.phoneNo });
   } catch (error) {
     console.error("Error fetching order status:", error);
     res.status(500).json({ message: "Server error" });
