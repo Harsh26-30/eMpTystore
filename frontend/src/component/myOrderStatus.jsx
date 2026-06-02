@@ -5,7 +5,7 @@ import './myOrderStatus.css'
 import Header2 from './header2'
 
 const MyOrderStatus = () => {
-  const token = localStorage.getItem("Token");
+  const token = localStorage.getItem("token");
   const [orders, setOrders] = useState([]);
   const [userId, setUserId] = useState('');
   
