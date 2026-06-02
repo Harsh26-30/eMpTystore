@@ -225,7 +225,7 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
 app.get("/myOrderStatus", authMiddleware, async (req, res) => {
   try {
     const finduser = await User.findOne({ email: req.user.email });
-    const orders = await Order.find({customerid: finduser._id});
+    const orders = await Order.findById({customerid: finduser._id});
     res.json({ orders });
   } catch (error) {
     console.error("Error fetching order status:", error);
