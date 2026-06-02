@@ -224,19 +224,36 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
 
 app.get("/myOrderStatus", authMiddleware, async (req, res) => {
   try {
-    const finduser = await User.findOne({ email: req.user.email });
-    const orders = await Order.findById({customerid: finduser._id});
-    const sellerOrShopName = await User.findById(orders.sellerid);
-    res.json({ orderStatus: orders.orderStatus,
-       orderName: orders.productname,
-        sellerOrShopName: sellerOrShopName.name,
-         customerName: finduser.name,
-          customerContact: finduser.phoneNo });
+    const finduser = await User.findOne({
+      email: req.user.email
+    });
+
+    const order = await Order.findOne({
+      customerid: finduser._id
+    });
+
+    if (!order) {
+      return res.status(404).json({
+        message: "No orders found"
+      });
+    }
+
+    const seller = await User.findById(order.sellerid);
+
+    res.json({
+      orderStatus: order.orderstatus,
+      orderName: order.productname,
+      sellerOrShopName: seller?.name || "Unknown Seller",
+      customerName: finduser.name,
+      customerContact: finduser.phoneNo
+    });
+
   } catch (error) {
     console.error("Error fetching order status:", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({
+      message: error.message
+    });
   }
-
 });
 
 app.post("/updateaddress", authMiddleware, async (req, res) => {
