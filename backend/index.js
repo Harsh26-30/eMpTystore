@@ -57,26 +57,7 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
-const createSlug = (text) => {
-  return text
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, "-")
-    .replace(/[^\w-]+/g, "");
-};
 
-// const generateUniqueSlug = async (name) => {
-//   let baseSlug = createSlug(name);
-//   let slug = baseSlug;
-
-//   let count = 1;
-//   while (await User.findOne({ slug })) {
-//     slug = `${baseSlug}-${count}`;
-//     count++;
-//   }
-
-//   return slug;
-// };
 
 app.get("/myprofile", authMiddleware, async (req, res) => {
   const finduser = await User.findOne({ email: req.user.email });
@@ -965,8 +946,7 @@ app.post("/signup", async (req, res) => {
       gender,
       phoneNo,
       email,
-      pass: hashedPassword,
-      slug
+      pass: hashedPassword
     });
 
     await newUser.save();
