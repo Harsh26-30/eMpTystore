@@ -22,7 +22,7 @@ import UserProfile from './component/UserProfile'
 
 function App() {
   // const [valid, setvalid] = useState('')
-  const token = localStorage.getItem("token");
+  // const token = localStorage.getItem("token");
 
   // useEffect(() => {
   //   const checkUser = async () => {
@@ -44,11 +44,7 @@ function App() {
     <BrowserRouter>
       <RouteLoader>
         <Routes>
-
-          <Route
-            path="/"
-            element={token ? <Navigate to="/home" /> : <Auth />}
-          />
+          <Route path="/" element={<Auth />} />
 
           <Route
             path="/home"

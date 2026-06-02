@@ -1,10 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import Logincard from './logincard'
 import Signupcard from './signupcard'
 import './auth.css'
 
 
 const auth = ({ setvalid }) => {
+  useEffect(() => {
+    localStorage.removeItem("token");
+  }, []);
   const [visibilty, setvisibilty] = useState('signup')
   return (
     <div id='authpage'>
