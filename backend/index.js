@@ -223,27 +223,17 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
 
 });
 
-app.post("/myOrderStatus", authMiddleware, async (req, res) => {
+app.get("/myOrderStatus", authMiddleware, async (req, res) => {
   try {
-    const finduser = await User.find({
+    const finduser = await User.findOne({
       email: req.user.email
     });
 
-    const order = await Order.find({
+    const orders = await Order.find({
       customerid: finduser._id
     });
 
-    if (!order) {
-      return res.status(404).json({
-        message: "No orders found"
-      });
-    }
-
-    const seller = await User.findById(order.sellerid);
-
-    const productInfo = await Product.findById(order.productid);
-
-      const orderData = await Promise.all(
+    const orderData = await Promise.all(
       orders.map(async (order) => {
         const seller = await User.findById(order.sellerid);
         const product = await Product.findById(order.productid);
@@ -263,10 +253,8 @@ app.post("/myOrderStatus", authMiddleware, async (req, res) => {
     res.json(orderData);
 
   } catch (error) {
-    console.error("Error fetching order status:", error);
-    res.status(500).json({
-      message: error.message
-    });
+    console.log(error);
+    res.status(500).json({ message: error.message });
   }
 });
 
