@@ -17,7 +17,7 @@ const UserProfile = () => {
     const [profilePicture, setProfilePicture] = useState('');
     const [SellerId, setSellerId] = useState('');
     const [currentUserId, setcurrentUserId] = useState('');
-    const [sellerEmailId,setsellerEmailId] = useState('');
+    const [sellerEmailId, setsellerEmailId] = useState('');
 
 
 
@@ -168,16 +168,16 @@ const UserProfile = () => {
                     {userRole === "Customer" && <p className="contactdetails">{AboutUs}</p>}
                 </div>
             </div>
-            {userRole === "Seller" || userRole === "Customer" && (
-                <div className="profilebuttonsection">
-                    <button onClick={handleclickShare} className="ShareProfileButton">Share Profile</button>
-                </div>
-            )}
 
-            { userRole === "Customer" && (
-                 <div className="profilebuttonsection">
+            <div className="profilebuttonsection">
+                <button onClick={handleclickShare} className="ShareProfileButton">Share Profile</button>
+            </div>
+
+
+            {userRole === "Customer" && (
+                <div className="profilebuttonsection">
                     <button onClick={handleclickConnectToShop} className="ConnectToShopButton">Connect To Shop</button>
-                    </div>
+                </div>
             )}
             {changeProfilePicformvisible === true && userRole && (
                 <div className="changeprofilepicturesection">
