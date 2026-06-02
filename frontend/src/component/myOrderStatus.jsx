@@ -55,8 +55,15 @@ const MyOrderStatus = () => {
           <h3>Customer Contact: {customerContact || "Not mentioned"}</h3>
         </div>
         <h3>Order Status</h3>
-        <div style={{ backgroundColor: orderStatus === 'pending' ? 'grey' : orderStatus === 'Confirm' ? 'Green' : orderStatus === 'preparing' ? 'Blue' : orderStatus === 'OFD' ? 'Yellow' : '' }} id='orderstatusmyorderstatus'>
-          <h4>{orderStatus || "Analysing..."}</h4>
+        <div style={{ backgroundColor: orderStatus === 'pending' ?
+           'grey' : orderStatus === 'Confirm' ?
+            'Green' : orderStatus === 'preparing' ?
+             'Blue' : orderStatus === 'OFD' ? 'Yellow' : '' }} 
+             id='orderstatusmyorderstatus'>
+          <h4 style={{ backgroundColor: orderStatus === 'pending' ?
+           'grey' : orderStatus === 'Confirm' ?
+            'DarkGreen' : orderStatus === 'preparing' ?
+             'DarkBlue' : orderStatus === 'OFD' ? 'Orange' : '' }} >{orderStatus || "Analysing..."}</h4>
         </div>
       </div>
     </div>
