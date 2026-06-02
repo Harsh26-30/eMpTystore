@@ -6,6 +6,7 @@ import Header2 from './header2'
 
 const MyOrderStatus = () => {
   const token = localStorage.getItem("token");
+
   const [orderStatus, setOrderStatus] = useState('');
   const [orderName, setOrderName] = useState('');
   const [sellerOrShopName, setSellerOrShopName] = useState('');
@@ -16,11 +17,14 @@ const MyOrderStatus = () => {
     if (!token) return; 
     const fetchOrderStatus = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/myOrderStatus`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+         const res = await axios.get(
+                `${import.meta.env.VITE_API_URL}/myOrderStatus`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
         setOrderStatus(res.data.orderStatus);
         setOrderName(res.data.orderName);
         setSellerOrShopName(res.data.sellerOrShopName);
