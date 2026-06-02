@@ -66,7 +66,6 @@ const UserProfile = () => {
                 setAboutUs(resParam.data.Aboutus);
                 setProfilePicture(resParam.data.profilePicture);
                 setsellerEmailId(resParam.data.email)
-                console.log("Profile data fetched successfully:", id);
 
             }
         }
