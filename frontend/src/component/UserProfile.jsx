@@ -17,6 +17,7 @@ const UserProfile = () => {
     const [profilePicture, setProfilePicture] = useState('');
     const [SellerId, setSellerId] = useState('');
     const [currentUserId, setcurrentUserId] = useState('');
+    const [sellerEmailId,setsellerEmailId] = useState('');
 
 
 
@@ -64,6 +65,7 @@ const UserProfile = () => {
                 setBussinessName(resParam.data.BusinessName);
                 setAboutUs(resParam.data.Aboutus);
                 setProfilePicture(resParam.data.profilePicture);
+                setsellerEmailId(resParam.data.email)
                 console.log("Profile data fetched successfully:", id);
 
             }
@@ -134,7 +136,7 @@ const UserProfile = () => {
 
             const res = await axios.post(
                 `${import.meta.env.VITE_API_URL}/buildconnection`,
-                { connectionid: SellerId },
+                { connectionid: sellerEmailId },
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,

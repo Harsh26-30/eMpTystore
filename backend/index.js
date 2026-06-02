@@ -133,7 +133,8 @@ app.get("/shoporsellerprofile/:id", authMiddleware, async (req, res) => {
       id: user._id,
       BusinessName: user.ui?.generalinfo?.BusinessName || "",
       Aboutus: user.profile?.Aboutus || "",
-      profilePicture: user.profile?.profilepic || ""
+      profilePicture: user.profile?.profilepic || "",
+      email: user.email
     });
 
   } catch (err) {
@@ -333,9 +334,9 @@ app.post("/buildconnection", authMiddleware, async (req, res) => {
       email: req.user.email,
     });
 
-    const seller = await User.findOneById({
-      _id: connectionid
-    }); 
+    const seller = await await User.findOne({
+      email: connectionid
+    });
 
 
     if (!customer || !seller) {
