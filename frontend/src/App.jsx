@@ -48,7 +48,9 @@ function App() {
             path="/"
             element={
               localStorage.getItem("token")
-                ? <Navigate to="/home" />
+                ? <ProtectedRoute>
+                  <Homepage />
+                </ProtectedRoute>
                 : <Auth />
             }
           />
@@ -56,9 +58,7 @@ function App() {
           <Route
             path="/home"
             element={
-              <ProtectedRoute>
-                <Homepage />
-              </ProtectedRoute>
+
             }
           />
 
