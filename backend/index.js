@@ -943,17 +943,17 @@ app.post("/signup", async (req, res) => {
     const regexemail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!regexname.test(name)) {
-      return res.json({ valid: "false", msg: "Invalid Name" });
+      return res.json({ valid: "false", message: "Invalid Name" });
     }
 
     if (!regexemail.test(email)) {
-      return res.json({ valid: "false", msg: "Invalid Email" });
+      return res.json({ valid: "false", message: "Invalid Email" });
     }
 
     const user = await User.findOne({ email: email });
 
     if (user) {
-      return res.json({ valid: "false", msg: "Email already used" });
+      return res.json({ valid: "false", message: "Email already used" });
     }
 
     const slug = await generateUniqueSlug(name);
@@ -979,7 +979,7 @@ app.post("/signup", async (req, res) => {
       { expiresIn: "1d" }
     );
 
-    res.json({ valid: "true", token });
+    res.json({ valid: "true", message: "Account created successfully", token });
 
 
   } catch (err) {

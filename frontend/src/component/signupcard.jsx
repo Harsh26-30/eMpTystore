@@ -25,6 +25,7 @@ const Signupcard = ({ setvalid }) => {
             pass: userpass
         })
         localStorage.setItem("token", res.data.token);
+        alert(res.data.message);
         if (res.data.valid === 'true') {
             navigate("/addAddress");
         }
