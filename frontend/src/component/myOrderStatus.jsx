@@ -5,7 +5,7 @@ import './myOrderStatus.css'
 import Header2 from './header2'
 
 const MyOrderStatus = () => {
-  const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
   const [Orders, setOrders] = useState([]);
   
   useEffect(() => {
