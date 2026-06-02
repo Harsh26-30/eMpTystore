@@ -9,11 +9,14 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
   },
-  profile:{
+  profile: {
     profilepic: { type: String },
-    Aboutus: { type: String },
+    Aboutus: {
+      type: String,
+      default: "Tell us about your business, your values, and what sets you apart. This is your chance to connect with customers and share your story. Make it engaging and informative to leave a lasting impression."
+    },
   },
-   dob: {
+  dob: {
     type: Date,
   }, gender: {
     type: String,
@@ -63,11 +66,11 @@ const userSchema = new mongoose.Schema({
     generalinfo: {
       logo: { type: String },
       BusinessName: { type: String },
-      BackgroundColor:{type:String},
-      TextColor:{type:String},
+      BackgroundColor: { type: String },
+      TextColor: { type: String },
       Backgroundimage: {
         type: String,
-    }
+      }
     },
     componentid: {
       header: { type: String },

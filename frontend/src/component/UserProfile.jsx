@@ -39,7 +39,7 @@ const UserProfile = () => {
                     },
                 });
                 setuserRole(res2.data.role);
-                setcurrentUserId(res2.data.id || "");
+                setcurrentUserId(res2.data.id);
 
 
             } catch (err) {
@@ -151,7 +151,10 @@ const UserProfile = () => {
                     </div>
                 </div>
                 <div className="contactsandaboutmesection">
-                    <textarea type="text" value={AboutUs} onChange={(e) => { setAboutUs(e.target.value) }} onBlur={handleblurAboutus} />
+                   {userRole === "Seller" && (
+                        <textarea type="text" value={AboutUs} onChange={(e) => { setAboutUs(e.target.value) }} onBlur={handleblurAboutus} />
+                    )}
+                    {userRole === "Customer" && <p className="contactdetails">{AboutUs}</p>}
                 </div>
             </div>
             {userRole === "Seller" && (
