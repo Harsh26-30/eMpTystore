@@ -239,7 +239,7 @@ app.post("/updateaddress", authMiddleware, async (req, res) => {
         .replace(/[^a-z0-9\s]/g, "")
         .replace(/\s+/g, "_");
 
-    const seller_key = `${user._id}_${format(user.ui.genralinfo.BusinessName)})}`;
+    const seller_key = `${user._id}_${format(user.email)}_${format(user.name)}`;
 
     const updatedUser = await User.findOneAndUpdate(
       { email: user.email },
