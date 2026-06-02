@@ -45,7 +45,7 @@ const MyOrderStatus = () => {
         <div id='orderdetailmyorderstatus'>
           <h3>Odered Item: {order.orderName || "Not mentioned"}</h3>
           <h3>Seller Name: {order.sellerOrShopName || "Not mentioned"}</h3>
-          <h3>Customer Name: {order.customerName || "Not mentioned"}</h3>
+          <h3>Customer Name: {order.phoneNo || "Not mentioned"}</h3>
           <h3>Customer Contact: {order.customerContact || "Not mentioned"}</h3>
         </div>
         <h3>Order Status</h3>
