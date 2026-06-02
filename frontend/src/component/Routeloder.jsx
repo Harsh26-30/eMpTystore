@@ -11,7 +11,7 @@ function RouteLoader({ children }) {
 
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 1500); // loader duration
+    }, 3000); // loader duration
 
     return () => clearTimeout(timer);
   }, [location.pathname]);
