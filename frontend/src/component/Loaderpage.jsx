@@ -49,7 +49,7 @@ const Loaderpage = () => {
 
                     }}
                 >
-                    <img src="E.png" alt="Logo" style={{ width: "100%", height: "100%", borderRadius: "10%" }} />
+                    <img src="\E.png" alt="Logo" style={{ width: "100%", height: "100%", borderRadius: "10%" }} />
                 </div>
             </div>
             <h3 style={{ marginTop: "10px", fontFamily: "Arial, sans-serif", color: "grey" }}>Loading...</h3>
