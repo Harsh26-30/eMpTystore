@@ -30,7 +30,12 @@ const myOrderStatus = () => {
         console.error("Error fetching order status:", error);
       }
     };
-
+    console.log("Token in myOrderStatus:", token);
+    console.log("Fetching order status...", orderStatus);
+    console.log("Order Name:", orderName);
+    console.log("Seller/Shop Name:", sellerOrShopName);
+    console.log("Customer Name:", customerName);
+    console.log("Customer Contact:", customerContact);
     fetchOrderStatus();
   }, [token]);
 
