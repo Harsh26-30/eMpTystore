@@ -120,8 +120,9 @@ app.get("/myprofile", authMiddleware, async (req, res) => {
 // });
 
 app.get("/shoporsellerprofile/:id", async (req, res) => {
+  const { id } = req.body;
   const user = await User.findOne({
-    _id: req.params.id
+    _id:id
   });
 
   if (!user) {
