@@ -18,7 +18,7 @@ import Shopnox from './component/Shopnox'
 import ForgotPassword from './component/forgotPassword'
 import RouteLoader from './component/Routeloder'
 import UserProfile from './component/UserProfile'
-import MyOrderStatus from './component/MyOrderStatus'
+import MyOrderStatus from './component/myOrderStatus'
 
 
 function App() {
@@ -192,7 +192,7 @@ function App() {
           />
 
           <Route
-            path="/MyOrderStatus"
+            path="/myOrderStatus"
             element={
               <ProtectedRoute>
                 < MyOrderStatus />
