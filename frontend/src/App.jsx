@@ -18,7 +18,7 @@ import Shopnox from './component/Shopnox'
 import ForgotPassword from './component/forgotPassword'
 import RouteLoader from './component/Routeloder'
 import UserProfile from './component/UserProfile'
-import MyOrderStatus from './component/myOrderStatus'
+import MyOrderStatus from './component/MyOrderStatus'
 
 
 function App() {
