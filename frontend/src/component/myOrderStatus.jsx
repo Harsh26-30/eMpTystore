@@ -43,14 +43,14 @@ const MyOrderStatus = () => {
           <img src="\E.png" alt="Search" />
         </div>
         <div id='orderdetailmyorderstatus'>
-          <h3>Odered Item: {Orders.orderName || "Not mentioned"}</h3>
-          <h3>Seller Name: {Orders.sellerOrShopName || "Not mentioned"}</h3>
-          <h3>Customer Name: {Orders.customerName || "Not mentioned"}</h3>
-          <h3>Customer Contact: {Orders.customerContact || "Not mentioned"}</h3>
+          <h3>Odered Item: {order.orderName || "Not mentioned"}</h3>
+          <h3>Seller Name: {order.sellerOrShopName || "Not mentioned"}</h3>
+          <h3>Customer Name: {order.customerName || "Not mentioned"}</h3>
+          <h3>Customer Contact: {order.customerContact || "Not mentioned"}</h3>
         </div>
         <h3>Order Status</h3>
-        <div style={{ backgroundColor: Orders.orderStatus === 'pending' ? 'grey' : Orders.orderStatus === 'Confirm' ? 'Green' : Orders.orderStatus === 'preparing' ? 'Blue' : Orders.orderStatus === 'OFD' ? 'Yellow' : '' }} id='orderstatusmyorderstatus'>
-          <h4>{Orders.orderStatus || "Analysing..."}</h4>
+        <div style={{ backgroundColor: order.orderStatus === 'pending' ? 'grey' : order.orderStatus === 'Confirm' ? 'Green' : order.orderStatus === 'preparing' ? 'Blue' : order.orderStatus === 'OFD' ? 'Yellow' : '' }} id='orderstatusmyorderstatus'>
+          <h4>{order.orderStatus || "Analysing..."}</h4>
         </div>
       </div>
       ))}
