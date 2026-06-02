@@ -333,9 +333,9 @@ app.post("/buildconnection", authMiddleware, async (req, res) => {
       email: req.user.email,
     });
 
-    const seller = await await User.findOne({
-      email: connectionid
-    });
+    const seller = await User.findOneById({
+      _id: connectionid
+    }); 
 
 
     if (!customer || !seller) {
