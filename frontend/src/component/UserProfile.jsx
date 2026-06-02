@@ -122,13 +122,14 @@ const UserProfile = () => {
 
     const handleclickConnectToShop = async (e) => {
         e.preventDefault();
+
         try {
-            // ❌ not logged in
+            // not logged in → send to login with state
             if (!token) {
-                if (!token) {
-                    navigate("/?redirect=" + location.pathname);
-                    return;
-                }
+                navigate("/", {
+                    state: { from: location }
+                });
+                return;
             }
 
             const res = await axios.post(
@@ -146,7 +147,6 @@ const UserProfile = () => {
         } catch (err) {
             console.log("Search error:", err);
         }
-
     };
 
     return (
