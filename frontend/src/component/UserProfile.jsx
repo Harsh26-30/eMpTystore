@@ -173,7 +173,7 @@ const UserProfile = () => {
                 </div>
             )}
 
-            {currentUserId !== SellerId && (
+            {SellerId && currentUserId && currentUserId !== SellerId && (
                 <div className="profilebuttonsection">
                     <button onClick={handleclickConnectToShop} className="ConnectToShopButton">Connect To Shop</button>
                 </div>
