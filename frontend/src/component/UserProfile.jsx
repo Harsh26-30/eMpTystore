@@ -6,16 +6,16 @@ import { useParams } from 'react-router-dom';
 
 const UserProfile = () => {
     const token = localStorage.getItem("token");
-    const data = useParams();
-
+    const { id } = useParams();
 
     const [bussinessname, setBussinessName] = useState('');
     const [AboutUs, setAboutUs] = useState('About Us');
     const [userRole, setuserRole] = useState('');
     const [changeProfilePicformvisible, setchangeProfilePicformvissible] = useState(false);
     const [profilePicture, setProfilePicture] = useState('');
-    const [sellerId, setSellerId] = useState('');
+    const [SellerId, setSellerId] = useState('');
     const [currentUserId, setcurrentUserId] = useState('');
+
 
 
 
@@ -33,28 +33,13 @@ const UserProfile = () => {
                 setAboutUs(res.data.Aboutus);
                 setProfilePicture(res.data.profilePicture);
 
-
-
                 const res2 = await axios.get(`${import.meta.env.VITE_API_URL}/checkuserinfo`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
                 setuserRole(res2.data.role);
-                setcurrentUserId(res2.data.id);
-
-
-                if (data) {
-                    const resParam = await axios.put(`${import.meta.env.VITE_API_URL}/shoporsellerprofile`, { id: data.id }, {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    });
-                    setSellerId(resParam.data.id || "");
-                    setBussinessName(resParam.data.BusinessName || "");
-                    setAboutUs(resParam.data.Aboutus || "");
-                    setProfilePicture(resParam.data.profilePicture || "");
-                }
+                setcurrentUserId(res2.data.id || "");
 
 
             } catch (err) {
@@ -63,7 +48,27 @@ const UserProfile = () => {
         };
 
         fetchUserProfile();
-    }, []);
+    }, [token]);
+
+        useEffect(() => {
+        async function fetchProfileData() {
+            if (id) {
+                const resParam = await axios.put(`${import.meta.env.VITE_API_URL}/shoporsellerprofile`, { id }, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                setSellerId(id);
+                setBussinessName(resParam.data.BusinessName);
+                setAboutUs(resParam.data.Aboutus);
+                setProfilePicture(resParam.data.profilePicture);
+                console.log("Profile data fetched successfully:", id);
+
+            }
+        }
+        fetchProfileData();
+    }, [id, token]);
+
 
     const handleblurAboutus = async () => {
         try {
@@ -118,7 +123,7 @@ const UserProfile = () => {
         try {
             const res = await axios.post(
                 `${import.meta.env.VITE_API_URL}/buildconnection`,
-                { id: sellerId },
+                { id: SellerId },
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -155,7 +160,7 @@ const UserProfile = () => {
                 </div>
             )}
 
-            {currentUserId !== sellerId && (
+            {currentUserId !== SellerId && (
                 <div className="profilebuttonsection">
                     <button onClick={handleclickConnectToShop} className="ConnectToShopButton">Connect To Shop</button>
                 </div>

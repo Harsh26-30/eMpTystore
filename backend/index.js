@@ -97,13 +97,16 @@ app.put("/shoporsellerprofile", authMiddleware, async (req, res) => {
       return res.status(400).json({ message: "User ID is required" });
     }
 
-    const finduser = await User.findById(id);
+    const finduser = await User.findById({ _id: id });
 
     if (!finduser) {
       return res.status(404).json({ message: "User not found" });
     }
 
+    console.log("shoporsellerprofile - found user:", finduser._id);
+
     return res.json({
+      id: finduser._id,
       BusinessName: finduser.ui?.generalinfo?.BusinessName || "",
       Aboutus: finduser.profile?.Aboutus || "",
       profilePicture: finduser.profile?.profilepic || "",
@@ -477,7 +480,6 @@ app.post("/updateproducttoui",
     }
   }
 );
-
 
 app.post("/updateshoplistcustomerlist", authMiddleware, async (req, res) => {
   try {
