@@ -119,29 +119,27 @@ app.get("/myprofile", authMiddleware, async (req, res) => {
 //   }
 // });
 
-app.get("/shoporsellerprofile/:id", async (req, res) => {
-  const { id } = req.body;
-  const user = await User.findOne({
-    _id:id
-  });
+app.get("/shoporsellerprofile/:id", authMiddleware, async (req, res) => {
+  try {
+    const { id } = req.params; // ✅ FIX HERE
 
-  if (!user) {
-    return res.status(404).json({ message: "user not found" });
+    const user = await User.findById(id); // cleaner than findOne
+
+    if (!user) {
+      return res.status(404).json({ message: "user not found" });
+    }
+
+    res.json({
+      id: user._id,
+      BusinessName: user.ui?.generalinfo?.BusinessName || "",
+      Aboutus: user.profile?.Aboutus || "",
+      profilePicture: user.profile?.profilepic || ""
+    });
+
+  } catch (err) {
+    console.log("ERROR:", err);
+    res.status(500).json({ message: "Server error" });
   }
-
-  console.log("user PROFILE:", {
-    id: user._id,
-    BusinessName: user.ui.generalinfo.BusinessName,
-    Aboutus: user.profile.Aboutus,
-    profilePicture: user.profile.profilepic
-  });
-
-  res.json({
-    id: user._id,
-    BusinessName: user.ui.generalinfo.BusinessName || "",
-    Aboutus: user.profile.Aboutus || "",
-    profilePicture: user.profile.profilepic || ""
-  });
 });
 
 app.put("/updateprofileAboutus", authMiddleware, async (req, res) => {
