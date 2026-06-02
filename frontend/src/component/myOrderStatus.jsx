@@ -5,8 +5,8 @@ import './myOrderStatus.css'
 import Header2 from './header2'
 
 const MyOrderStatus = () => {
-  const token = localStorage.getItem("token");
-  const [Orders, setOrders] = useState([]);
+  const token = localStorage.getItem("Token");
+  const [orders, setOrders] = useState([]);
   const [userId, setUserId] = useState('');
   
   useEffect(() => {
@@ -37,7 +37,7 @@ const MyOrderStatus = () => {
   return (
     <div id='mainboxmyorderstatus'>
       <Header2 />
-      {Orders.map((order) => (
+      {orders.map((order) => (
       <div  key={order._id} style={{display:order.customerid === userId ? 'block' : 'none'}} id='boxmyorderstatus'>
         <div id='box1myorderstatus'>
           <img src="\E.png" alt="Search" />
