@@ -48,13 +48,13 @@ const MyOrderStatus = () => {
         <h3>Order Status</h3>
         <div style={{ backgroundColor: order.orderStatus === 'pending' ?
            'grey' : order.orderStatus === 'Confirm' ?
-            'Green' : order.orderStatus === 'preparing' ?
-             'Blue' : order.orderStatus === 'OFD' ? 'Yellow' : '' }} 
+            'green' : order.orderStatus === 'preparing' ?
+             'blue' : order.orderStatus === 'OFD' ? 'Yellow' : '' }} 
              id='orderstatusmyorderstatus'>
           <h4 style={{color: order.orderStatus === 'pending' ?
            'grey' : order.orderStatus === 'Confirm' ?
-            'DarkGreen' : order.orderStatus === 'preparing' ?
-             'DarkBlue' : order.orderStatus === 'OFD' ? 'Orange' : '' }} >{order.orderStatus || "Analysing..."}</h4>
+            'darkgreen' : order.orderStatus === 'preparing' ?
+             'darkblue' : order.orderStatus === 'OFD' ? 'orange' : '' }} >{order.orderStatus === 'Pending' ? "Pending" : order.orderStatus === 'Confirm' ? "Preparing" : order.orderStatus === 'RFD' ? "Ready For Delivery" : order.orderStatus === 'OFD' ? "Out for Delivery" : "Analysing..."}</h4>
         </div>
       </div>
       ))}
