@@ -143,7 +143,7 @@ const UserProfile = () => {
                 }
             );
             alert(res.data.message);
-            navigate(-1);
+            navigate("/home");
 
         } catch (err) {
             console.log("Search error:", err);
