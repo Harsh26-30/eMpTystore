@@ -60,7 +60,7 @@ const MyOrderStatus = () => {
             'Green' : orderStatus === 'preparing' ?
              'Blue' : orderStatus === 'OFD' ? 'Yellow' : '' }} 
              id='orderstatusmyorderstatus'>
-          <h4 style={{ backgroundColor: orderStatus === 'pending' ?
+          <h4 style={{color: orderStatus === 'pending' ?
            'grey' : orderStatus === 'Confirm' ?
             'DarkGreen' : orderStatus === 'preparing' ?
              'DarkBlue' : orderStatus === 'OFD' ? 'Orange' : '' }} >{orderStatus || "Analysing..."}</h4>
