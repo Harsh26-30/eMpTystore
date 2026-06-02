@@ -173,9 +173,7 @@ const UserProfile = () => {
             )}
 
             {SellerId && currentUserId && currentUserId !== SellerId && (
-                <div className="profilebuttonsection">
                     <button onClick={handleclickConnectToShop} className="ConnectToShopButton">Connect To Shop</button>
-                </div>
             )}
             {changeProfilePicformvisible === true && userRole && (
                 <div className="changeprofilepicturesection">
