@@ -177,7 +177,7 @@ const UserProfile = () => {
                     <button onClick={handleclickConnectToShop} className="ConnectToShopButton">Connect To Shop</button>
                 </div>
             )}
-            {changeProfilePicformvisible === true && (
+            {changeProfilePicformvisible === true && userRole && (
                 <div className="changeprofilepicturesection">
                     <form onSubmit={handleChangeProfilePicSubmit}>
                         <input type="file" id="profilePictureInput" name="profilePicture" accept="image/*" />

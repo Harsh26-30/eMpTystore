@@ -90,6 +90,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    user-select: none;
 }
 
 .userprofilemainbox .profilebuttonsection .ShareProfileButton {
@@ -117,7 +118,7 @@
     color: #fff;
 }
 
-.userprofilemainbox .profilebuttonsection .ConnectToShopButton button {
+.userprofilemainbox .profilebuttonsection .ConnectToShopButton button:hover {
    background-color: grey;
     color: #fff;
 
