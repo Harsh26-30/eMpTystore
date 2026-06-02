@@ -44,7 +44,14 @@ function App() {
     <BrowserRouter>
       <RouteLoader>
         <Routes>
-          <Route path="/" element={<Auth />} />
+          <Route
+            path="/"
+            element={
+              localStorage.getItem("token")
+                ? <Navigate to="/home" />
+                : <Auth />
+            }
+          />
 
           <Route
             path="/home"
