@@ -240,12 +240,15 @@ app.get("/myOrderStatus", authMiddleware, async (req, res) => {
 
     const seller = await User.findById(order.sellerid);
 
+    const productInfo = await Product.findById(order.productid);
+
     res.json({
       orderStatus: order.orderstatus,
       orderName: order.productname,
       sellerOrShopName: seller?.name || "Unknown Seller",
       customerName: finduser.name,
-      customerContact: finduser.phoneNo
+      customerContact: finduser.phoneNo,
+      productImg: productInfo.productimage
     });
 
   } catch (error) {

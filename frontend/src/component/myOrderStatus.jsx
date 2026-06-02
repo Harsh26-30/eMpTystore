@@ -11,6 +11,7 @@ const myOrderStatus = () => {
   const [sellerOrShopName, setSellerOrShopName] = useState('');
   const [customerName, setCustomerName] = useState('');
   const [customerContact, setCustomerContact] = useState('');
+  const [productImage, setProductImage] = useState('');
   useEffect(() => {
     if (!token) return; 
     const fetchOrderStatus = async () => {
@@ -25,17 +26,13 @@ const myOrderStatus = () => {
         setSellerOrShopName(res.data.sellerOrShopName);
         setCustomerName(res.data.customerName);
         setCustomerContact(res.data.customerContact);
+        setProductImage(res.data.productImage);
 
       } catch (error) {
         console.error("Error fetching order status:", error);
       }
     };
-    console.log("Token in myOrderStatus:", token);
-    console.log("Fetching order status...", orderStatus);
-    console.log("Order Name:", orderName);
-    console.log("Seller/Shop Name:", sellerOrShopName);
-    console.log("Customer Name:", customerName);
-    console.log("Customer Contact:", customerContact);
+
     fetchOrderStatus();
   }, [token]);
 
@@ -44,7 +41,7 @@ const myOrderStatus = () => {
       <Header2 />
       <div id='boxmyorderstatus'>
         <div id='box1myorderstatus'>
-          <img src="\E.png" alt="Search" />
+          <img src={productImage} alt="Product Image" />
         </div>
         <div id='orderdetailmyorderstatus'>
           <h3>Odered Item: {orderName || "Not mentioned"}</h3>
