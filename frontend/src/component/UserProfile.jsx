@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import './UserProfile.css'; // Import CSS for styling
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 
 const UserProfile = () => {
     const token = localStorage.getItem("token");
     const { id } = useParams();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const [bussinessname, setBussinessName] = useState('');
     const [AboutUs, setAboutUs] = useState('About Us');
@@ -50,7 +52,7 @@ const UserProfile = () => {
         fetchUserProfile();
     }, [token]);
 
-        useEffect(() => {
+    useEffect(() => {
         async function fetchProfileData() {
             if (id) {
                 const resParam = await axios.get(`${import.meta.env.VITE_API_URL}/shoporsellerprofile/${id}`, {
@@ -121,6 +123,14 @@ const UserProfile = () => {
     const handleclickConnectToShop = async (e) => {
         e.preventDefault();
         try {
+            // ❌ not logged in
+            if (!token) {
+                if (!token) {
+                    navigate("/?redirect=" + location.pathname);
+                    return;
+                }
+            }
+
             const res = await axios.post(
                 `${import.meta.env.VITE_API_URL}/buildconnection`,
                 { id: SellerId },
@@ -151,7 +161,7 @@ const UserProfile = () => {
                     </div>
                 </div>
                 <div className="contactsandaboutmesection">
-                   {userRole === "Seller" && (
+                    {userRole === "Seller" && (
                         <textarea type="text" value={AboutUs} onChange={(e) => { setAboutUs(e.target.value) }} onBlur={handleblurAboutus} />
                     )}
                     {userRole === "Customer" && <p className="contactdetails">{AboutUs}</p>}

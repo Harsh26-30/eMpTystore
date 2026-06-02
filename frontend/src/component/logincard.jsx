@@ -1,30 +1,44 @@
 import React from 'react'
 import axios from 'axios'
 import { useState } from 'react'
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import './logincard.css'
 
 
 const Logincard = () => {
   const [useremail, setuseremail] = useState('')
   const [userpass, setuserpass] = useState('')
-  const navigate = useNavigate();
+  const location = useLocation();
+const navigate = useNavigate();
 
 
-  const handlesubmit = async (e) => {
-    e.preventDefault();
+const handlesubmit = async (e) => {
+  e.preventDefault();
+
+  try {
     const res = await axios.post(`${import.meta.env.VITE_API_URL}/login`, {
       email: useremail,
       pass: userpass
-    })
+    });
+
     if (res.data.valid === 'true') {
-      navigate("/home");
-    }else{
+      // 1. store token FIRST
+      localStorage.setItem("token", res.data.token);
+
+      // 2. get previous route
+      const from = location.state?.from?.pathname || "/home";
+
+      // 3. redirect back
+      navigate(from, { replace: true });
+
+    } else {
       alert(res.data.msg);
     }
-    localStorage.setItem("token", res.data.token);
 
+  } catch (err) {
+    console.log(err);
   }
+};
 
     const handleforgotpassword = async (e) => {
     e.preventDefault();
