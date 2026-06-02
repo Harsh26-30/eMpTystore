@@ -44,6 +44,7 @@ app.use('/uploads', express.static('uploads'));
 
 const authMiddleware = (req, res, next) => {
   const header = req.headers.authorization;
+  console.log("Auth Header:", header); // Debugging line
   if (!header) {
     return res.status(401).json({ message: "No token" });
   }

@@ -4,7 +4,7 @@ import axios from 'axios';
 import './myOrderStatus.css'
 import Header2 from './header2'
 
-const myOrderStatus = () => {
+const MyOrderStatus = () => {
   const token = localStorage.getItem("token");
   const [orderStatus, setOrderStatus] = useState('');
   const [orderName, setOrderName] = useState('');
@@ -58,4 +58,4 @@ const myOrderStatus = () => {
   )
 }
 
-export default myOrderStatus
+export default MyOrderStatus
