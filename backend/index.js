@@ -223,7 +223,7 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
 
 });
 
-app.get("/myOrderStatus", authMiddleware, async (req, res) => {
+app.post("/myOrderStatus", authMiddleware, async (req, res) => {
   try {
     const finduser = await User.findOne({
       email: req.user.email

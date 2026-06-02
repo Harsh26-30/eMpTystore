@@ -17,8 +17,9 @@ const MyOrderStatus = () => {
     if (!token) return; 
     const fetchOrderStatus = async () => {
       try {
-         const res = await axios.get(
+         const res = await axios.post(
                 `${import.meta.env.VITE_API_URL}/myOrderStatus`,
+                {},
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
