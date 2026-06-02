@@ -956,8 +956,6 @@ app.post("/signup", async (req, res) => {
       return res.json({ valid: "false", message: "Email already used" });
     }
 
-    const slug = await generateUniqueSlug(name);
-
     const hashedPassword = await bcrypt.hash(pass, 10);
 
     const newUser = new User({
