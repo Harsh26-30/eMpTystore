@@ -160,7 +160,7 @@ const UI = () => {
       data?.productbox1?.productprice || "Productprice1id"
     );
 
-      console.log("pp:",data?.productbox1?.productprice);
+      console.log("pp:",data?.productbox1?.productprice,data?.productbox1?.productimage);
 
 
 
