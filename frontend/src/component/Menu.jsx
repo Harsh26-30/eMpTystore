@@ -40,33 +40,34 @@ const Menu = () => {
 
     return (
         <div id='mainboxMenu'>
+             <h2>Menu</h2>
             <div id='box2Menu'>
-                <h2>Menu</h2>
+               
 
-                <button id='logoutbutton2' onClick={() => navigate("/Key")}>
+                <button id='menubutton' onClick={() => navigate("/Key")}>
                     Key
                 </button>
 
                 {(userRole === 'Seller' || userRole === 'Admin' ) && (
-                    <button id='logoutbutton2' onClick={() => navigate("/OrderStatus")}>
+                    <button id='menubutton' onClick={() => navigate("/OrderStatus")}>
                         Order Status
                     </button>
                 )}
 
-                {( userRole === 'Admin' ) && (<button id='logoutbutton2' onClick={() => navigate("/Order")}>
+                {( userRole === 'Admin' ) && (<button id='menubutton' onClick={() => navigate("/Order")}>
                     Orders
                 </button>)}
 
-                {( userRole === 'Admin' ) && (<button id='logoutbutton2' onClick={() => navigate("/Request")}>
+                {( userRole === 'Admin' ) && (<button id='menubutton' onClick={() => navigate("/Request")}>
                     Requests
                 </button>)}
 
-                {( userRole === 'Admin' ) && (<button id='logoutbutton2' onClick={() => navigate("/Uploadcomponent")}>
+                {( userRole === 'Admin' ) && (<button id='menubutton' onClick={() => navigate("/Uploadcomponent")}>
                     Upload_Component
                 </button>)}
 
                 {(userRole === 'Seller' || userRole === 'Admin' ) && (
-                    <button id='logoutbutton2' onClick={() => navigate("/UserProfile")}>
+                    <button id='menubutton' onClick={() => navigate("/UserProfile")}>
                         Profile
                     </button>
                 )}

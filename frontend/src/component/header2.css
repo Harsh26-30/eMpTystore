@@ -2,6 +2,8 @@
     background-color: #000;
     height: 15%;
     padding: 4px;
+    display: flex;
+    align-items: center;
 }
 
 #mainboxheader2 #box2header2 {
@@ -84,4 +86,15 @@ button #ShopOpenornotbox2 #ShopOpenornotcircle{
     height: 100%;
     background-color: grey;  
     border-radius: 30px; 
+}
+
+@media (min-width:794px) {
+    #mainboxheader2 {
+    background-color: #000;
+    height: 15%;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+   justify-content: center;
+}
 }

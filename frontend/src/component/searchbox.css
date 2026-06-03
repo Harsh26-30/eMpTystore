@@ -48,3 +48,27 @@
 #mainboxsearch #buttonsearch:focus{
     background-color: grey;
 }
+
+ @media (min-width:923px) {
+    #mainboxsearch #box2{
+    width: 90%;
+    height: 10%;
+    display: flex;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    border-radius: 20px;
+}
+ }
+
+  @media (min-width:1440px) {
+    #mainboxsearch #box2{
+    width: 45%;
+    height: 10%;
+    display: flex;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    border-radius: 20px;
+}
+ }
