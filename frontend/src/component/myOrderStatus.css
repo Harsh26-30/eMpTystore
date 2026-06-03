@@ -64,6 +64,14 @@
 }
 
 @media (min-width:839) {
+    #mainboxmyorderstatus{
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+}
     #mainboxmyorderstatus #boxmyorderstatus{
     width: 45%;
     height: 40vh;
