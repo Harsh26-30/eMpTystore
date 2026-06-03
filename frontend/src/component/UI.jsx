@@ -157,7 +157,7 @@ const UI = () => {
 
     updatedHTML = updatedHTML.replaceAll(
       "{{Productprice1id}}",
-      data?.productbox1?.productname || "0"
+      data?.productbox1?.productprice || "O"
     );
 
 
