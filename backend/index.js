@@ -141,11 +141,11 @@ app.put("/updateprofilePicture", upload.single("profilePicture"), authMiddleware
     folder: "ui-backgrounds",
   });
 
-   await finduser.updateOne({
-      "profile.profilepic": result.secure_url
-    });
- 
-  res.json({ message: "Profile updated successfully" });  
+  await finduser.updateOne({
+    "profile.profilepic": result.secure_url
+  });
+
+  res.json({ message: "Profile updated successfully" });
 });
 
 app.get("/checkuserinfo", authMiddleware, async (req, res) => {
@@ -218,8 +218,10 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
     myproductdata: findproduct,
     shops: finduser2,
     shopOpenOrNot: finduser.shopOpenOrNot
-  });
 
+
+  });
+  console.log(findproductid1.productprice);
 });
 
 app.post("/myOrderStatus", authMiddleware, async (req, res) => {
