@@ -156,6 +156,12 @@ const UI = () => {
     );
 
     updatedHTML = updatedHTML.replaceAll(
+      "{{Productprice1id}}",
+      data?.productbox1?.productprice || "Productprice1id"
+    );
+
+
+    updatedHTML = updatedHTML.replaceAll(
       "{{Productname2id}}",
       data?.productbox2?.productname || "Productname1id"
     );
@@ -163,6 +169,11 @@ const UI = () => {
     updatedHTML = updatedHTML.replaceAll(
       "{{Productname2idimg}}",
       data?.productbox2?.productimage || "Productname1id"
+    );
+
+     updatedHTML = updatedHTML.replaceAll(
+      "{{Productprice2id}}",
+      data?.productbox1?.productprice || "Productprice2id"
     );
 
     updatedHTML = updatedHTML.replaceAll(
@@ -175,6 +186,11 @@ const UI = () => {
       data?.productbox3?.productimage || "Productname1id"
     );
 
+     updatedHTML = updatedHTML.replaceAll(
+      "{{Productprice3id}}",
+      data?.productbox1?.productprice || "Productprice3id"
+    );
+
     updatedHTML = updatedHTML.replaceAll(
       "{{Productname4id}}",
       data?.productbox4?.productname || "Productname4id"
@@ -183,6 +199,11 @@ const UI = () => {
     updatedHTML = updatedHTML.replaceAll(
       "{{Productname4idimg}}",
       data?.productbox4?.productimage || "Productname4id"
+    );
+
+     updatedHTML = updatedHTML.replaceAll(
+      "{{Productprice4id}}",
+      data?.productbox1?.productprice || "Productprice4id"
     );
 
     updatedHTML = updatedHTML.replaceAll(
@@ -195,6 +216,11 @@ const UI = () => {
       data?.productbox5?.productimage || "Productname5id"
     );
 
+     updatedHTML = updatedHTML.replaceAll(
+      "{{Productprice5id}}",
+      data?.productbox1?.productprice || "Productprice5id"
+    );
+
     updatedHTML = updatedHTML.replaceAll(
       "{{Productname6id}}",
       data?.productbox6?.productname || "Productname6id"
@@ -203,6 +229,11 @@ const UI = () => {
     updatedHTML = updatedHTML.replaceAll(
       "{{Productname6idimg}}",
       data?.productbox6?.productimage || "Productname6id"
+    );
+
+     updatedHTML = updatedHTML.replaceAll(
+      "{{Productprice6id}}",
+      data?.productbox1?.productprice || "Productprice6id"
     );
 
 
@@ -216,6 +247,11 @@ const UI = () => {
       data?.productbox7?.productimage || "Productname7id"
     );
 
+     updatedHTML = updatedHTML.replaceAll(
+      "{{Productprice7id}}",
+      data?.productbox1?.productprice || "Productprice7id"
+    );
+
     updatedHTML = updatedHTML.replaceAll(
       "{{Productname8id}}",
       data?.productbox8?.productname || "Productname8id"
@@ -224,6 +260,11 @@ const UI = () => {
     updatedHTML = updatedHTML.replaceAll(
       "{{Productname8idimg}}",
       data?.productbox8?.productimage || "Productname8id"
+    );
+
+     updatedHTML = updatedHTML.replaceAll(
+      "{{Productprice8id}}",
+      data?.productbox1?.productprice || "Productprice8id"
     );
 
     return updatedHTML;
