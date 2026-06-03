@@ -221,7 +221,6 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
 
 
   });
-  console.log(findproductid1.productprice);
 });
 
 app.post("/myOrderStatus", authMiddleware, async (req, res) => {
