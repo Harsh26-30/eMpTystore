@@ -125,7 +125,7 @@ const UI = () => {
         );
 
         setUserUI(res.data.productbox);
-        console.log("FULL RESPONSE:", res.data);
+        console.log("FULL RESPONSE:", res.data.productbox);
       } catch (err) {
         console.log(err);
       }
