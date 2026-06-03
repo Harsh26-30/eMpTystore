@@ -2,6 +2,9 @@
     background-color: #000;
     height: 15%;
     padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #mainboxheader2 #box2header2 {
