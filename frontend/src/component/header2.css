@@ -2,9 +2,6 @@
     background-color: #000;
     height: 15%;
     padding: 4px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 }
 
 #mainboxheader2 #box2header2 {
@@ -13,6 +10,7 @@
     align-items: center;
     justify-content: space-between;
     background-color: #000;
+    position: relative;
 }
 
 #mainboxheader2 #box2header2 img {
@@ -89,13 +87,30 @@ button #ShopOpenornotbox2 #ShopOpenornotcircle{
     border-radius: 30px; 
 }
 
-@media (min-width:794px) {
-    #mainboxheader2 {
-    background-color: #000;
-    height: 15%;
-    padding: 4px;
-    display: flex;
-    align-items: center;
-   justify-content: center;
+@media (min-width:597px) {
+    #mainboxheader2 #box2header2 img {
+    width: 25%;
+    border-radius: 20px;
+}
+}
+
+@media (min-width:764px) {
+    #mainboxheader2 #box2header2 img {
+    width: 25%;
+    border-radius: 20px;
+}
+}
+
+@media (min-width:1374px) {
+    #mainboxheader2 #box2header2 img {
+    width: 20%;
+    border-radius: 20px;
+}
+}
+
+@media (min-width:1440px) {
+    #mainboxheader2 #box2header2 img {
+    width: 15%;
+    border-radius: 20px;
 }
 }
