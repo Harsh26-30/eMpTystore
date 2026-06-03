@@ -38,6 +38,14 @@ const orderSchema = new mongoose.Schema({
 
     weight: {
         type: Number,
+    },
+    order_date: {
+        type: Date,
+        default: Date.now
+    },
+    order_time: {
+        type: String,
+        default: new Date().toLocaleTimeString()
     }
 });
 
