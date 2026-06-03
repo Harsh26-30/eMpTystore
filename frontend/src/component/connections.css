@@ -2,15 +2,15 @@
   width: 100%;
     height: 90vh;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     margin-top: 20px;
 }
 
 #Shopnoxs {
     width: 90%;
-    height: 12%;
+    height: 10%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -19,8 +19,7 @@
     text-transform: capitalize;
     box-shadow: 2px 2px 10px 2px #000;
     border-radius: 20px;
-    margin-bottom: 10px;
-    margin: 5px;
+    margin: 10px;
 }
 
 
@@ -66,39 +65,4 @@
     color:grey;
     user-select: none;
     font-family: sans-serif;
-}
-
-@media (min-width:794px) {
-#mainboxconnections {
-  width: 100%;
-    height: 90vh;
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: flex-start;
-    margin-top: 20px;
-    padding: 10px;
-}
-
-#Shopnoxs {
-    width: 18%;
-    height: 35%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content:flex-end;
-    padding-left: 10px;
-    padding-bottom: 5px;
-    text-transform: capitalize;
-    box-shadow: 2px 2px 10px 2px #000;
-    border-radius: 20px;
-    margin-bottom: 10px;
-}
-
-
-#Shopnoxs h3 {
-    color: #000;
-    font-size: 30px;
-    font-family: sans-serif;
-}
 }
