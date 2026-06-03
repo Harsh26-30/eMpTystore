@@ -22,25 +22,6 @@ const UI = () => {
 
 
 
-  useEffect(() => {
-    const fetchUiData = async () => {
-      try {
-        const res = await axios.post(`${import.meta.env.VITE_API_URL}/uidatas`, {}, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-        );
-        setUidatas(res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    fetchUiData();
-  }, []);
-
-
   const handleAdd = async (uiid) => {
     try {
       const res = await axios.post(
@@ -99,12 +80,9 @@ const UI = () => {
           }
         );
 
-
-
         setheader(res.data.uiheader);
         setbody(res.data.uibody);
         //  setfooter(res.data.uifooter);
-
 
       } catch (err) {
         console.log(err);
@@ -125,14 +103,34 @@ const UI = () => {
         );
 
         setUserUI(res.data.productbox);
-        console.log("FULL RESPONSE:", res.data.productbox);
+        console.log("UserUi:", res.data.productbox);
       } catch (err) {
         console.log(err);
       }
     };
 
     fun1();
+        
+
+     const fetchUiData = async () => {
+      try {
+        console.log(import.meta.env.VITE_API_URL);
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}/uidatas`, {}, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+        );
+        setUidatas(res.data);        
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchUiData();
   }, [token]);
+
+        console.log("Check feonnt useEffect working or not");
 
 
   const renderHTML = (html, data = {}) => {
@@ -155,9 +153,9 @@ const UI = () => {
       data?.productbox1?.productimage || "Productname1id"
     );
 
-    updatedHTML = updatedHTML.replaceAll(
+    updatedHTML =  updatedHTML.replaceAll(
       "{{Productprice1id}}",
-      data?.productbox1?.productprice || "0"
+      data?.productbox1?.productsellerid || "0"
     );
 
 
@@ -308,7 +306,8 @@ const UI = () => {
         </div>
       )}
 
-      {visibilityval === true && <Updateproductuiid onclicksave={()=>{fun1();}} setvisibilityval={setvisibilityval} />}
+      {visibilityval === true && <Updateproductuiid  setvisibilityval={setvisibilityval} />}
+      {/* onclicksave={()=>{fun1();}} */}
 
 
       <div id='lookbox'>

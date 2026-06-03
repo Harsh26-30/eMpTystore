@@ -818,6 +818,8 @@ app.post("/uidatas", authMiddleware, async (req, res) => {
   try {
     const allUi = await Ui.find();
     res.json(allUi);
+    console.log("api is hiited");
+    
   } catch (err) {
     res.status(500).json({ message: "Error fetching UI data" });
   }

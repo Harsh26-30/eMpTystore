@@ -148,6 +148,12 @@ const Shopnox = () => {
       data?.productbox1?.productimage || "Productname1id"
     );
 
+    updatedHTML =  updatedHTML.replaceAll(
+      "{{Productprice1id}}",
+      data?.productbox1?.productprice || "0"
+    );
+
+
     updatedHTML = updatedHTML.replaceAll(
       "{{Productname2id}}",
       data?.productbox2?.productname || "Productname1id"
@@ -156,6 +162,11 @@ const Shopnox = () => {
     updatedHTML = updatedHTML.replaceAll(
       "{{Productname2idimg}}",
       data?.productbox2?.productimage || "Productname1id"
+    );
+
+     updatedHTML = updatedHTML.replaceAll(
+      "{{Productprice2id}}",
+      data?.productbox2?.productprice || "Productprice2id"
     );
 
     updatedHTML = updatedHTML.replaceAll(
@@ -168,6 +179,11 @@ const Shopnox = () => {
       data?.productbox3?.productimage || "Productname1id"
     );
 
+     updatedHTML = updatedHTML.replaceAll(
+      "{{Productprice3id}}",
+      data?.productbox3?.productprice || "Productprice3id"
+    );
+
     updatedHTML = updatedHTML.replaceAll(
       "{{Productname4id}}",
       data?.productbox4?.productname || "Productname4id"
@@ -176,6 +192,11 @@ const Shopnox = () => {
     updatedHTML = updatedHTML.replaceAll(
       "{{Productname4idimg}}",
       data?.productbox4?.productimage || "Productname4id"
+    );
+
+     updatedHTML = updatedHTML.replaceAll(
+      "{{Productprice4id}}",
+      data?.productbox4?.productprice || "Productprice4id"
     );
 
     updatedHTML = updatedHTML.replaceAll(
@@ -188,6 +209,11 @@ const Shopnox = () => {
       data?.productbox5?.productimage || "Productname5id"
     );
 
+     updatedHTML = updatedHTML.replaceAll(
+      "{{Productprice5id}}",
+      data?.productbox5?.productprice || "Productprice5id"
+    );
+
     updatedHTML = updatedHTML.replaceAll(
       "{{Productname6id}}",
       data?.productbox6?.productname || "Productname6id"
@@ -196,6 +222,11 @@ const Shopnox = () => {
     updatedHTML = updatedHTML.replaceAll(
       "{{Productname6idimg}}",
       data?.productbox6?.productimage || "Productname6id"
+    );
+
+     updatedHTML = updatedHTML.replaceAll(
+      "{{Productprice6id}}",
+      data?.productbox6?.productprice || "Productprice6id"
     );
 
 
@@ -209,6 +240,11 @@ const Shopnox = () => {
       data?.productbox7?.productimage || "Productname7id"
     );
 
+     updatedHTML = updatedHTML.replaceAll(
+      "{{Productprice7id}}",
+      data?.productbox7?.productprice || "Productprice7id"
+    );
+
     updatedHTML = updatedHTML.replaceAll(
       "{{Productname8id}}",
       data?.productbox8?.productname || "Productname8id"
@@ -217,6 +253,11 @@ const Shopnox = () => {
     updatedHTML = updatedHTML.replaceAll(
       "{{Productname8idimg}}",
       data?.productbox8?.productimage || "Productname8id"
+    );
+
+     updatedHTML = updatedHTML.replaceAll(
+      "{{Productprice8id}}",
+      data?.productbox8?.productprice || "Productprice8id"
     );
 
     return updatedHTML;
