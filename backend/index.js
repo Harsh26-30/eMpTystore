@@ -159,9 +159,9 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
     _id: { $in: finduser.myproductid }
   });
 
-const findproductid1 = finduser.ui.productbox.productbox1id
-  ? await Product.findById(finduser.ui.productbox.productbox1id).lean()
-  : null;
+  const findproductid1 = finduser.ui.productbox.productbox1id
+    ? await Product.findById(finduser.ui.productbox.productbox1id)
+    : null;
 
   const findproductid2 = finduser.ui.productbox.productbox2id
     ? await Product.findById(finduser.ui.productbox.productbox2id)
