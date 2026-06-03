@@ -173,7 +173,7 @@ const UI = () => {
 
      updatedHTML = updatedHTML.replaceAll(
       "{{Productprice2id}}",
-      data?.productbox1?.productprice || "Productprice2id"
+      data?.productbox2?.productprice || "Productprice2id"
     );
 
     updatedHTML = updatedHTML.replaceAll(
@@ -188,7 +188,7 @@ const UI = () => {
 
      updatedHTML = updatedHTML.replaceAll(
       "{{Productprice3id}}",
-      data?.productbox1?.productprice || "Productprice3id"
+      data?.productbox3?.productprice || "Productprice3id"
     );
 
     updatedHTML = updatedHTML.replaceAll(
@@ -203,7 +203,7 @@ const UI = () => {
 
      updatedHTML = updatedHTML.replaceAll(
       "{{Productprice4id}}",
-      data?.productbox1?.productprice || "Productprice4id"
+      data?.productbox4?.productprice || "Productprice4id"
     );
 
     updatedHTML = updatedHTML.replaceAll(
@@ -218,7 +218,7 @@ const UI = () => {
 
      updatedHTML = updatedHTML.replaceAll(
       "{{Productprice5id}}",
-      data?.productbox1?.productprice || "Productprice5id"
+      data?.productbox5?.productprice || "Productprice5id"
     );
 
     updatedHTML = updatedHTML.replaceAll(
@@ -233,7 +233,7 @@ const UI = () => {
 
      updatedHTML = updatedHTML.replaceAll(
       "{{Productprice6id}}",
-      data?.productbox1?.productprice || "Productprice6id"
+      data?.productbox6?.productprice || "Productprice6id"
     );
 
 
@@ -249,7 +249,7 @@ const UI = () => {
 
      updatedHTML = updatedHTML.replaceAll(
       "{{Productprice7id}}",
-      data?.productbox1?.productprice || "Productprice7id"
+      data?.productbox7?.productprice || "Productprice7id"
     );
 
     updatedHTML = updatedHTML.replaceAll(
@@ -264,7 +264,7 @@ const UI = () => {
 
      updatedHTML = updatedHTML.replaceAll(
       "{{Productprice8id}}",
-      data?.productbox1?.productprice || "Productprice8id"
+      data?.productbox8?.productprice || "Productprice8id"
     );
 
     return updatedHTML;
