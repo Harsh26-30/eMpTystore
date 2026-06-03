@@ -125,7 +125,7 @@ const UI = () => {
         );
 
         setUserUI(res.data.productbox);
-
+console.log("UserUI:", UserUI);
       } catch (err) {
         console.log(err);
       }
@@ -157,7 +157,7 @@ const UI = () => {
 
     updatedHTML = updatedHTML.replaceAll(
       "{{Productprice1id}}",
-      data.productbox.productbox1.productprice || "Productprice1id"
+      data?.productbox1?.productprice || "Productprice1id"
     );
 
 
