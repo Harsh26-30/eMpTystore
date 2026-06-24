@@ -42,6 +42,37 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "../frontend/dist")));
 app.use('/uploads', express.static('uploads'));
 
+async function getCoordinates(address, district, state, country) {
+  const fullAddress =
+    `${address}, ${district}, ${state}, ${country}`;
+
+  const url =
+    `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fullAddress)}`;
+
+  const response = await fetch(url, {
+    headers: {
+      "User-Agent": "MyStoreApp/1.0 (contact@example.com)"
+    }
+  });
+
+  const data = await response.json();
+
+  return {
+    lat: parseFloat(data[0].lat),
+    lon: parseFloat(data[0].lon)
+  };
+}
+
+async function getRouteDistance(start, end) {
+  const url =
+    `https://router.project-osrm.org/route/v1/driving/${start.lon},${start.lat};${end.lon},${end.lat}?overview=false`;
+
+  const response = await fetch(url);
+  const data = await response.json();
+
+  return data.routes[0].distance / 1000; // km
+}
+
 const authMiddleware = (req, res, next) => {
   const header = req.headers.authorization;
   if (!header) {
@@ -819,7 +850,7 @@ app.post("/uidatas", authMiddleware, async (req, res) => {
     const allUi = await Ui.find();
     res.json(allUi);
     console.log("api is hiited");
-    
+
   } catch (err) {
     res.status(500).json({ message: "Error fetching UI data" });
   }
@@ -928,6 +959,52 @@ app.post("/uidata", authMiddleware, async (req, res) => {
   } catch (err) {
     console.log("❌ ERROR:", err);
     res.status(500).json({ message: err.message });
+  }
+});
+
+app.get('/allshops', authMiddleware, async (req, res) => {
+  try {
+
+            console.log('work b');
+
+    const sellers = await User.find({
+      role: "Seller"
+    });
+
+    return res.json({
+      shops: sellers
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      msg: "Server Error"
+    });
+  }
+});
+
+app.post('/Updatelatlog', authMiddleware, async (req, res) => {
+  try {
+    const { clatitude, clongitude } = req.body
+    await User.findOneAndUpdate(
+      {
+        email: req.user.email
+      },
+      {
+        shoplatitude: clatitude,
+        shoplongitude: clongitude
+      }
+    );
+    res.json({
+      msg: "Coordinates received"
+    });
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      msg: 'Server Error'
+    });
   }
 });
 

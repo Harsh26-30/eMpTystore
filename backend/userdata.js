@@ -40,6 +40,14 @@ const userSchema = new mongoose.Schema({
   district: {
     type: String,
   },
+  shoplatitude: {
+    type: String
+  }
+  ,
+  shoplongitude: {
+    type: String
+  }
+  ,
   address: {
     type: String
   },
