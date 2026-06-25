@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 
 const QrScanner = ({ onScan }) => {
   const scannedRef = useRef(false);
+  const scannerRef = useRef(null);
 
   useEffect(() => {
     const scanner = new Html5QrcodeScanner(
@@ -10,33 +11,37 @@ const QrScanner = ({ onScan }) => {
       {
         fps: 10,
         qrbox: 250,
+        rememberLastUsedCamera: true,
       },
       false
     );
 
+    scannerRef.current = scanner;
+
     scanner.render(
-      async (decodedText) => {
+      (decodedText) => {
         if (scannedRef.current) return;
 
         scannedRef.current = true;
 
         onScan(decodedText);
 
-        try {
-          await scanner.clear();
-        } catch (err) {
-          console.log(err);
-        }
+        scanner.clear().catch(() => {});
       },
-      () => {}
+      (error) => {
+        // ignore scanning errors
+      }
     );
 
     return () => {
-      scanner.clear().catch(() => {});
+      if (scannerRef.current) {
+        scannerRef.current.clear().catch(() => {});
+        scannerRef.current = null;
+      }
     };
-  }, [onScan]);
+  }, []); // 👈 IMPORTANT: empty dependency
 
-  return <div id="reader"></div>;
+  return <div id="reader" />;
 };
 
 export default QrScanner;
