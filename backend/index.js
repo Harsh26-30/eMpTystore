@@ -252,7 +252,7 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
     shopOpenOrNot: finduser.shopOpenOrNot,
     managingOrder:finduser.managingOrder,
     slat:orderdata.shopcorrdinates.latitude,
-    slong:orderdata.shopcorrdinates.latitude
+    slong:orderdata.shopcorrdinates.longitude
   });
 });
 

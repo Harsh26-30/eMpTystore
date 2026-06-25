@@ -20,7 +20,7 @@ const DeliveryPartnerdashboard = () => {
     const [heading, setHeading] = useState(0);
     const prevPos = useRef(null);
     const markerRef = useRef(null);
-    const [managingOrder,setmanagingOrder] = useState('')
+    const [managingOrder, setmanagingOrder] = useState('')
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -47,7 +47,7 @@ const DeliveryPartnerdashboard = () => {
                 );
                 setmanagingOrder(res2.data.managingOrder)
                 setdestlat(res2.data.slat);
-        setdestlong(res2.data.slong);
+                setdestlong(res2.data.slong);
 
             } catch (err) {
                 console.error(err);
@@ -223,7 +223,7 @@ const DeliveryPartnerdashboard = () => {
 
     return (
         <div id='maindpd'>
-            {(mapvisblity === 'True' || managingOrder) &&( <MapContainer
+            {(mapvisblity === 'True' || managingOrder) && (<MapContainer
                 center={position}
                 zoom={6}
                 style={{ height: "500px", width: "100%" }}
@@ -239,14 +239,14 @@ const DeliveryPartnerdashboard = () => {
                 </Marker>
 
                 {destlat && destlong && (
-    <Marker position={[destlat, destlong]} icon={shopIcon}>
-        <Popup>Shop Location</Popup>
-    </Marker>
-)}
+                    <Marker position={[destlat, destlong]} icon={shopIcon}>
+                        <Popup>Shop Location</Popup>
+                    </Marker>
+                )}
 
-{destlat !== null && destlong !== null && (
-    <Routing start={position} end={destination} />
-)}            </MapContainer>)}
+                {destlat !== null && destlong !== null && (
+                    <Routing start={position} end={destination} />
+                )}            </MapContainer>)}
             {
                 Array.isArray(orders) && orders.length > 0 ? (
                     orders
