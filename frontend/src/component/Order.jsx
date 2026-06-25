@@ -3,11 +3,14 @@ import './Order.css'
 import Header2 from "./header2";
 import { useState } from 'react';
 import axios from 'axios'
+import QrScanner from "./QrScanner"
+
 
 const Order = () => {
   const token = localStorage.getItem("token");
   const [orders, setrorders] = useState([])
   const [userRole, setuserRole] = useState('')
+  const [showScanner, setShowScanner] = useState(false);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -142,7 +145,12 @@ const Order = () => {
     }
   };
 
+  const handleScan = async (e) => {
+          setShowScanner(true)
+  }
+
   const handleOutfordelivary = async (e) => {
+
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/Outfordelivary`,
@@ -286,13 +294,39 @@ const Order = () => {
                     width: "30%",
                     height: "30%",
                     borderRadius: "10px"
-                  }} onClick={() => handleOutfordelivary(order._id)}>Out For Delivary</button> :
+                  }} onClick={() => handleScan(order._id)}>Scan Qr</button> :
                   <></>}
 
                 <div>
-
-
                 </div>
+                {showScanner && (
+                  <div
+                    style={{
+                      position: "fixed",
+                      top: 0,
+                      left: 0,
+                      width: "100vw",
+                      height: "100vh",
+                      background: "rgba(0,0,0,0.7)",
+                      zIndex: 9999,
+                    }}
+                  >
+                    <QRScanner
+                      onScan={(result) => {
+                        console.log("QR:", result);
+
+                        if (String(result) === String(order._id)) {
+                          alert("Correct Order Scanned");
+                           handleOutfordelivary(order._id)
+                        } else {
+                          alert("Wrong QR Code");
+                        }
+
+                        setShowScanner(false);
+                      }}
+                    />
+                  </div>
+                )}
               </div>
             ))
           ) : (
