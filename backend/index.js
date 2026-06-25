@@ -185,6 +185,7 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
     _id: { $in: finduser.shoporseller }
   });
 
+  const orderdata =  await Order.findById(finduser.managingOrder)
 
   const findproduct = await Product.find({
     _id: { $in: finduser.myproductid }
@@ -249,7 +250,10 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
     myproductdata: findproduct,
     shops: finduser2,
     shopOpenOrNot: finduser.shopOpenOrNot,
-    managingOrder:finduser.managingOrder
+    managingOrder:finduser.managingOrder,
+    slat:orderdata.shopcorrdinates.latitude,
+    slong:orderdata.shopcorrdinates.latitude
+
 
   });
 });

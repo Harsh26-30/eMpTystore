@@ -46,6 +46,8 @@ const DeliveryPartnerdashboard = () => {
                     }
                 );
                 setmanagingOrder(res2.data.managingOrder)
+                setdestlat(res2.data.slat);
+        setdestlong(res2.data.slong);
 
             } catch (err) {
                 console.error(err);
@@ -221,7 +223,7 @@ const DeliveryPartnerdashboard = () => {
 
     return (
         <div id='maindpd'>
-            {mapvisblity === 'True' && <MapContainer
+            {mapvisblity === 'True' || managingOrder && <MapContainer
                 center={position}
                 zoom={6}
                 style={{ height: "500px", width: "100%" }}
