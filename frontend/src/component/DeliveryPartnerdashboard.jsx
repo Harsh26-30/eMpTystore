@@ -296,6 +296,7 @@ const DeliveryPartnerdashboard = () => {
                                                     padding: "20px",
                                                     borderRadius: "10px",
                                                     display:"flex",
+                                                    flexDirection:"column",
                                                     justifyContentL:"Center",
                                                     alignItems:"Center"
                                                 }}
