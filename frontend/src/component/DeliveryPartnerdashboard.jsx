@@ -38,16 +38,21 @@ const DeliveryPartnerdashboard = () => {
         fetchOrders();
     }, [token])
 
-
     useEffect(() => {
-        navigator.geolocation.getCurrentPosition(
+        const watchId = navigator.geolocation.watchPosition(
             (position) => {
-                setclat(position.coords.latitude)
-                setclong(position.coords.longitude)
+                setclat(position.coords.latitude);
+                setclong(position.coords.longitude);
             },
-            (error) => console.log(error.message)
-        )
-    }, [])
+            (error) => console.log(error.message),
+            {
+                enableHighAccuracy: true,
+                maximumAge: 0,
+            }
+        );
+
+        return () => navigator.geolocation.clearWatch(watchId);
+    }, []);
 
     const position = [clat, clong]
 
