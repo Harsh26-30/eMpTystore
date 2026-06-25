@@ -99,12 +99,7 @@ const NearByShop = () => {
                         ).toFixed(2)?? 'Not Defined'} km
                     </h4>
                 </div>
-            ))) : (
-                <div id='addshop'>
-                    <div id='plus' onClick={() => navigate("/searchbox")}>+ </div>
-                    <div id='plustext'>Add Shop</div>
-                </div>
-            )}
+            ))):<></>}
 
         </div>
     )

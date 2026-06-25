@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import Connections from "./connections";
 import axios from 'axios'
 import NearByShop from "./NearByShop"
+import DeliveryPartnerdashboard from "./DeliveryPartnerdashboard"
 
 function Homepage() {
   const [managehomepagevisible, setmanagehomepagevisible] = useState('Order');
@@ -79,6 +80,7 @@ useEffect(() => {
       {userRole === "Customer" && <NearByShop/>}
       {userRole === "Customer" && <h3 className="hmh3">Your Connections</h3>}
       {userRole === "Customer" && <Connections />}
+      {userRole === "Delivery_partner" && <DeliveryPartnerdashboard/>}
       {/* <Footer/> */}
     </div>
   );

@@ -18,6 +18,8 @@ const orderSchema = new mongoose.Schema({
 
     sellerid: { type: String, required: true },
 
+    delivery_partner:{type:String},
+
     orderstatus: {
         type: String,
         default: "Pending"
