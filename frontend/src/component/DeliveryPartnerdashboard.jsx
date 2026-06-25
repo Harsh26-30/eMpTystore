@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { MapContainer, TileLayer, Marker, Popup, Polyline, Tooltip, useMapEvents } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import Loaderpage from "./Loaderpage"
 import "./DeliveryPartnerdashboard.css"
 import L from "leaflet";
 import "leaflet-routing-machine";
+import "leaflet-rotatedmarker";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import axios from "axios";
 
@@ -16,6 +17,9 @@ const DeliveryPartnerdashboard = () => {
     const [orders, setrorders] = useState([])
     const [mapvisblity, setmapvisblity] = useState('False')
     const token = localStorage.getItem("token");
+    const [heading, setHeading] = useState(0);
+    const prevPos = useRef(null);
+    const markerRef = useRef(null);
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -39,11 +43,36 @@ const DeliveryPartnerdashboard = () => {
     }, [token])
 
     useEffect(() => {
+        if (markerRef.current) {
+            markerRef.current.setRotationAngle(heading);
+        }
+    }, [heading]);
+
+    useEffect(() => {
         const watchId = navigator.geolocation.watchPosition(
             (position) => {
-                setclat(position.coords.latitude);
-                setclong(position.coords.longitude);
-            },
+                const newLat = position.coords.latitude;
+                const newLng = position.coords.longitude;
+
+                if (prevPos.current) {
+                    const angle = getBearing(
+                        prevPos.current.lat,
+                        prevPos.current.lng,
+                        newLat,
+                        newLng
+                    );
+
+                    setHeading(angle);
+                }
+
+                prevPos.current = {
+                    lat: newLat,
+                    lng: newLng,
+                };
+
+                setclat(newLat);
+                setclong(newLng);
+            },,
             (error) => console.log(error.message),
             {
                 enableHighAccuracy: true,
@@ -110,6 +139,22 @@ const DeliveryPartnerdashboard = () => {
         return null;
     }
 
+    function getBearing(lat1, lon1, lat2, lon2) {
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+
+        lat1 = lat1 * Math.PI / 180;
+        lat2 = lat2 * Math.PI / 180;
+
+        const y = Math.sin(dLon) * Math.cos(lat2);
+        const x =
+            Math.cos(lat1) * Math.sin(lat2) -
+            Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
+
+        let bearing = Math.atan2(y, x) * 180 / Math.PI;
+
+        return (bearing + 360) % 360;
+    }
+
     // ✅ correct zoom tracker
     // function ZoomTracker() {
     //     useMapEvents({
@@ -170,7 +215,11 @@ const DeliveryPartnerdashboard = () => {
             >
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
-                <Marker position={position} icon={riderIcon}>
+                <Marker
+                    position={position}
+                    icon={riderIcon}
+                    ref={markerRef}
+                >
                     <Popup>Your Location</Popup>
                 </Marker>
 
