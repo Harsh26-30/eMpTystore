@@ -42,11 +42,13 @@ const DeliveryPartnerdashboard = () => {
         fetchOrders();
     }, [token])
 
-    useEffect(() => {
-        if (markerRef.current) {
-            markerRef.current.setRotationAngle(heading);
-        }
-    }, [heading]);
+  useEffect(() => {
+    const marker = markerRef.current;
+
+    if (marker && marker.setRotationAngle) {
+        marker.setRotationAngle(heading);
+    }
+}, [heading]);
 
     useEffect(() => {
         const watchId = navigator.geolocation.watchPosition(
@@ -92,9 +94,9 @@ const DeliveryPartnerdashboard = () => {
         maxLng: 97.5,
     }
 
-    if (!clat || !clong) {
-        return <Loaderpage />
-    }
+    if (clat === null || clong === null) {
+    return <Loaderpage />
+}
 
     const destination = [destlat, destlong]; // Delhi example
 
