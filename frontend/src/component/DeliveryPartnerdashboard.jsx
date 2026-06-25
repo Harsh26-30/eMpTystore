@@ -64,17 +64,12 @@ const DeliveryPartnerdashboard = () => {
 
     const destination = [destlat, destlong]; // Delhi example
 
-    const riderIcon = L.icon({
-        iconUrl: "/rider.png",
-        iconSize: [40, 40],
-        iconAnchor: [20, 40],
-    });
-
-    const shopIcon = L.icon({
-        iconUrl: "/shop.png",
-        iconSize: [40, 40],
-        iconAnchor: [20, 40],
-    });
+    const customIcon = L.icon({
+  iconUrl: "/E.png", // image in public folder
+  iconSize: [40, 40],
+  iconAnchor: [20, 40],
+  popupAnchor: [0, -40],
+});
 
     function Routing({ start, end }) {
         const map = useMapEvents({});
@@ -87,18 +82,11 @@ const DeliveryPartnerdashboard = () => {
                     L.latLng(start[0], start[1]),
                     L.latLng(end[0], end[1]),
                 ],
-
-                createMarker: function (i, waypoint) {
-                    return L.marker(
-                        waypoint.latLng,
-                        {
-                            icon: i === 0 ? riderIcon : shopIcon
-                        }
-                    );
-                },
-
+                routeWhileDragging: false,
                 addWaypoints: false,
                 draggableWaypoints: false,
+                fitSelectedRoutes: true,
+                show: false,
             }).addTo(map);
 
             return () => {
@@ -169,7 +157,7 @@ const DeliveryPartnerdashboard = () => {
             >
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
-                <Marker position={position}>
+                <Marker position={position} icon={customIcon}>
                     <Popup>Your Location</Popup>
                 </Marker>
 
