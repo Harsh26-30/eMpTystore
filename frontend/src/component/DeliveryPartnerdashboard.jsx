@@ -93,6 +93,8 @@ const DeliveryPartnerdashboard = () => {
                 draggableWaypoints: false,
                 fitSelectedRoutes: true,
                 show: false,
+                createMarker: () => null, // hides default markers
+
             }).addTo(map);
 
             return () => {
