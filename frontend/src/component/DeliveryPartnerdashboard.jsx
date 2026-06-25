@@ -64,12 +64,18 @@ const DeliveryPartnerdashboard = () => {
 
     const destination = [destlat, destlong]; // Delhi example
 
-    const customIcon = L.icon({
-  iconUrl: "/E.png", // image in public folder
-  iconSize: [40, 40],
-  iconAnchor: [20, 40],
-  popupAnchor: [0, -40],
-});
+
+    const riderIcon = L.icon({
+        iconUrl: "/OIP.webp",
+        iconSize: [40, 40],
+        iconAnchor: [20, 40],
+    });
+
+    const shopIcon = L.icon({
+        iconUrl: "/ab8a01bebb0428f367b1525360046a3f.jpg",
+        iconSize: [40, 40],
+        iconAnchor: [20, 40],
+    });
 
     function Routing({ start, end }) {
         const map = useMapEvents({});
@@ -157,8 +163,12 @@ const DeliveryPartnerdashboard = () => {
             >
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
-                <Marker position={position} icon={customIcon}>
+                <Marker position={position} icon={riderIcon}>
                     <Popup>Your Location</Popup>
+                </Marker>
+
+                <Marker position={[destlat, destlong]} icon={shopIcon}>
+                    <Popup>Shop Location</Popup>
                 </Marker>
 
                 <Routing start={position} end={destination} />
