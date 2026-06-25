@@ -135,9 +135,9 @@ const DeliveryPartnerdashboard = () => {
                         .filter(order => order.orderstatus === 'RFD').map((order) => (
                             <div key={order._id} id='deliveryrequest'>
                                 <div id='box1'>
-                                    <h3>Order Id: {order._id}</h3>
-                                    <h3>Seller Name: {order.sellerName}</h3>
-                                    <h3>Address: {order.address}</h3>
+                                    <h5>Order Id: {order._id}</h5>
+                                    <h5>Seller Name: {order.sellerName}</h5>
+                                    <h5>Address: {order.address}</h5>
                                     <h4>{order.distance} km</h4>
                                 </div>
 
