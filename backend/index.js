@@ -687,13 +687,8 @@ app.post("/Orders", authMiddleware, async (req, res) => {
   }
 });
 
-app.post("/deliveryorder", authMiddleware, async (req, res) => {
+app.get("/deliveryorder", authMiddleware, async (req, res) => {
   try {
-    const finduser = await User.findOne({ email: req.user.email });
-
-    if (!finduser) {
-      return res.status(404).json({ message: "User not found" });
-    }
     const orders = await Order.find({
       orderstatus: 'RFD'  // no need for toString if ObjectId
     });
