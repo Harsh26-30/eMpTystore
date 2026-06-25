@@ -1,11 +1,7 @@
-import QRCode from "react-qr-code";
+import { QRCodeCanvas } from "qrcode.react";
 
-function OrderQr() {
-  return (
-    <div>
-      <QRCode value="Hello World" size={200} />
-    </div>
-  );
-}
+const OrderQr = ({ value }) => {
+  return <QRCodeCanvas value={value} size={150} />;
+};
 
 export default OrderQr;
