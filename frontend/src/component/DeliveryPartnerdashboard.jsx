@@ -274,7 +274,12 @@ const DeliveryPartnerdashboard = () => {
                                         Qr
                                     </button>}
 
-                                    {(managingOrder === order._id && QrVusibility === true) && (<OrderQr value={order._id} style={{'zIndex':'100'}}/>)}
+
+                                    {(managingOrder === order._id && QrVusibility === true) && (
+                                    <div style={{'width':'90%','height':'90%','position':'fixed'}}>
+                                        <OrderQr value={order._id} style={{'zIndex':'100'}}/>
+                                    </div>
+                                    )}
                                 </div>
                             </div>
                         ))
