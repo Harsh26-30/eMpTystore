@@ -72,7 +72,7 @@ const DeliveryPartnerdashboard = () => {
 
                 setclat(newLat);
                 setclong(newLng);
-            },,
+            },
             (error) => console.log(error.message),
             {
                 enableHighAccuracy: true,
