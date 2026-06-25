@@ -19,7 +19,7 @@ const DeliveryPartnerdashboard = () => {
             try {
                 const res = await axios.get(
                     `${import.meta.env.VITE_API_URL}/deliveryorder`,
-                    
+
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -132,22 +132,22 @@ const DeliveryPartnerdashboard = () => {
             {
                 Array.isArray(orders) && orders.length > 0 ? (
                     orders
-  .filter(order => order.status === 'RFD').map((order) => (
-                        <div key={order._id} id='deliveryrequest'>
-                            <div id='box1'>
-                                <h3>Order Id: {order._id}</h3>
-                                <h3>Seller Name: {order.sellerName}</h3>
-                                <h3>Address: {order.address}</h3>
-                                <h4>{order.distance} km</h4>
-                            </div>
+                        .filter(order => order.orderstatus === 'RFD').map((order) => (
+                            <div key={order._id} id='deliveryrequest'>
+                                <div id='box1'>
+                                    <h3>Order Id: {order._id}</h3>
+                                    <h3>Seller Name: {order.sellerName}</h3>
+                                    <h3>Address: {order.address}</h3>
+                                    <h4>{order.distance} km</h4>
+                                </div>
 
-                            <div id='box2'>
-                                <button>
-                                    Accept
-                                </button>
+                                <div id='box2'>
+                                    <button>
+                                        Accept
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    ))
+                        ))
                 ) : (
                     <></>
                 )
