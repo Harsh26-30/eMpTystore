@@ -11,8 +11,10 @@ import axios from "axios";
 const DeliveryPartnerdashboard = () => {
     const [clat, setclat] = useState(null)
     const [clong, setclong] = useState(null)
+    const [destlat, setdestlat] = useState(null)
+    const [destlong, setdestlong] = useState(null)
     const [orders, setrorders] = useState([])
-    const [mapvisblity,setmapvisblity] = useState('False')
+    const [mapvisblity, setmapvisblity] = useState('False')
     const token = localStorage.getItem("token");
 
     useEffect(() => {
@@ -47,7 +49,7 @@ const DeliveryPartnerdashboard = () => {
         )
     }, [])
 
-    // const position = [clat, clong]
+    const position = [clat, clong]
 
     const INDIA_BOUNDS = {
         minLat: 6.5,
@@ -60,7 +62,7 @@ const DeliveryPartnerdashboard = () => {
         return <Loaderpage />
     }
 
-    // const destination = [28.7041, 77.1025]; // Delhi example
+    const destination = [destlat, destlong]; // Delhi example
 
     function Routing({ start, end }) {
         const map = useMapEvents({});
@@ -132,13 +134,16 @@ const DeliveryPartnerdashboard = () => {
         return R * c;
     }
 
-    const handleAcept = async (e) => {
-        setmapvisblity('True')
-    }
+    const handleAcept = (order) => {
+        setmapvisblity('True');
+
+        setdestlat(order.shopcorrdinates.latitude);
+        setdestlong(order.shopcorrdinates.longitude);
+    };
 
     return (
         <div id='maindpd'>
-           {mapvisblity === 'True' && <MapContainer
+            {mapvisblity === 'True' && <MapContainer
                 center={position}
                 zoom={6}
                 style={{ height: "500px", width: "100%" }}
@@ -169,7 +174,7 @@ const DeliveryPartnerdashboard = () => {
                                 </div>
 
                                 <div id='box2'>
-                                    <button onClick={handleAcept}>
+                                    <button onClick={() => handleAcept(order)}>
                                         Accept
                                     </button>
                                 </div>
