@@ -4,6 +4,7 @@ import Header2 from "./header2";
 import { useState } from 'react';
 import axios from 'axios'
 import QrScanner from "./QrScanner"
+import { Navigate } from 'react-router-dom';
 
 
 const Order = () => {

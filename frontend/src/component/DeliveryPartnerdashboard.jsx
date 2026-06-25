@@ -26,16 +26,6 @@ const DeliveryPartnerdashboard = () => {
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                const res = await axios.get(
-                    `${import.meta.env.VITE_API_URL}/deliveryorder`,
-
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
-                setrorders(res.data.orders)
 
                 const res2 = await axios.get(
                     `${import.meta.env.VITE_API_URL}/checkuserinfo`,
@@ -49,6 +39,18 @@ const DeliveryPartnerdashboard = () => {
                 setmanagingOrder(res2.data.managingOrder)
                 setdestlat(res2.data.slat);
                 setdestlong(res2.data.slong);
+
+                const res = await axios.get(
+                    `${import.meta.env.VITE_API_URL}/deliveryorder`,
+
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+                setrorders(res.data.orders)
+
 
             } catch (err) {
                 console.error(err);
@@ -295,17 +297,17 @@ const DeliveryPartnerdashboard = () => {
                                                     background: "white",
                                                     padding: "20px",
                                                     borderRadius: "10px",
-                                                    display:"flex",
-                                                    flexDirection:"column",
-                                                    justifyContentL:"Center",
-                                                    alignItems:"Center"
+                                                    display: "flex",
+                                                    flexDirection: "column",
+                                                    justifyContentL: "Center",
+                                                    alignItems: "Center"
                                                 }}
                                             >
                                                 <OrderQr value={order._id} />
 
                                                 <button
                                                     onClick={() => setQrVusibility(false)}
-                                                    style={{ marginTop: "10px" ,width:"90%"}}
+                                                    style={{ marginTop: "10px", width: "90%" }}
                                                 >
                                                     Close
                                                 </button>
