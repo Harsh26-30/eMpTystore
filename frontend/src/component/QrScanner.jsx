@@ -1,59 +1,54 @@
-import { Html5QrcodeScanner } from "html5-qrcode";
+import { Html5Qrcode } from "html5-qrcode";
 import { useEffect, useRef } from "react";
-import "./QrScanner.css"
+
 const QrScanner = ({ onScan }) => {
-  const scannedRef = useRef(false);
   const scannerRef = useRef(null);
 
-useEffect(() => {
-  const requestCamera = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-      });
+  useEffect(() => {
+    const qr = new Html5Qrcode("reader");
+    scannerRef.current = qr;
 
-      console.log("Permission granted", stream);
+    const start = async () => {
+      try {
+        await qr.start(
+          { facingMode: "environment" },
+          {
+            fps: 10,
+            qrbox: { width: 250, height: 250 },
+          },
+          (text) => {
+            console.log("SCAN:", text);
+            onScan(text);
+            qr.stop(); // stop after scan
+          },
+          (err) => {}
+        );
+      } catch (e) {
+        console.log("START ERROR:", e);
+      }
+    };
 
-      stream.getTracks().forEach((track) => track.stop());
-    } catch (err) {
-      console.log("Permission denied or error:", err);
-    }
-  };
+    start();
 
-  requestCamera(); // ✅ THIS WAS MISSING
+    return () => {
+      if (scannerRef.current) {
+        scannerRef.current.stop().catch(() => {});
+      }
+    };
+  }, []);
 
-  const scanner = new Html5QrcodeScanner(
-    "reader",
-    {
-      fps: 10,
-      qrbox: 250,
-      rememberLastUsedCamera: true,
-    },
-    false
+  return (
+    <div
+      id="reader"
+      style={{
+        width: "100%",
+        maxWidth: "400px",
+        height: "400px",
+        margin: "auto",
+        background: "black",
+      }}
+    />
   );
-
-  scannerRef.current = scanner;
-
-  scanner.render(
-    (decodedText) => {
-      if (scannedRef.current) return;
-
-      scannedRef.current = true;
-
-      onScan(decodedText);
-
-      scanner.clear().catch(() => {});
-    },
-    (error) => {}
-  );
-
-  return () => {
-    scannerRef.current?.clear().catch(() => {});
-    scannerRef.current = null;
-  };
-}, []);
-
-  return <div id="reader" />;
 };
 
 export default QrScanner;
