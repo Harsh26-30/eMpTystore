@@ -64,6 +64,18 @@ const DeliveryPartnerdashboard = () => {
 
     const destination = [destlat, destlong]; // Delhi example
 
+    const riderIcon = L.icon({
+        iconUrl: "/rider.png",
+        iconSize: [40, 40],
+        iconAnchor: [20, 40],
+    });
+
+    const shopIcon = L.icon({
+        iconUrl: "/shop.png",
+        iconSize: [40, 40],
+        iconAnchor: [20, 40],
+    });
+
     function Routing({ start, end }) {
         const map = useMapEvents({});
 
@@ -75,11 +87,18 @@ const DeliveryPartnerdashboard = () => {
                     L.latLng(start[0], start[1]),
                     L.latLng(end[0], end[1]),
                 ],
-                routeWhileDragging: false,
+
+                createMarker: function (i, waypoint) {
+                    return L.marker(
+                        waypoint.latLng,
+                        {
+                            icon: i === 0 ? riderIcon : shopIcon
+                        }
+                    );
+                },
+
                 addWaypoints: false,
                 draggableWaypoints: false,
-                fitSelectedRoutes: true,
-                show: false,
             }).addTo(map);
 
             return () => {
