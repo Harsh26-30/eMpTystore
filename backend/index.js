@@ -248,8 +248,8 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
     },
     myproductdata: findproduct,
     shops: finduser2,
-    shopOpenOrNot: finduser.shopOpenOrNot
-
+    shopOpenOrNot: finduser.shopOpenOrNot,
+    managingOrder:finduser.managingOrder
 
   });
 });
@@ -702,7 +702,7 @@ app.get("/deliveryorder", authMiddleware, async (req, res) => {
 });
 
 app.post("/placeOrder", authMiddleware, async (req, res) => {
-  const { quantity, sellerid, productid, productname,customerlatitude,customerlongitude } = req.body;
+  const { quantity, sellerid, productid, productname, customerlatitude, customerlongitude } = req.body;
   const finduser = await User.findOne({ email: req.user.email });
   const findseller = await User.findById(sellerid)
 
@@ -721,14 +721,14 @@ app.post("/placeOrder", authMiddleware, async (req, res) => {
       productname,
       quantity,
       sellerid,
-       customercorrdinates: {
-        latitude:customerlatitude,
-        longitude:customerlongitude 
-    },
-    shopcorrdinates: {
+      customercorrdinates: {
+        latitude: customerlatitude,
+        longitude: customerlongitude
+      },
+      shopcorrdinates: {
         latitude: findseller.shoplatitude,
-        longitude:findseller.shoplongitude
-    },
+        longitude: findseller.shoplongitude
+      },
 
       orderstatus: "Pending"
     });
@@ -1006,8 +1006,30 @@ app.get('/allshops', authMiddleware, async (req, res) => {
   }
 });
 
-app.post("/aceptdelivery",authMiddleware,async (req,res) => {
-  const {}= req.body
+app.post("/aceptdelivery", authMiddleware, async (req, res) => {
+  const { orderId } = req.body
+  const finduser = await User.findOne({
+    email: req.user.email
+  })
+  await Order.findByIdAndUpdate(
+    orderId,
+    {
+      delivery_partner: finduser._id
+    },
+    { new: true }
+  );
+
+  if(finduser.role === 'Delivery_partner'){
+
+  await User.findByIdAndUpdate(
+    finduser._id,
+    {
+      managingOrder: orderId
+    },
+    { new: true }
+  );
+}
+
 })
 
 app.post('/Updatelatlog', authMiddleware, async (req, res) => {

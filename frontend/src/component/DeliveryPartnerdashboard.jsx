@@ -20,6 +20,7 @@ const DeliveryPartnerdashboard = () => {
     const [heading, setHeading] = useState(0);
     const prevPos = useRef(null);
     const markerRef = useRef(null);
+    const [managingOrder,setmanagingOrder] = useState('')
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -34,6 +35,18 @@ const DeliveryPartnerdashboard = () => {
                     }
                 );
                 setrorders(res.data.orders)
+
+                const res2 = await axios.get(
+                    `${import.meta.env.VITE_API_URL}/checkuserinfo`,
+
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+                setmanagingOrder(res2.data.managingOrder)
+
             } catch (err) {
                 console.error(err);
             }
@@ -42,13 +55,13 @@ const DeliveryPartnerdashboard = () => {
         fetchOrders();
     }, [token])
 
-  useEffect(() => {
-    const marker = markerRef.current;
+    useEffect(() => {
+        const marker = markerRef.current;
 
-    if (marker && marker.setRotationAngle) {
-        marker.setRotationAngle(heading);
-    }
-}, [heading]);
+        if (marker && marker.setRotationAngle) {
+            marker.setRotationAngle(heading);
+        }
+    }, [heading]);
 
     useEffect(() => {
         const watchId = navigator.geolocation.watchPosition(
@@ -95,8 +108,8 @@ const DeliveryPartnerdashboard = () => {
     }
 
     if (clat === null || clong === null) {
-    return <Loaderpage />
-}
+        return <Loaderpage />
+    }
 
     const destination = [destlat, destlong]; // Delhi example
 
@@ -167,23 +180,6 @@ const DeliveryPartnerdashboard = () => {
     //     return null
     // }
 
-    // const handleClick = async (e) => {
-    //     try {
-    //         const res = await axios.post(
-    //             `${import.meta.env.VITE_API_URL}/aceptdelivery`, {
-
-    //         },
-    //             {
-    //                 headers: {
-    //                     Authorization: `Bearer ${token}`,
-    //                 },
-    //             }
-    //         );
-    //     } catch (err) {
-    //         console.log(err);
-    //     }
-    // }
-
     function getDistance(lat1, lon1, lat2, lon2) {
         const R = 6371;
 
@@ -201,11 +197,26 @@ const DeliveryPartnerdashboard = () => {
         return R * c;
     }
 
-    const handleAcept = (order) => {
+    const handleAcept = async (order) => {
         setmapvisblity('True');
 
         setdestlat(order.shopcorrdinates.latitude);
         setdestlong(order.shopcorrdinates.longitude);
+
+        try {
+            await axios.post(
+                `${import.meta.env.VITE_API_URL}/aceptdelivery`, {
+                orderId: order._id
+            },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     return (
@@ -234,7 +245,7 @@ const DeliveryPartnerdashboard = () => {
             {
                 Array.isArray(orders) && orders.length > 0 ? (
                     orders
-                        .filter(order => order.orderstatus === 'RFD').map((order) => (
+                        .filter(order => order.orderstatus === 'RFD' && managingOrder === '').map((order) => (
                             <div key={order._id} id='deliveryrequest'>
                                 <div id='box1'>
                                     <h5>Order Id: {order._id}</h5>
@@ -253,6 +264,30 @@ const DeliveryPartnerdashboard = () => {
                                         Accept
                                     </button>
                                 </div>
+                            </div>
+                        ))
+                ) : (
+                    <></>
+                )
+            }
+
+                        {
+                Array.isArray(orders) && orders.length > 0 ? (
+                    orders
+                        .filter(order => order.orderstatus === 'RFD' && managingOrder === order._id).map((order) => (
+                            <div key={order._id} id='deliveryrequest'>
+                                <div id='box1'>
+                                    <h5>Order Id: {order._id}</h5>
+                                    <h4>
+                                        {getDistance(
+                                            clat,
+                                            clong,
+                                            order.shopcorrdinates.latitude,
+                                            order.shopcorrdinates.longitude
+                                        ).toFixed(2) ?? 'Not Defined'} km
+                                    </h4>
+                                </div>
+
                             </div>
                         ))
                 ) : (
