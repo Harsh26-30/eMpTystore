@@ -295,13 +295,16 @@ const DeliveryPartnerdashboard = () => {
                                                     background: "white",
                                                     padding: "20px",
                                                     borderRadius: "10px",
+                                                    display:"flex",
+                                                    justifyContentL:"Center",
+                                                    alignItems:"Center"
                                                 }}
                                             >
                                                 <OrderQr value={order._id} />
 
                                                 <button
                                                     onClick={() => setQrVusibility(false)}
-                                                    style={{ marginTop: "10px" }}
+                                                    style={{ marginTop: "10px" ,width:"90%"}}
                                                 >
                                                     Close
                                                 </button>
