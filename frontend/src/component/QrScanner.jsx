@@ -6,6 +6,22 @@ const QrScanner = ({ onScan }) => {
   const scannerRef = useRef(null);
 
   useEffect(() => {
+
+    const requestCamera = async () => {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+    });
+
+    console.log("Permission granted", stream);
+
+    // stop camera immediately if you only wanted permission
+    stream.getTracks().forEach(track => track.stop());
+  } catch (err) {
+    console.log("Permission denied or error:", err);
+  }
+};
+
     const scanner = new Html5QrcodeScanner(
       "reader",
       {
