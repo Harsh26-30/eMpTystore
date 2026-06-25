@@ -15,6 +15,7 @@
     "dotenv": "^17.4.1",
     "h3-js": "^4.4.0",
     "leaflet": "^1.9.4",
+    "leaflet-rotatedmarker": "^0.2.0",
     "leaflet-routing-machine": "^3.2.12",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
