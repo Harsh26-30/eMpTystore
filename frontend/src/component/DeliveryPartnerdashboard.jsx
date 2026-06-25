@@ -8,6 +8,7 @@ import "leaflet-routing-machine";
 import "leaflet-rotatedmarker";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import axios from "axios";
+import OrderQr from "./OrderQr"
 
 const DeliveryPartnerdashboard = () => {
     const [clat, setclat] = useState(null)
