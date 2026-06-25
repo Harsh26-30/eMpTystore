@@ -12,6 +12,7 @@ const DeliveryPartnerdashboard = () => {
     const [clat, setclat] = useState(null)
     const [clong, setclong] = useState(null)
     const [orders, setrorders] = useState([])
+    const [mapvisblity,setmapvisblity] = useState('False')
     const token = localStorage.getItem("token");
 
     useEffect(() => {
@@ -114,7 +115,7 @@ const DeliveryPartnerdashboard = () => {
     //     }
     // }
 
-        function getDistance(lat1, lon1, lat2, lon2) {
+    function getDistance(lat1, lon1, lat2, lon2) {
         const R = 6371;
 
         const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -131,9 +132,13 @@ const DeliveryPartnerdashboard = () => {
         return R * c;
     }
 
+    const handleAcept = async (e) => {
+        setmapvisblity('True')
+    }
+
     return (
         <div id='maindpd'>
-            {/* <MapContainer
+           {mapvisblity === 'True' && <MapContainer
                 center={position}
                 zoom={6}
                 style={{ height: "500px", width: "100%" }}
@@ -145,7 +150,7 @@ const DeliveryPartnerdashboard = () => {
                 </Marker>
 
                 <Routing start={position} end={destination} />
-            </MapContainer> */}
+            </MapContainer>}
             {
                 Array.isArray(orders) && orders.length > 0 ? (
                     orders
@@ -154,17 +159,17 @@ const DeliveryPartnerdashboard = () => {
                                 <div id='box1'>
                                     <h5>Order Id: {order._id}</h5>
                                     <h4>
-                        {getDistance(
-                            clat,
-                            clong,
-                            order.shopcorrdinates.latitude,
-                            order.shopcorrdinates.longitude
-                        ).toFixed(2)?? 'Not Defined'} km
-                    </h4>
+                                        {getDistance(
+                                            clat,
+                                            clong,
+                                            order.shopcorrdinates.latitude,
+                                            order.shopcorrdinates.longitude
+                                        ).toFixed(2) ?? 'Not Defined'} km
+                                    </h4>
                                 </div>
 
                                 <div id='box2'>
-                                    <button>
+                                    <button onClick={handleAcept}>
                                         Accept
                                     </button>
                                 </div>
