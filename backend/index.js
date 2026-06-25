@@ -702,7 +702,7 @@ app.get("/deliveryorder", authMiddleware, async (req, res) => {
 });
 
 app.post("/placeOrder", authMiddleware, async (req, res) => {
-  const { quantity, sellerid, productid, productname } = req.body;
+  const { quantity, sellerid, productid, productname,customerlatitude,customerlongitude } = req.body;
   const finduser = await User.findOne({ email: req.user.email });
   const findseller = await User.findById(sellerid)
 
