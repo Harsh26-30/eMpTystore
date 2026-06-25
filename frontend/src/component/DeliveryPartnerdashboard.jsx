@@ -22,7 +22,7 @@ const DeliveryPartnerdashboard = () => {
     const prevPos = useRef(null);
     const markerRef = useRef(null);
     const [managingOrder, setmanagingOrder] = useState('')
-    const [QrVusibility,setQrVusibility] = useState(false)
+    const [QrVusibility, setQrVusibility] = useState(false)
     useEffect(() => {
         const fetchOrders = async () => {
             try {
@@ -270,15 +270,43 @@ const DeliveryPartnerdashboard = () => {
                                         Accept
                                     </button>}
 
-                                     {managingOrder === order._id && <button onClick={() => setQrVusibility(true)}>
+                                    {managingOrder === order._id && <button onClick={() => setQrVusibility(true)}>
                                         Qr
                                     </button>}
 
 
-                                    {(managingOrder === order._id && QrVusibility === true) && (
-                                    <div style={{'width':'90%','height':'90%','position':'fixed','zIndex':'90'}}>
-                                        <OrderQr value={order._id} style={{'zIndex':'100'}}/>
-                                    </div>
+                                    {managingOrder === order._id && QrVusibility && (
+                                        <div
+                                            style={{
+                                                position: "fixed",
+                                                top: 0,
+                                                left: 0,
+                                                width: "100vw",
+                                                height: "100vh",
+                                                background: "rgba(0,0,0,0.7)",
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                alignItems: "center",
+                                                zIndex: 9999,
+                                            }}
+                                        >
+                                            <div
+                                                style={{
+                                                    background: "white",
+                                                    padding: "20px",
+                                                    borderRadius: "10px",
+                                                }}
+                                            >
+                                                <OrderQr value={order._id} />
+
+                                                <button
+                                                    onClick={() => setQrVusibility(false)}
+                                                    style={{ marginTop: "10px" }}
+                                                >
+                                                    Close
+                                                </button>
+                                            </div>
+                                        </div>
                                     )}
                                 </div>
                             </div>
