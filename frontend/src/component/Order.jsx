@@ -248,11 +248,6 @@ const Order = () => {
                     borderRadius: "10px"
                   }} onClick={() => handlereadyforshipment(order._id)}>Ready for Delivary</button> :
                   <></>}
-
-                <div>
-
-
-                </div>
               </div>
             ))
           ) : (
@@ -311,7 +306,7 @@ const Order = () => {
                       zIndex: 9999,
                     }}
                   >
-                    <QRScanner
+                    <QrScanner
                       onScan={(result) => {
                         console.log("QR:", result);
 
