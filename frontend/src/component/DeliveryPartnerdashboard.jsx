@@ -269,9 +269,7 @@ const DeliveryPartnerdashboard = () => {
                                         Accept
                                     </button>}
 
-                                    {(managingOrder === order._id)&& (<button onClick={() => handleAcept(order)}>
-                                        Generate
-                                    </button>)}
+                                    {managingOrder === order._id && <OrderQr value={order._id} />}
                                 </div>
                             </div>
                         ))
