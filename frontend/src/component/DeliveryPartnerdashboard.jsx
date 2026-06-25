@@ -22,7 +22,7 @@ const DeliveryPartnerdashboard = () => {
     const prevPos = useRef(null);
     const markerRef = useRef(null);
     const [managingOrder, setmanagingOrder] = useState('')
-
+    const [QrVusibility,setQrVusibility] = useState(false)
     useEffect(() => {
         const fetchOrders = async () => {
             try {
@@ -270,7 +270,11 @@ const DeliveryPartnerdashboard = () => {
                                         Accept
                                     </button>}
 
-                                    {managingOrder === order._id && <OrderQr value={order._id} />}
+                                     {managingOrder === order._id && <button onClick={() => setQrVusibility(true)}>
+                                        Qr
+                                    </button>}
+
+                                    {(managingOrder === order._id && QrVusibility === true) && (<OrderQr value={order._id} style={{'zIndex':'100'}}/>)}
                                 </div>
                             </div>
                         ))
