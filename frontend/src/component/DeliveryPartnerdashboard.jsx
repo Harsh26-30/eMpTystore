@@ -223,7 +223,7 @@ const DeliveryPartnerdashboard = () => {
 
     return (
         <div id='maindpd'>
-            {mapvisblity === 'True' || managingOrder && <MapContainer
+            {(mapvisblity === 'True' || managingOrder) &&( <MapContainer
                 center={position}
                 zoom={6}
                 style={{ height: "500px", width: "100%" }}
@@ -238,12 +238,15 @@ const DeliveryPartnerdashboard = () => {
                     <Popup>Your Location</Popup>
                 </Marker>
 
-                <Marker position={[destlat, destlong]} icon={shopIcon}>
-                    <Popup>Shop Location</Popup>
-                </Marker>
+                {destlat && destlong && (
+    <Marker position={[destlat, destlong]} icon={shopIcon}>
+        <Popup>Shop Location</Popup>
+    </Marker>
+)}
 
-                <Routing start={position} end={destination} />
-            </MapContainer>}
+{destlat !== null && destlong !== null && (
+    <Routing start={position} end={destination} />
+)}            </MapContainer>)}
             {
                 Array.isArray(orders) && orders.length > 0 ? (
                     orders
