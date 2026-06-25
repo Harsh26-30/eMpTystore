@@ -245,7 +245,7 @@ const DeliveryPartnerdashboard = () => {
             {
                 Array.isArray(orders) && orders.length > 0 ? (
                     orders
-                        .filter(order => order.orderstatus === 'RFD' && managingOrder === '').map((order) => (
+                        .filter(order => order.orderstatus === 'RFD').map((order) => (
                             <div key={order._id} id='deliveryrequest'>
                                 <div id='box1'>
                                     <h5>Order Id: {order._id}</h5>
@@ -271,29 +271,6 @@ const DeliveryPartnerdashboard = () => {
                 )
             }
 
-                        {
-                Array.isArray(orders) && orders.length > 0 ? (
-                    orders
-                        .filter(order => order.orderstatus === 'RFD' && managingOrder === order._id).map((order) => (
-                            <div key={order._id} id='deliveryrequest'>
-                                <div id='box1'>
-                                    <h5>Order Id: {order._id}</h5>
-                                    <h4>
-                                        {getDistance(
-                                            clat,
-                                            clong,
-                                            order.shopcorrdinates.latitude,
-                                            order.shopcorrdinates.longitude
-                                        ).toFixed(2) ?? 'Not Defined'} km
-                                    </h4>
-                                </div>
-
-                            </div>
-                        ))
-                ) : (
-                    <></>
-                )
-            }
         </div>
     )
 }
