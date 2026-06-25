@@ -157,8 +157,8 @@ const DeliveryPartnerdashboard = () => {
                         {getDistance(
                             clat,
                             clong,
-                            order.shoplatitude,
-                            order.shoplongitude
+                            order.shopcorrdinates.latitude,
+                            order.shopcorrdinates.longitude
                         ).toFixed(2)?? 'Not Defined'} km
                     </h4>
                                 </div>
