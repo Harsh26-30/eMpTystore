@@ -18,7 +18,18 @@ const orderSchema = new mongoose.Schema({
 
     sellerid: { type: String, required: true },
 
-    delivery_partner:{type:String},
+    delivery_partner: { type: String },
+
+    customercorrdinates: {
+        latitude: { type: String },
+        longitude: { type: String }
+    },
+    
+    shopcorrdinates: {
+        latitude: { type: String },
+        longitude: { type: String }
+    },
+
 
     orderstatus: {
         type: String,

@@ -114,6 +114,23 @@ const DeliveryPartnerdashboard = () => {
     //     }
     // }
 
+        function getDistance(lat1, lon1, lat2, lon2) {
+        const R = 6371;
+
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+
+        const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * Math.PI / 180) *
+            Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return R * c;
+    }
+
     return (
         <div id='maindpd'>
             {/* <MapContainer
@@ -136,9 +153,14 @@ const DeliveryPartnerdashboard = () => {
                             <div key={order._id} id='deliveryrequest'>
                                 <div id='box1'>
                                     <h5>Order Id: {order._id}</h5>
-                                    <h5>Seller Name: {order.sellerName}</h5>
-                                    <h5>Address: {order.address}</h5>
-                                    <h4>{order.distance} km</h4>
+                                    <h4>
+                        {getDistance(
+                            clat,
+                            clong,
+                            order.shoplatitude,
+                            order.shoplongitude
+                        ).toFixed(2)?? 'Not Defined'} km
+                    </h4>
                                 </div>
 
                                 <div id='box2'>

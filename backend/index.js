@@ -704,6 +704,7 @@ app.get("/deliveryorder", authMiddleware, async (req, res) => {
 app.post("/placeOrder", authMiddleware, async (req, res) => {
   const { quantity, sellerid, productid, productname } = req.body;
   const finduser = await User.findOne({ email: req.user.email });
+  const findseller = await User.findById(sellerid)
 
   try {
     const newOrder = new Order({
@@ -720,6 +721,15 @@ app.post("/placeOrder", authMiddleware, async (req, res) => {
       productname,
       quantity,
       sellerid,
+       customercorrdinates: {
+        latitude:customerlatitude,
+        longitude:customerlongitude 
+    },
+    shopcorrdinates: {
+        latitude: findseller.shoplatitude,
+        longitude:findseller.shoplongitude
+    },
+
       orderstatus: "Pending"
     });
 

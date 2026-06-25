@@ -13,6 +13,9 @@ const Shopnox = () => {
   const [header, setheader] = useState('');
   const [body, setbody] = useState('');
   const [footer, setfooter] = useState('');
+  const [clat,setclat] = useState(null);
+  const [clong,setclong] = useState(null);
+
 
   useEffect(() => {
 
@@ -41,6 +44,18 @@ const Shopnox = () => {
     };
 
     loadUI();
+
+      navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const clatitude = position.coords.latitude;
+                        const clongitude = position.coords.longitude;
+                        setclat(clatitude)
+                        setclong(clongitude)
+                    },
+                    (error) => {
+                        console.log(error.message);
+                    }
+                );
 
   }, [token, location.state.id]);
 
@@ -92,7 +107,9 @@ const Shopnox = () => {
             quantity,
             productid: productData._id,
             productname: productData.productname,
-            sellerid: productData.productsellerid
+            sellerid: productData.productsellerid,
+            customerlatitude:clat,
+            customerlongitude:clong
           },
             {
               headers: {
