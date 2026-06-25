@@ -251,8 +251,8 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
     shops: finduser2,
     shopOpenOrNot: finduser.shopOpenOrNot,
     managingOrder:finduser.managingOrder,
-    slat:orderdata.shopcorrdinates.latitude,
-    slong:orderdata.shopcorrdinates.longitude
+    slat: orderdata?.shopcorrdinates?.latitude || null,
+  slong: orderdata?.shopcorrdinates?.longitude || null,
   });
 });
 

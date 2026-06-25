@@ -55,7 +55,7 @@ const Order = () => {
   const handleconfirm = async (e) => {
     const result = window.confirm("Do you want to continue?");
     if (result) {
-      const res = await axios.post(
+       await axios.post(
         `${import.meta.env.VITE_API_URL}/confirmOrders`,
         { orderid: e }, // empty body
         {
@@ -67,70 +67,70 @@ const Order = () => {
     }
   }
 
-  const printAllOrders = (orders) => {
-    const win = window.open("", "", "width=800,height=600");
+  // const printAllOrders = (orders) => {
+  //   const win = window.open("", "", "width=800,height=600");
 
-    let content = `
-    <html>
-      <head>
-        <title>All Orders</title>
-        <style>
-          body {
-            font-family: Arial;
-            padding: 20px;
-          }
-          .box {
-            border: 2px solid black;
-            padding: 15px;
-            margin-bottom: 15px;
-            width: 350px;
-          }
-          h2 {
-            text-align: center;
-          }
-          .row {
-            margin: 6px 0;
-          }
-          .bold {
-            font-weight: bold;
-          }
-        </style>
-      </head>
-      <body>
-        <h2>All Orders</h2>
-  `;
+  //   let content = `
+  //   <html>
+  //     <head>
+  //       <title>All Orders</title>
+  //       <style>
+  //         body {
+  //           font-family: Arial;
+  //           padding: 20px;
+  //         }
+  //         .box {
+  //           border: 2px solid black;
+  //           padding: 15px;
+  //           margin-bottom: 15px;
+  //           width: 350px;
+  //         }
+  //         h2 {
+  //           text-align: center;
+  //         }
+  //         .row {
+  //           margin: 6px 0;
+  //         }
+  //         .bold {
+  //           font-weight: bold;
+  //         }
+  //       </style>
+  //     </head>
+  //     <body>
+  //       <h2>All Orders</h2>
+  // `;
 
-    orders.forEach((order) => {
-      content += `
-      <div class="box">
-        <div class="row"><span class="bold">customername:</span> ${order.customername}</div>
-        <div class="row"><span class="bold">customeremail:</span> ${order.customeremail}</div>
-        <div class="row"><span class="bold">address:</span> ${order.address}</div>
-        <div class="row"><span class="bold">state:</span> ${order.state}</div>
-        <div class="row"><span class="bold">district:</span> ${order.district}</div>
-        <div class="row"><span class="bold">pincode:</span> ${order.pincode}</div>
-        <div class="row"><span class="bold">Orderid:</span> ${order._id}</div>
-        <div class="row"><span class="bold">productname:</span> ${order.productname}</div>
-        <div class="row"><span class="bold">quantity:</span> ${order.quantity}</div>
-        <div class="row"><span class="bold">sellerid:</span> ${order.sellerid}</div>
-        <div class="row"><span class="bold">Date:</span> ${new Date().toLocaleDateString()}</div>
-      </div>
-    `;
-    });
+  //   orders.forEach((order) => {
+  //     content += `
+  //     <div class="box">
+  //       <div class="row"><span class="bold">customername:</span> ${order.customername}</div>
+  //       <div class="row"><span class="bold">customeremail:</span> ${order.customeremail}</div>
+  //       <div class="row"><span class="bold">address:</span> ${order.address}</div>
+  //       <div class="row"><span class="bold">state:</span> ${order.state}</div>
+  //       <div class="row"><span class="bold">district:</span> ${order.district}</div>
+  //       <div class="row"><span class="bold">pincode:</span> ${order.pincode}</div>
+  //       <div class="row"><span class="bold">Orderid:</span> ${order._id}</div>
+  //       <div class="row"><span class="bold">productname:</span> ${order.productname}</div>
+  //       <div class="row"><span class="bold">quantity:</span> ${order.quantity}</div>
+  //       <div class="row"><span class="bold">sellerid:</span> ${order.sellerid}</div>
+  //       <div class="row"><span class="bold">Date:</span> ${new Date().toLocaleDateString()}</div>
+  //     </div>
+  //   `;
+  //   });
 
-    content += `
-      </body>
-    </html>
-  `;
+  //   content += `
+  //     </body>
+  //   </html>
+  // `;
 
-    win.document.write(content);
-    win.document.close();
-    win.print();
-  };
+  //   win.document.write(content);
+  //   win.document.close();
+  //   win.print();
+  // };
 
   const handlereadyforshipment = async (e) => {
     try {
-      const res = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_API_URL}/readyforDelivary`,
         { orderid: e },
         {
@@ -145,14 +145,14 @@ const Order = () => {
     }
   };
 
-  const handleScan = async (e) => {
+  const handleScan = async () => {
           setShowScanner(true)
   }
 
   const handleOutfordelivary = async (e) => {
 
     try {
-      const res = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_API_URL}/Outfordelivary`,
         { orderid: e },
         {
