@@ -265,9 +265,13 @@ const DeliveryPartnerdashboard = () => {
                                 </div>
 
                                 <div id='box2'>
-                                    <button onClick={() => handleAcept(order)}>
+                                    {managingOrder === '' && <button onClick={() => handleAcept(order)}>
                                         Accept
-                                    </button>
+                                    </button>}
+
+                                    {(managingOrder === order._id)&& (<button onClick={() => handleAcept(order)}>
+                                        Generate
+                                    </button>)}
                                 </div>
                             </div>
                         ))
