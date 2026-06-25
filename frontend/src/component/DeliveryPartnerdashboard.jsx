@@ -132,7 +132,7 @@ const DeliveryPartnerdashboard = () => {
             {
                 Array.isArray(orders) && orders.length > 0 ? (
                     orders.map((order) => (
-                        <div key={order._id} id='deliveryrequest' style={{'display':order.status === 'RFD' ? 'intial' : 'none'}}>
+                        <div key={order._id} id='deliveryrequest' style={{'display':order.status === 'RFD' ? 'initial' : 'none'}}>
                             <div id='box1'>
                                 <h3>Order Id: {order._id}</h3>
                                 <h3>Seller Name: {order.sellerName}</h3>
