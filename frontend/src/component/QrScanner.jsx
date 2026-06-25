@@ -11,18 +11,17 @@ const QrScanner = ({ onScan }) => {
     const start = async () => {
       try {
         await qr.start(
-          { facingMode: "environment" },
-          {
-            fps: 10,
-            qrbox: { width: 250, height: 250 },
-          },
-          (text) => {
-            console.log("SCAN:", text);
-            onScan(text);
-            qr.stop(); // stop after scan
-          },
-          (err) => {}
-        );
+  { facingMode: "environment" }, // try back camera
+  {
+    fps: 10,
+    qrbox: { width: 250, height: 250 },
+  },
+  (text) => {
+    console.log("SCAN:", text);
+    onScan(text);
+    qr.stop();
+  }
+);
       } catch (e) {
         console.log("START ERROR:", e);
       }
