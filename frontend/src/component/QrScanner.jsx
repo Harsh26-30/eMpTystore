@@ -52,6 +52,8 @@ const QrScanner = ({ onScan }) => {
             }}
         />
     );
+
+    
 };
 
 export default QrScanner;

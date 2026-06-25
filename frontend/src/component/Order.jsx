@@ -10,7 +10,8 @@ const Order = () => {
   const token = localStorage.getItem("token");
   const [orders, setrorders] = useState([])
   const [userRole, setuserRole] = useState('')
-  const [showScanner, setShowScanner] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+const [showScanner, setShowScanner] = useState(false);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -145,9 +146,10 @@ const Order = () => {
     }
   };
 
-  const handleScan = async () => {
-          setShowScanner(true)
-  }
+  const handleScan = (order) => {
+  setSelectedOrder(order);
+  setShowScanner(true);
+};
 
   const handleOutfordelivary = async (e) => {
 
@@ -289,45 +291,48 @@ const Order = () => {
                     width: "30%",
                     height: "30%",
                     borderRadius: "10px"
-                  }} onClick={() => handleScan(order._id)}>Scan Qr</button> :
+                  }} onClick={() => handleScan(order)}>Scan Qr</button> :
                   <></>}
 
                 <div>
                 </div>
-                {showScanner && (
-                  <div
-                    style={{
-                      position: "fixed",
-                      top: 0,
-                      left: 0,
-                      width: "100vw",
-                      height: "100vh",
-                      background: "rgba(0,0,0,0.7)",
-                      zIndex: 9999,
-                    }}
-                  >
-                    <QrScanner
-                      onScan={(result) => {
-                        console.log("QR:", result);
 
-                        if (String(result) === String(order._id)) {
-                          alert("Correct Order Scanned");
-                           handleOutfordelivary(order._id)
-                        } else {
-                          alert("Wrong QR Code");
-                        }
-
-                        setShowScanner(false);
-                      }}
-                    />
-                  </div>
-                )}
               </div>
             ))
           ) : (
             <p>No orders found</p>
           )}        </div>
       }
+
+      {showScanner && selectedOrder && (
+  <div
+    style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100vw",
+      height: "100vh",
+      background: "rgba(0,0,0,0.7)",
+      zIndex: 9999,
+    }}
+  >
+    <QrScanner
+      onScan={(result) => {
+        console.log("QR:", result);
+
+        if (String(result) === String(selectedOrder._id)) {
+          alert("Correct Order Scanned");
+          handleOutfordelivary(selectedOrder._id);
+        } else {
+          alert("Wrong QR Code");
+        }
+
+        setShowScanner(false);
+        setSelectedOrder(null);
+      }}
+    />
+  </div>
+)}
     </div>
   )
 }
