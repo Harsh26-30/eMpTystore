@@ -108,8 +108,8 @@ const Shopnox = () => {
             productid: productData._id,
             productname: productData.productname,
             sellerid: productData.productsellerid,
-            customerlatitude:clat,
-            customerlongitude:clong
+            customerlatitude:productData.clat,
+            customerlongitude:productData.clong
           },
             {
               headers: {
