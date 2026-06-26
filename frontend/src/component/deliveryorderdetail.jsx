@@ -62,6 +62,7 @@ const DeliveryOrderDetail = ({
                 setorders(res2.data.dporders)
                 setCurrentuserid(res2.data.id)
                 setmanagingOrder(res2.data.managingOrder);
+                
             } catch (err) {
                 console.log(err);
             }
@@ -83,6 +84,7 @@ const DeliveryOrderDetail = ({
         <div>
 
             {visibleOrders.map(order => (
+                
                 <div key={order._id} id="deliveryrequest">
                     <div id="box1">
                         <h5>Order Id: {order._id}</h5>
@@ -98,24 +100,20 @@ const DeliveryOrderDetail = ({
 
                     <div id="box2">
 
-                        {managingOrder === order._id && order.delivery_partner_verification === "" && (
+                        {managingOrder === order._id && order.delivery_partner_verification === "Not Verified" && (
                             <button onClick={() => { setQrVusibility(true), setSelectedOrder(order) }}>
                                 QR
                             </button>
                         )}
-
-                        <button
+                        {managingOrder === order._id && order.delivery_partner_verification === "Verified" && <button
                             onClick={() => {
                                 setSelectedOrder(order);
                                 setShowScanner(true);
                             }}
                         >
                             Scan QR
-                        </button>
-
-
+                        </button>}
                     </div>
-
                 </div>
 
             ))}

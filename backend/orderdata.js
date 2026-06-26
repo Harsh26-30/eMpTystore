@@ -20,7 +20,10 @@ const orderSchema = new mongoose.Schema({
 
     delivery_partner: { type: String },
 
-    delivery_partner_verification:{ type :String},
+    delivery_partner_verification:{
+         type :String,
+         default:'Not Verified'
+        },
 
     customercorrdinates: {
         latitude: { type: String },
