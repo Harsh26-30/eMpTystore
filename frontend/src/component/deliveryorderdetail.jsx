@@ -25,7 +25,6 @@ const DeliveryOrderDetail = ({ orders }) => {
                 }
             );
 
-            setmanagingOrder(order._id);
         } catch (err) {
             console.log(err);
         }
@@ -47,7 +46,7 @@ const DeliveryOrderDetail = ({ orders }) => {
         return R * c;
     }
 
-    useEffect(() => {
+    useEffect( () => {
         const watchId = navigator.geolocation.watchPosition(
             (position) => {
                 setclat(position.coords.latitude);
@@ -57,8 +56,30 @@ const DeliveryOrderDetail = ({ orders }) => {
             { enableHighAccuracy: true }
         );
 
+            const fetchData = async () => {
+        try {
+            const res2 = await axios.get(
+                `${import.meta.env.VITE_API_URL}/checkuserinfo`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            setmanagingOrder(res2.data.managingOrder);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    fetchData();
+
+
+
         return () => navigator.geolocation.clearWatch(watchId);
-    }, []);
+    }, [token]);
+    
 
     if (!clat || !clong) return <div>Loading...</div>;
 
