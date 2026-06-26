@@ -62,7 +62,7 @@
     font-family: sans-serif;
     
 }
-#mainboxmyorderstatus #boxmyorderstatus #orderstatusmyorderstatus #qrbutton{
+#mainboxmyorderstatus #boxmyorderstatus #qrbutton{
     width: 90%;
    height: 12%;
    border-radius: 10px;
@@ -75,7 +75,7 @@
    border: none;
 }
 
-#mainboxmyorderstatus #boxmyorderstatus #orderstatusmyorderstatus #qrbutton:hover{
+#mainboxmyorderstatus #boxmyorderstatus  #qrbutton:hover{
     background-color: grey;
 }
 
