@@ -25,6 +25,7 @@ const DeliveryPartnerdashboard = () => {
     const markerRef = useRef(null);
     const [QrVusibility, setQrVusibility] = useState(false);
     const [managingOrder, setmanagingOrder] = useState('')
+    const [selectedOrder, setSelectedOrder] = useState(null);
 
 
 
@@ -218,7 +219,7 @@ const DeliveryPartnerdashboard = () => {
                     <Routing start={position} end={destination} />
                 )}            </MapContainer>)}
 
-            <Deliveryorderdetail orders={orders} setQrVusibility={setQrVusibility} />
+            <Deliveryorderdetail orders={orders} setQrVusibility={setQrVusibility} setSelectedOrder={setSelectedOrder} />
             {QrVusibility === true && (
                 <div
                     style={{
@@ -245,8 +246,7 @@ const DeliveryPartnerdashboard = () => {
                             justifyContent: "center",
                         }}
                     >
-                        <OrderQr value={orders._id} />
-
+                        {selectedOrder && <OrderQr value={selectedOrder._id} />}
                         <button
                             onClick={() => setQrVusibility(false)}
                             style={{ marginTop: "10px" }}

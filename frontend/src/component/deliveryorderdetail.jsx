@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from "axios";
 import "./deliveryorderdetail.css"
 
-const DeliveryOrderDetail = ({ orders ,setQrVusibility}) => {
+const DeliveryOrderDetail = ({ orders ,setQrVusibility,setSelectedOrder}) => {
     const token = localStorage.getItem("token");
 
     const [clat, setclat] = useState(null);
@@ -113,7 +113,7 @@ const DeliveryOrderDetail = ({ orders ,setQrVusibility}) => {
                         )}
 
                         {managingOrder === order._id && (
-                            <button onClick={() => setQrVusibility(true)}>
+                            <button onClick={() =>{ setQrVusibility(true),setSelectedOrder(order)}}>
                                 QR
                             </button>
                         )}
