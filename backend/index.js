@@ -1032,46 +1032,51 @@ app.post("/aceptdelivery", authMiddleware, async (req, res) => {
 
 })
 
-app.post('/Updatelatlog', authMiddleware, async (req, res) => {
-  const finduser = await User.findby({ email: req.user.email })
+app.post("/Updatelatlog", authMiddleware, async (req, res) => {
   try {
-    const { clatitude, clongitude } = req.body
-
-    if (finduser.role === 'Seller') {
-      await User.findOneAndUpdate(
-        {
-          email: req.user.email
-        },
-        {
-          shoplatitude: clatitude,
-          shoplongitude: clongitude
-        }
-      );
-    }
-    if (finduser.role === 'Delivery_partner') {
-
-      await User.findOneAndUpdate(
-        {
-          email: req.user.email
-        },
-        {
-          dplatitude: clatitude,
-          dplongitude: clongitude
-        }
-      );
-    }
-    res.json({
-      msg: "Coordinates received"
+    const finduser = await User.findOne({
+      email: req.user.email,
     });
 
+    const { clatitude, clongitude } = req.body;
+
+    if (!finduser) {
+      return res.status(404).json({
+        msg: "User not found",
+      });
+    }
+
+    if (finduser.role === "Seller") {
+      await User.findOneAndUpdate(
+        { email: req.user.email },
+        {
+          shoplatitude: clatitude,
+          shoplongitude: clongitude,
+        }
+      );
+    }
+
+    if (finduser.role === "Delivery_partner") {
+      await User.findOneAndUpdate(
+        { email: req.user.email },
+        {
+          dplatitude: clatitude,
+          dplongitude: clongitude,
+        }
+      );
+    }
+
+    return res.json({
+      msg: "Coordinates received",
+    });
   } catch (err) {
     console.error(err);
+
     return res.status(500).json({
-      msg: 'Server Error'
+      msg: err.message,
     });
   }
 });
-
 // uploadui
 app.post("/uploadui", authMiddleware, async (req, res) => {
 
