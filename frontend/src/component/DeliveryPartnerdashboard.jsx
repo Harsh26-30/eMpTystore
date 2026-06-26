@@ -9,7 +9,7 @@ import "leaflet-rotatedmarker";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import axios from "axios";
 import OrderQr from "./OrderQr"
-import QrScanner from "./QrScanner";  
+import QrScanner from "./QrScanner";
 
 const DeliveryPartnerdashboard = () => {
     const [clat, setclat] = useState(null)
@@ -26,6 +26,7 @@ const DeliveryPartnerdashboard = () => {
     const [QrVusibility, setQrVusibility] = useState(false)
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [showScanner, setShowScanner] = useState(false);
+    const [scannerOrder, setScannerOrder] = useState(null);
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -41,7 +42,7 @@ const DeliveryPartnerdashboard = () => {
                 );
                 setrorders(res.data.orders)
 
-                  const res2 = await axios.get(
+                const res2 = await axios.get(
                     `${import.meta.env.VITE_API_URL}/checkuserinfo`,
 
                     {
@@ -285,9 +286,12 @@ const DeliveryPartnerdashboard = () => {
                                         Qr
                                     </button>}
 
-                                    {(managingOrder === order._id  && order.delivery_partner_verification === "Verified") && <button onClick={() => handleScan(order)}>
-                                        Scan Qr
-                                    </button>}
+                                    {String(managingOrder) === String(order._id) &&
+                                        order.delivery_partner_verification === "Verified" && (
+                                            <button onClick={() => setScannerOrder(order)}>
+                                                Scan QR
+                                            </button>
+                                        )}
 
 
                                     {managingOrder === order._id && QrVusibility && (
@@ -328,7 +332,7 @@ const DeliveryPartnerdashboard = () => {
                                         </div>
                                     )}
 
-                                    {(managingOrder === order._id && QrVusibility && order.delivery_partner_verification === "") &&  (
+                                    {(managingOrder === order._id && QrVusibility && order.delivery_partner_verification === "") && (
                                         <div
                                             style={{
                                                 position: "fixed",
@@ -366,35 +370,6 @@ const DeliveryPartnerdashboard = () => {
                                         </div>
                                     )}
 
-                                    {(managingOrder === order._id && showScanner === true && selectedOrder && QrVusibility && order.delivery_partner_verification === "Verified") && (
-                                        <div
-                                            style={{
-                                                position: "fixed",
-                                                top: 0,
-                                                left: 0,
-                                                width: "100vw",
-                                                height: "100vh",
-                                                background: "rgba(0,0,0,0.7)",
-                                                zIndex: 9999,
-                                            }}
-                                        >
-                                            <QrScanner
-                                                onScan={(result) => {
-                                                    console.log("QR:", result);
-
-                                                    if (String(result) === String(order._id)) {
-                                                        alert("Correct Order Scanned");
-                                                    } else {
-                                                        alert("Wrong QR Code");
-                                                    }
-
-                                                    setShowScanner(false);
-                                                    setSelectedOrder(null);
-                                                }}
-                                            />
-                                        </div>
-                                    )}
-
                                 </div>
                             </div>
                         ))
@@ -402,6 +377,39 @@ const DeliveryPartnerdashboard = () => {
                     <></>
                 )
             }
+
+            {scannerOrder && (
+                <div
+                    style={{
+                        position: "fixed",
+                        top: 0,
+                        left: 0,
+                        width: "100vw",
+                        height: "100vh",
+                        background: "rgba(0,0,0,0.7)",
+                        zIndex: 9999,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}
+                >
+                    <QrScanner
+                        onScan={(result) => {
+                            console.log("QR:", result);
+
+                            if (String(result) === String(scannerOrder._id)) {
+                                alert("Correct Order Scanned ✔");
+
+                                // close scanner
+                                setScannerOrder(null);
+
+                            } else {
+                                alert("Wrong QR Code ❌");
+                            }
+                        }}
+                    />
+                </div>
+            )}
 
         </div>
     )
