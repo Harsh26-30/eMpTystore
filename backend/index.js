@@ -17,20 +17,12 @@ const SECRET = process.env.JWT_SECRET || "secretkey";
 const multer = require("multer");
 const cloudinary = require("./cloudinary");
 
-
-
-
-// multer config
 const upload = multer({ dest: "uploads/" });
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
   .catch(err => console.log(err));
 
-// app.use(cors({
-//   origin: "https://emptystore.onrender.com",
-//   credentials: true
-// }));
 
 app.use(cors({
   origin: "http://localhost:5173", // or your frontend port
@@ -185,7 +177,7 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
     _id: { $in: finduser.shoporseller }
   });
 
-  const orderdata =  await Order.findById(finduser.managingOrder)
+  const orderdata = await Order.findById(finduser.managingOrder)
 
   const findproduct = await Product.find({
     _id: { $in: finduser.myproductid }
@@ -250,9 +242,9 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
     myproductdata: findproduct,
     shops: finduser2,
     shopOpenOrNot: finduser.shopOpenOrNot,
-    managingOrder:finduser.managingOrder,
+    managingOrder: finduser.managingOrder,
     slat: orderdata?.shopcorrdinates?.latitude || null,
-  slong: orderdata?.shopcorrdinates?.longitude || null,
+    slong: orderdata?.shopcorrdinates?.longitude || null,
   });
 });
 
@@ -627,9 +619,9 @@ app.post("/confirmOrders", authMiddleware, async (req, res) => {
 });
 
 app.post("/readyforDelivary", authMiddleware, async (req, res) => {
-  const { orderid } = req.body
+  const { orderid, clat, clong } = req.body
+  const fdp = await User.find({ 'role': 'Delivery_partner' })
   try {
-
     const updatedOrder = await Order.findOneAndUpdate(
       { _id: orderid },   // 🔍 find by email
       {
@@ -637,6 +629,10 @@ app.post("/readyforDelivary", authMiddleware, async (req, res) => {
       },
       { new: true } // ✅ return updated data
     );
+    const start = [clat, clong]
+
+    const distance = getRouteDistance(start, end)
+
 
     res.json({ orders: updatedOrder });
 
@@ -654,11 +650,11 @@ app.post("/Outfordelivary", authMiddleware, async (req, res) => {
       { _id: orderid },   // 🔍 find by email
       {
         orderstatus: "OFD",
-        delivery_partner_verification:"Verified"
+        delivery_partner_verification: "Verified"
       },
       { new: true } // ✅ return updated data
     );
-    
+
 
 
     res.json({ orders: updatedOrder });
@@ -1023,31 +1019,47 @@ app.post("/aceptdelivery", authMiddleware, async (req, res) => {
     { new: true }
   );
 
-  if(finduser.role === 'Delivery_partner'){
+  if (finduser.role === 'Delivery_partner') {
 
-  await User.findByIdAndUpdate(
-    finduser._id,
-    {
-      managingOrder: orderId
-    },
-    { new: true }
-  );
-}
+    await User.findByIdAndUpdate(
+      finduser._id,
+      {
+        managingOrder: orderId
+      },
+      { new: true }
+    );
+  }
 
 })
 
 app.post('/Updatelatlog', authMiddleware, async (req, res) => {
+  const finduser = await User.findby({ email: req.user.email })
   try {
     const { clatitude, clongitude } = req.body
-    await User.findOneAndUpdate(
-      {
-        email: req.user.email
-      },
-      {
-        shoplatitude: clatitude,
-        shoplongitude: clongitude
-      }
-    );
+
+    if (finduser.role === 'Seller') {
+      await User.findOneAndUpdate(
+        {
+          email: req.user.email
+        },
+        {
+          shoplatitude: clatitude,
+          shoplongitude: clongitude
+        }
+      );
+    }
+    if (finduser.role === 'Delivery_partner') {
+
+      await User.findOneAndUpdate(
+        {
+          email: req.user.email
+        },
+        {
+          dplatitude: clatitude,
+          dplongitude: clongitude
+        }
+      );
+    }
     res.json({
       msg: "Coordinates received"
     });

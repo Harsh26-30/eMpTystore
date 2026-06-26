@@ -14,10 +14,24 @@ const Order = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showScanner, setShowScanner] = useState(false);
   const navigate = useNavigate();
+  const [clat, setclat] = useState('')
+  const [clong, setclong] = useState('')
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const clatitude = position.coords.latitude;
+            const clongitude = position.coords.longitude;
+            setclat(clatitude)
+            setclong(clongitude)
+          },
+          (error) => {
+            console.log(error.message);
+          }
+        );
+
         const res = await axios.post(
           `${import.meta.env.VITE_API_URL}/Orders`,
           {}, // empty body
@@ -135,7 +149,7 @@ const Order = () => {
     try {
       await axios.post(
         `${import.meta.env.VITE_API_URL}/readyforDelivary`,
-        { orderid: e },
+        { orderid: e,clat,clong },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -319,35 +333,35 @@ const Order = () => {
           }}
         >
           <QrScanner
-         onScan={(result) => {
-  const scannedValue =
-    typeof result === "string"
-      ? result
-      : result?.text;   // 👈 IMPORTANT FIX
+            onScan={(result) => {
+              const scannedValue =
+                typeof result === "string"
+                  ? result
+                  : result?.text;   // 👈 IMPORTANT FIX
 
-  console.log("SCANNED VALUE:", scannedValue);
+              console.log("SCANNED VALUE:", scannedValue);
 
-  if (!scannedValue) {
-    alert("No QR data detected");
-    return;
-  }
+              if (!scannedValue) {
+                alert("No QR data detected");
+                return;
+              }
 
-  const expected = String(selectedOrder._id);
+              const expected = String(selectedOrder._id);
 
-  if (scannedValue.trim().includes(expected)) {
-    alert("Correct Order Scanned ✔")
-  
-    handleOutfordelivary(selectedOrder._id);
-    navigate("/homepage"); 
-  } else {
-    alert("Wrong QR Code ❌");
-        navigate("/homepage"); 
+              if (scannedValue.trim().includes(expected)) {
+                alert("Correct Order Scanned ✔")
 
-  }
+                handleOutfordelivary(selectedOrder._id);
+                navigate("/homepage");
+              } else {
+                alert("Wrong QR Code ❌");
+                navigate("/homepage");
 
-  setShowScanner(false);
-  setSelectedOrder(null);
-}}
+              }
+
+              setShowScanner(false);
+              setSelectedOrder(null);
+            }}
           />
         </div>
       )}

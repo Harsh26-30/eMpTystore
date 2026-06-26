@@ -86,7 +86,6 @@ const DeliveryPartnerdashboard = () => {
                         newLat,
                         newLng
                     );
-
                     setHeading(angle);
                 }
 
@@ -97,6 +96,21 @@ const DeliveryPartnerdashboard = () => {
 
                 setclat(newLat);
                 setclong(newLng);
+
+                setInterval(async () => {
+                    await axios.post(
+                        `${import.meta.env.VITE_API_URL}/Updatelatlog`,
+                        {
+                            clatitude: position.coords.latitude,
+                            clongitude: position.coords.longitude
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`
+                            }
+                        }
+                    );
+                }, 10000);
             },
             (error) => console.log(error.message),
             {
@@ -107,6 +121,7 @@ const DeliveryPartnerdashboard = () => {
 
         return () => navigator.geolocation.clearWatch(watchId);
     }, []);
+
 
     const position = [clat, clong]
 

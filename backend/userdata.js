@@ -47,6 +47,13 @@ const userSchema = new mongoose.Schema({
   shoplongitude: {
     type: String
   },
+  dplatitude: {
+    type: String
+  }
+  ,
+  dplongitude: {
+    type: String
+  },
    managingOrder: {type:String}
   ,
   address: {
