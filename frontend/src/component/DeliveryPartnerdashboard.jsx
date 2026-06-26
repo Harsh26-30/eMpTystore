@@ -73,55 +73,67 @@ const DeliveryPartnerdashboard = () => {
         }
     }, [heading]);
 
-    useEffect(() => {
-        const watchId = navigator.geolocation.watchPosition(
-            (position) => {
-                const newLat = position.coords.latitude;
-                const newLng = position.coords.longitude;
+ useEffect(() => {
+    let latestPosition = null;
 
-                if (prevPos.current) {
-                    const angle = getBearing(
-                        prevPos.current.lat,
-                        prevPos.current.lng,
-                        newLat,
-                        newLng
-                    );
-                    setHeading(angle);
-                }
+    const watchId = navigator.geolocation.watchPosition(
+        (position) => {
+            latestPosition = position;
 
-                prevPos.current = {
-                    lat: newLat,
-                    lng: newLng,
-                };
+            const newLat = position.coords.latitude;
+            const newLng = position.coords.longitude;
 
-                setclat(newLat);
-                setclong(newLng);
-
-                setInterval(async () => {
-                    await axios.post(
-                        `${import.meta.env.VITE_API_URL}/Updatelatlog`,
-                        {
-                            clatitude: position.coords.latitude,
-                            clongitude: position.coords.longitude
-                        },
-                        {
-                            headers: {
-                                Authorization: `Bearer ${token}`
-                            }
-                        }
-                    );
-                }, 10000);
-            },
-            (error) => console.log(error.message),
-            {
-                enableHighAccuracy: true,
-                maximumAge: 0,
+            if (prevPos.current) {
+                const angle = getBearing(
+                    prevPos.current.lat,
+                    prevPos.current.lng,
+                    newLat,
+                    newLng
+                );
+                setHeading(angle);
             }
-        );
 
-        return () => navigator.geolocation.clearWatch(watchId);
-    }, []);
+            prevPos.current = {
+                lat: newLat,
+                lng: newLng,
+            };
 
+            setclat(newLat);
+            setclong(newLng);
+        },
+        (error) => console.log(error.message),
+        {
+            enableHighAccuracy: true,
+            maximumAge: 0,
+        }
+    );
+
+    const intervalId = setInterval(async () => {
+        if (!latestPosition) return;
+
+        try {
+            await axios.post(
+                `${import.meta.env.VITE_API_URL}/Updatelatlog`,
+                {
+                    clatitude: latestPosition.coords.latitude,
+                    clongitude: latestPosition.coords.longitude,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+        } catch (err) {
+            console.log(err);
+        }
+    }, 10000);
+
+    return () => {
+        navigator.geolocation.clearWatch(watchId);
+        clearInterval(intervalId);
+    };
+}, [token]);
 
     const position = [clat, clong]
 
