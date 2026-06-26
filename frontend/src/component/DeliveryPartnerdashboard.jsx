@@ -285,7 +285,7 @@ const DeliveryPartnerdashboard = () => {
                                         Qr
                                     </button>}
 
-                                    {(managingOrder === order._id && QrVusibility && order.delivery_partner_verification === "Verified") && <button onClick={() => handleScan(order)}>
+                                    {(managingOrder === order._id  && order.delivery_partner_verification === "Verified") && <button onClick={() => handleScan(order)}>
                                         Scan Qr
                                     </button>}
 
