@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from "axios";
+import "./deliveryorderdetail.css"
 
 const DeliveryOrderDetail = ({ orders }) => {
     const token = localStorage.getItem("token");
@@ -8,9 +9,9 @@ const DeliveryOrderDetail = ({ orders }) => {
     const [clong, setclong] = useState(null);
     const [managingOrder, setmanagingOrder] = useState('');
     const [QrVusibility, setQrVusibility] = useState(false);
-    // const [scannerOrder, setScannerOrder] = useState(null);
+    const [scannerOrder, setScannerOrder] = useState(null);
 
-    // const prevPos = useRef(null);
+    const prevPos = useRef(null);
 
     const handleAcept = async (order) => {
         try {
