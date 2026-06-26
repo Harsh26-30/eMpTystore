@@ -263,7 +263,7 @@ const DeliveryPartnerdashboard = () => {
             {
                 Array.isArray(orders) && orders.length > 0 ? (
                     orders
-                        .filter(order => order.orderstatus === 'RFD').map((order) => (
+                        .filter(order => order.orderstatus !== 'RFD').map((order) => (
                             <div key={order._id} id='deliveryrequest'>
                                 <div id='box1'>
                                     <h5>Order Id: {order._id}</h5>
