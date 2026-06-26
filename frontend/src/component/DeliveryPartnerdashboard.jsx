@@ -234,7 +234,7 @@ const DeliveryPartnerdashboard = () => {
                         routingRef={routingRef}
                     />)}            </MapContainer>)}
 
-            <DeliveryOrderDetail
+            <Deliveryorderdetail
                 setQrVusibility={setQrVusibility}
                 setSelectedOrder={setSelectedOrder}
                 selectedOrder={selectedOrder}
