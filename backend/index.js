@@ -639,7 +639,7 @@ app.post("/readyforDelivary", authMiddleware, async (req, res) => {
     for (const partner of fdp) {
       if (!partner.dplatitude || !partner.dplongitude) continue;
 
-      if (partner.managingOrder !== "") continue;
+      if (partner.managingOrder) continue;
 
       const end = [partner.dplatitude, partner.dplongitude];
 
@@ -660,6 +660,11 @@ app.post("/readyforDelivary", authMiddleware, async (req, res) => {
     await User.findByIdAndUpdate(nearestPartner._id, {
       managingOrder: orderid
     });
+
+    const user = await User.findById(nearestPartner._id);
+
+    console.log(user.managingOrder,nearestPartner._id,user._id);
+
     res.json({ orders: updatedOrder });
 
   } catch (err) {
