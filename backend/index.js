@@ -629,10 +629,25 @@ app.post("/readyforDelivary", authMiddleware, async (req, res) => {
       },
       { new: true } // ✅ return updated data
     );
-    const start = [clat, clong]
 
-    const distance = getRouteDistance(start, end)
+    const nearestPartner = null;
+    const minDistance = Infinity;
 
+    for (const partner of fdp) {
+      if (!partner.dplatitude || !partner.dplongitude) continue;
+
+      const end = [partner.dplatitude, partner.dplongitude];
+
+      const distance = await getRouteDistance(start, end);
+
+      if (distance < minDistance) {
+        minDistance = distance;
+        nearestPartner = partner;
+      }
+    }
+
+    console.log(nearestPartner.name);
+    
 
     res.json({ orders: updatedOrder });
 
