@@ -4,11 +4,11 @@ import "./deliveryorderdetail.css"
 
 const DeliveryOrderDetail = ({ orders ,setQrVusibility,setSelectedOrder}) => {
     const token = localStorage.getItem("token");
-
     const [clat, setclat] = useState(null);
     const [clong, setclong] = useState(null);
     const [managingOrder, setmanagingOrder] = useState('');
     const [scannerOrder, setScannerOrder] = useState(null);
+    const [Currentuserid,setCurrentuserid] = useState('')
 
     const prevPos = useRef(null);
 
@@ -65,7 +65,7 @@ const DeliveryOrderDetail = ({ orders ,setQrVusibility,setSelectedOrder}) => {
                     },
                 }
             );
-
+            setCurrentuserid(res2.data.id)
             setmanagingOrder(res2.data.managingOrder);
         } catch (err) {
             console.log(err);
@@ -87,7 +87,7 @@ const DeliveryOrderDetail = ({ orders ,setQrVusibility,setSelectedOrder}) => {
         : [];
 
      const visibleOrders2 = Array.isArray(orders)
-        ? orders.filter(order => order.orderstatus === "OFD")
+        ? orders.filter(order => {order.orderstatus === "OFD",order.delivery_partner === Currentuserid,order.delivery_partner_verification === 'Verified'} )
         : [];
 
     return (
@@ -162,9 +162,6 @@ const DeliveryOrderDetail = ({ orders ,setQrVusibility,setSelectedOrder}) => {
                             )}
 
                     </div>
-
-                    
-
                 </div>
                 
             ))}
