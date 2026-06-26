@@ -30,8 +30,18 @@ const DeliveryPartnerdashboard = () => {
     useEffect(() => {
         const fetchOrders = async () => {
             try {
+                const res = await axios.get(
+                    `${import.meta.env.VITE_API_URL}/deliveryorder`,
 
-                const res2 = await axios.get(
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+                setrorders(res.data.orders)
+
+                  const res2 = await axios.get(
                     `${import.meta.env.VITE_API_URL}/checkuserinfo`,
 
                     {
@@ -43,17 +53,6 @@ const DeliveryPartnerdashboard = () => {
                 setmanagingOrder(res2.data.managingOrder)
                 setdestlat(res2.data.slat);
                 setdestlong(res2.data.slong);
-
-                const res = await axios.get(
-                    `${import.meta.env.VITE_API_URL}/deliveryorder`,
-
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
-                setrorders(res.data.orders)
 
 
             } catch (err) {
