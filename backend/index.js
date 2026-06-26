@@ -723,7 +723,7 @@ app.post("/OrderReached", authMiddleware, async (req, res) => {
       { new: true } // ✅ return updated data
     );
 
-    await Order.findOneAndUpdate(
+    await User.findOneAndUpdate(
       { _id: dpid },   // 🔍 find by email
       {
         managingOrder: "",

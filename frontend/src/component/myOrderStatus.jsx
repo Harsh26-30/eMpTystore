@@ -62,7 +62,8 @@ const MyOrderStatus = () => {
               color: order.orderStatus === 'pending' ?
                 'grey' : order.orderStatus === 'Confirm' ?
                   'darkgreen' : order.orderStatus === 'preparing' ?
-                    'darkblue' : order.orderStatus === 'OFD' ? 'orange' : ''
+                    'darkblue' : order.orderStatus === 'OFD' ? 'orange' 
+                    : order.orderStatus === 'Reached' ? 'darkgreen' :''
             }} >{order.orderStatus === 'Pending' ? "Pending" :
              order.orderStatus === 'Confirm' ? "Preparing" :
               order.orderStatus === 'RFD' ? "Ready For Delivery" :
@@ -71,9 +72,9 @@ const MyOrderStatus = () => {
                 "Analysing..."}</h4>
           </div>
 
-          <button id='qrbutton' style={{ width: "50%" }} onClick={() => { setQrVusibility(true), setSelectedOrder(order) }}>
+          {order.orderStatus !== 'Reached' && <button id='qrbutton' style={{ width: "50%" }} onClick={() => { setQrVusibility(true), setSelectedOrder(order) }}>
             QR
-          </button>
+          </button>}
 
         </div>
       ))}
