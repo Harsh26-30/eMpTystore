@@ -92,7 +92,7 @@ const DeliveryOrderDetail = ({ orders, setQrVusibility, setSelectedOrder }) => {
 const visibleOrders2 = Array.isArray(orders)
   ? orders.filter(order =>
       order.orderstatus === "OFD" &&
-      String(order.delivery_partner?._id || order.delivery_partner) === String(Currentuserid) &&
+      String(order.delivery_partner) === String(Currentuserid) &&
       order.delivery_partner_verification === "Verified"
     )
   : [];
