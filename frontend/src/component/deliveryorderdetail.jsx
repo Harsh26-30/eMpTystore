@@ -86,6 +86,10 @@ const DeliveryOrderDetail = ({ orders ,setQrVusibility,setSelectedOrder}) => {
         ? orders.filter(order => order.orderstatus === "RFD")
         : [];
 
+     const visibleOrders2 = Array.isArray(orders)
+        ? orders.filter(order => order.orderstatus === "OFD")
+        : [];
+
     return (
         <div>
 
@@ -132,6 +136,40 @@ const DeliveryOrderDetail = ({ orders ,setQrVusibility,setSelectedOrder}) => {
                 </div>
                 
             ))}
+
+             {visibleOrders2.map(order => (
+                <div key={order._id} id="deliveryrequest">
+
+                    <div id="box1">
+                        <h5>Order Id: {order._id}</h5>
+                        <h4>
+                            {getDistance(
+                                clat,
+                                clong,
+                                order.shopcorrdinates.latitude,
+                                order.shopcorrdinates.longitude
+                            ).toFixed(2)} km
+                        </h4>
+                    </div>
+
+                    <div id="box2">
+
+                        {managingOrder === order._id &&
+                            order.delivery_partner_verification === "Verified" && (
+                                <button onClick={() => setScannerOrder(order)}>
+                                    Scan QR
+                                </button>
+                            )}
+
+                    </div>
+
+                    
+
+                </div>
+                
+            ))}
+
+            
         </div>
     );
 };
