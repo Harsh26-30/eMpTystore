@@ -640,14 +640,16 @@ app.post("/readyforDelivary", authMiddleware, async (req, res) => {
 
       const distance = await getRouteDistance(start, end);
 
-      if (distance < minDistance) {
+      if (distance < minDistance && partner.managingOrder === '') {
         minDistance = distance;
+
         nearestPartner = partner;
+
       }
     }
 
-    console.log(nearestPartner.name);
-    
+    await User.findByIdAndUpdate(nearestPartner._id)
+
 
     res.json({ orders: updatedOrder });
 
