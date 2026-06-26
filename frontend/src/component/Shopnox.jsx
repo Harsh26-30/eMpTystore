@@ -101,9 +101,9 @@ const Shopnox = () => {
 
         if (!permission) return;
 
-        const handlebuy = async (e) => {
+        const handlebuy = async () => {
 
-          const res = await axios.post(`${import.meta.env.VITE_API_URL}/placeOrder`, {
+          await axios.post(`${import.meta.env.VITE_API_URL}/placeOrder`, {
             quantity,
             productid: productData._id,
             productname: productData.productname,

@@ -9,6 +9,7 @@ import "leaflet-rotatedmarker";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import axios from "axios";
 import OrderQr from "./OrderQr"
+import QrScanner from "./QrScanner";  
 
 const DeliveryPartnerdashboard = () => {
     const [clat, setclat] = useState(null)
@@ -23,6 +24,9 @@ const DeliveryPartnerdashboard = () => {
     const markerRef = useRef(null);
     const [managingOrder, setmanagingOrder] = useState('')
     const [QrVusibility, setQrVusibility] = useState(false)
+    const [selectedOrder, setSelectedOrder] = useState(null);
+    const [showScanner, setShowScanner] = useState(false);
+
     useEffect(() => {
         const fetchOrders = async () => {
             try {
@@ -224,6 +228,12 @@ const DeliveryPartnerdashboard = () => {
         }
     };
 
+
+    const handleScan = (order) => {
+        setSelectedOrder(order);
+        setShowScanner(true);
+    };
+
     return (
         <div id='maindpd'>
             {(mapvisblity === 'True' || managingOrder) && (<MapContainer
@@ -276,8 +286,50 @@ const DeliveryPartnerdashboard = () => {
                                         Qr
                                     </button>}
 
+                                    {(managingOrder === order._id && QrVusibility && order.delivery_partner_verification === "Verified") && <button onClick={() => handleScan(order)}>
+                                        Scan Qr
+                                    </button>}
+
 
                                     {managingOrder === order._id && QrVusibility && (
+                                        <div
+                                            style={{
+                                                position: "fixed",
+                                                top: 0,
+                                                left: 0,
+                                                width: "100vw",
+                                                height: "100vh",
+                                                background: "rgba(0,0,0,0.7)",
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                alignItems: "center",
+                                                zIndex: 9999,
+                                            }}
+                                        >
+                                            <div
+                                                style={{
+                                                    background: "white",
+                                                    padding: "20px",
+                                                    borderRadius: "10px",
+                                                    display: "flex",
+                                                    flexDirection: "column",
+                                                    justifyContent: "Center",
+                                                    alignItems: "Center"
+                                                }}
+                                            >
+                                                <OrderQr value={order._id} />
+
+                                                <button
+                                                    onClick={() => setQrVusibility(false)}
+                                                    style={{ marginTop: "10px", width: "90%" }}
+                                                >
+                                                    Close
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {(managingOrder === order._id && QrVusibility && order.delivery_partner_verification === "") &&  (
                                         <div
                                             style={{
                                                 position: "fixed",
@@ -314,6 +366,36 @@ const DeliveryPartnerdashboard = () => {
                                             </div>
                                         </div>
                                     )}
+
+                                    {(managingOrder === order._id && showScanner === true && selectedOrder && QrVusibility && order.delivery_partner_verification === "Verified") && (
+                                        <div
+                                            style={{
+                                                position: "fixed",
+                                                top: 0,
+                                                left: 0,
+                                                width: "100vw",
+                                                height: "100vh",
+                                                background: "rgba(0,0,0,0.7)",
+                                                zIndex: 9999,
+                                            }}
+                                        >
+                                            <QrScanner
+                                                onScan={(result) => {
+                                                    console.log("QR:", result);
+
+                                                    if (String(result) === String(order._id)) {
+                                                        alert("Correct Order Scanned");
+                                                    } else {
+                                                        alert("Wrong QR Code");
+                                                    }
+
+                                                    setShowScanner(false);
+                                                    setSelectedOrder(null);
+                                                }}
+                                            />
+                                        </div>
+                                    )}
+
                                 </div>
                             </div>
                         ))

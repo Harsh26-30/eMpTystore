@@ -20,6 +20,8 @@ const orderSchema = new mongoose.Schema({
 
     delivery_partner: { type: String },
 
+    delivery_partner_verification:{ type :String},
+
     customercorrdinates: {
         latitude: { type: String },
         longitude: { type: String }

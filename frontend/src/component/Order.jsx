@@ -12,7 +12,7 @@ const Order = () => {
   const [orders, setrorders] = useState([])
   const [userRole, setuserRole] = useState('')
   const [selectedOrder, setSelectedOrder] = useState(null);
-const [showScanner, setShowScanner] = useState(false);
+  const [showScanner, setShowScanner] = useState(false);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -57,7 +57,7 @@ const [showScanner, setShowScanner] = useState(false);
   const handleconfirm = async (e) => {
     const result = window.confirm("Do you want to continue?");
     if (result) {
-       await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_API_URL}/confirmOrders`,
         { orderid: e }, // empty body
         {
@@ -148,9 +148,9 @@ const [showScanner, setShowScanner] = useState(false);
   };
 
   const handleScan = (order) => {
-  setSelectedOrder(order);
-  setShowScanner(true);
-};
+    setSelectedOrder(order);
+    setShowScanner(true);
+  };
 
   const handleOutfordelivary = async (e) => {
 
@@ -306,34 +306,34 @@ const [showScanner, setShowScanner] = useState(false);
       }
 
       {showScanner && selectedOrder && (
-  <div
-    style={{
-      position: "fixed",
-      top: 0,
-      left: 0,
-      width: "100vw",
-      height: "100vh",
-      background: "rgba(0,0,0,0.7)",
-      zIndex: 9999,
-    }}
-  >
-    <QrScanner
-      onScan={(result) => {
-        console.log("QR:", result);
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            background: "rgba(0,0,0,0.7)",
+            zIndex: 9999,
+          }}
+        >
+          <QrScanner
+            onScan={(result) => {
+              console.log("QR:", result);
 
-        if (String(result) === String(selectedOrder._id)) {
-          alert("Correct Order Scanned");
-          handleOutfordelivary(selectedOrder._id);
-        } else {
-          alert("Wrong QR Code");
-        }
+              if (String(result) === String(selectedOrder._id)) {
+                alert("Correct Order Scanned");
+                handleOutfordelivary(selectedOrder._id);
+              } else {
+                alert("Wrong QR Code");
+              }
 
-        setShowScanner(false);
-        setSelectedOrder(null);
-      }}
-    />
-  </div>
-)}
+              setShowScanner(false);
+              setSelectedOrder(null);
+            }}
+          />
+        </div>
+      )}
     </div>
   )
 }

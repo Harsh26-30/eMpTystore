@@ -653,10 +653,12 @@ app.post("/Outfordelivary", authMiddleware, async (req, res) => {
     const updatedOrder = await Order.findOneAndUpdate(
       { _id: orderid },   // 🔍 find by email
       {
-        orderstatus: "OFD"
+        orderstatus: "OFD",
+        delivery_partner_verification:"Verified"
       },
       { new: true } // ✅ return updated data
     );
+    
 
 
     res.json({ orders: updatedOrder });
