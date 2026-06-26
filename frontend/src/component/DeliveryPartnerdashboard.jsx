@@ -278,7 +278,7 @@ const DeliveryPartnerdashboard = () => {
                                 </div>
 
                                 <div id='box2'>
-                                    {managingOrder === '' && <button onClick={() => handleAcept(order)}>
+                                    {!managingOrder && <button onClick={() => handleAcept(order)}>
                                         Accept
                                     </button>}
 
