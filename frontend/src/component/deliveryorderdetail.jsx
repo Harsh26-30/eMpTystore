@@ -65,6 +65,7 @@ const DeliveryOrderDetail = ({ orders, setQrVusibility, setSelectedOrder }) => {
                         },
                     }
                 );
+                console.log("API id:", res2.data.id);
                 setCurrentuserid(res2.data.id)
                 setmanagingOrder(res2.data.managingOrder);
             } catch (err) {
