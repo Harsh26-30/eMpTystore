@@ -149,6 +149,7 @@ const DeliveryOrderDetail = ({
                         height: "100vh",
                         background: "rgba(0,0,0,0.7)",
                         display: "flex",
+                        flexDirection:"column",
                         justifyContent: "center",
                         alignItems: "center",
                         zIndex: 9999,
@@ -174,7 +175,13 @@ const DeliveryOrderDetail = ({
                         }}
                     />
                     <button
-                        onClick={() => {
+                    style={{
+                        width:"70%",
+                        borderRadius:"20px",
+                        color:'#fff',
+                        backgroundColor:"#000"
+                    }}   
+                    onClick={() => {
                             setShowScanner(false);
                         }}
                     >

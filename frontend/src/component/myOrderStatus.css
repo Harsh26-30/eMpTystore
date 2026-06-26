@@ -47,12 +47,12 @@
 }
 
 #mainboxmyorderstatus #boxmyorderstatus #orderstatusmyorderstatus {
-   width: 90%;
+   width: 50%;
    height: 12%;
    border-radius: 10px;
    display: flex;
    justify-content: center;
-    align-items: center;
+   align-items: center;
    background-color: grey;
 }
 
