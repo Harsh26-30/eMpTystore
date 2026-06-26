@@ -245,7 +245,7 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
     managingOrder: finduser.managingOrder,
     slat: orderdata?.shopcorrdinates?.latitude || null,
     slong: orderdata?.shopcorrdinates?.longitude || null,
-    dporders:await Order.findById(finduser.managingOrder) || null
+    dporders: await Order.findById(finduser.managingOrder) || null
   });
 });
 
@@ -631,24 +631,35 @@ app.post("/readyforDelivary", authMiddleware, async (req, res) => {
       { new: true } // ✅ return updated data
     );
 
-    const nearestPartner = null;
-    const minDistance = Infinity;
+    const start = [clat, clong];
+
+    let nearestPartner = null;
+    let minDistance = Infinity;
 
     for (const partner of fdp) {
       if (!partner.dplatitude || !partner.dplongitude) continue;
+
+      if (partner.managingOrder !== "") continue;
 
       const end = [partner.dplatitude, partner.dplongitude];
 
       const distance = await getRouteDistance(start, end);
 
-      if (distance < minDistance && partner.managingOrder === '') {
+      if (distance < minDistance) {
         minDistance = distance;
         nearestPartner = partner;
       }
     }
 
-    await User.findByIdAndUpdate(nearestPartner._id,{managingOrder:orderid})
+    if (!nearestPartner) {
+      return res.status(404).json({
+        message: "No available delivery partner found."
+      });
+    }
 
+    await User.findByIdAndUpdate(nearestPartner._id, {
+      managingOrder: orderid
+    });
     res.json({ orders: updatedOrder });
 
   } catch (err) {
