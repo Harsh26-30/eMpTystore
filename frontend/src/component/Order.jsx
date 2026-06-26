@@ -330,7 +330,7 @@ const Order = () => {
                 alert("Correct Order Scanned");
                 handleOutfordelivary(selectedOrder._id);
               } else {
-                alert("Wrong QR Code",scannedValue,expected);
+                alert(scannedValue);
               }
 
               setShowScanner(false);
