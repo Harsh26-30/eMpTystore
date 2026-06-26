@@ -1,8 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from "axios";
 import "./deliveryorderdetail.css"
+import QrScanner from "./QrScanner";
 
-const DeliveryOrderDetail = ({ setQrVusibility, setSelectedOrder,setmapvisblity }) => {
+const DeliveryOrderDetail = ({
+    setQrVusibility,
+    setSelectedOrder,
+    selectedOrder,
+    setmapvisblity
+}) => {
     const token = localStorage.getItem("token");
     const [clat, setclat] = useState(null);
     const [clong, setclong] = useState(null);
@@ -10,6 +16,7 @@ const DeliveryOrderDetail = ({ setQrVusibility, setSelectedOrder,setmapvisblity 
     const [scannerOrder, setScannerOrder] = useState(null);
     const [orders, setorders] = useState(null);
     const [Currentuserid, setCurrentuserid] = useState('')
+    const [showScanner, setShowScanner] = useState(false);
 
     const prevPos = useRef(null);
 
@@ -68,7 +75,7 @@ const DeliveryOrderDetail = ({ setQrVusibility, setSelectedOrder,setmapvisblity 
                 );
                 console.log("API id:", res2.data.id);
                 console.log("orders", res2.data.dporders);
-                if(orders){
+                if (orders) {
                     setmapvisblity(true)
                 }
 
@@ -92,11 +99,6 @@ const DeliveryOrderDetail = ({ setQrVusibility, setSelectedOrder,setmapvisblity 
         ? (Array.isArray(orders) ? orders : [orders])
         : [];
 
-    console.log("DeliveryOrderDetail rendered");
-    console.log("orders:", orders);
-    console.log("visibleOrders:", visibleOrders);
-    console.log("managingOrder:", managingOrder);
-
     return (
         <div>
 
@@ -116,24 +118,71 @@ const DeliveryOrderDetail = ({ setQrVusibility, setSelectedOrder,setmapvisblity 
 
                     <div id="box2">
 
-                        {managingOrder === order._id && (
+                        {managingOrder === order._id && order.delivery_partner_verification === "" && (
                             <button onClick={() => { setQrVusibility(true), setSelectedOrder(order) }}>
                                 QR
                             </button>
                         )}
 
-                        {managingOrder === order._id &&
-                            order.delivery_partner_verification === "Verified" && (
-                                <button onClick={() => setScannerOrder(order)}>
-                                    Scan QR
-                                </button>
-                            )}
+                        <button
+                            onClick={() => {
+                                setSelectedOrder(order);
+                                setShowScanner(true);
+                            }}
+                        >
+                            Scan QR
+                        </button>
+
 
                     </div>
+
                 </div>
 
             ))}
+            {showScanner && selectedOrder && (
+                <div
+                    style={{
+                        position: "fixed",
+                        top: 0,
+                        left: 0,
+                        width: "100vw",
+                        height: "100vh",
+                        background: "rgba(0,0,0,0.7)",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        zIndex: 9999,
+                    }}
+                >
+                    <QrScanner
+                        onScan={(result) => {
+                            const scanned =
+                                typeof result === "string"
+                                    ? result
+                                    : result?.text;
 
+                            console.log("Scanned:", scanned);
+                            console.log("Expected:", selectedOrder._id);
+
+                            if (scanned === String(selectedOrder._id)) {
+                                alert("Correct QR ✔");
+                            } else {
+                                alert("Wrong QR ❌");
+                            }
+
+                            setShowScanner(false);
+                        }
+                    />
+
+                    <button
+                        onClick={() => {
+                            setShowScanner(false);
+                        }}
+                    >
+                        Close
+                    </button>
+                </div>
+            )}
 
         </div>
     );

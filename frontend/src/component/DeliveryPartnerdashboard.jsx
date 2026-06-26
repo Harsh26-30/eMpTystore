@@ -12,7 +12,8 @@ import OrderQr from "./OrderQr"
 import QrScanner from "./QrScanner";
 import Deliveryorderdetail from "./deliveryorderdetail"
 
-const Routing = ({ start, end, routingRef }) => {    const map = useMapEvents({});
+const Routing = ({ start, end, routingRef }) => {
+    const map = useMapEvents({});
 
     useEffect(() => {
         if (!map || !start || !end) return;
@@ -233,8 +234,12 @@ const DeliveryPartnerdashboard = () => {
                         routingRef={routingRef}
                     />)}            </MapContainer>)}
 
-            <Deliveryorderdetail setmapvisblity={setmapvisblity} setQrVusibility={setQrVusibility} setSelectedOrder={setSelectedOrder} />
-            {QrVusibility === true && (
+            <DeliveryOrderDetail
+                setQrVusibility={setQrVusibility}
+                setSelectedOrder={setSelectedOrder}
+                selectedOrder={selectedOrder}
+                setmapvisblity={setmapvisblity}
+            />            {QrVusibility === true && (
                 <div
                     style={{
                         position: "fixed",

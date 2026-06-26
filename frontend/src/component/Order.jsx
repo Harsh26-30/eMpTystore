@@ -149,7 +149,7 @@ const Order = () => {
     try {
       await axios.post(
         `${import.meta.env.VITE_API_URL}/readyforDelivary`,
-        { orderid: e,clat,clong },
+        { orderid: e, clat, clong },
         {
           headers: {
             Authorization: `Bearer ${token}`,
