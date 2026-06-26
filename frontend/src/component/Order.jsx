@@ -319,9 +319,14 @@ const Order = () => {
         >
           <QrScanner
             onScan={(result) => {
-              console.log("QR:", result);
 
-              if (String(result) === String(selectedOrder._id)) {
+              const scannedValue = String(result).trim();
+              const expected = String(selectedOrder._id);
+
+              console.log("SCANNED:", scannedValue);
+              console.log("EXPECTED:", expected);
+
+              if (scannedValue.includes(expected)) {
                 alert("Correct Order Scanned");
                 handleOutfordelivary(selectedOrder._id);
               } else {
