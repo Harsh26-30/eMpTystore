@@ -318,24 +318,31 @@ const Order = () => {
           }}
         >
           <QrScanner
-            onScan={(result) => {
+         onScan={(result) => {
+  const scannedValue =
+    typeof result === "string"
+      ? result
+      : result?.text;   // 👈 IMPORTANT FIX
 
-              const scannedValue = String(result).trim();
-              const expected = String(selectedOrder._id);
+  console.log("SCANNED VALUE:", scannedValue);
 
-              console.log("SCANNED:", scannedValue);
-              console.log("EXPECTED:", expected);
+  if (!scannedValue) {
+    alert("No QR data detected");
+    return;
+  }
 
-              if (scannedValue.includes(expected)) {
-                alert("Correct Order Scanned");
-                handleOutfordelivary(selectedOrder._id);
-              } else {
-                alert(scannedValue);
-              }
+  const expected = String(selectedOrder._id);
 
-              setShowScanner(false);
-              setSelectedOrder(null);
-            }}
+  if (scannedValue.trim().includes(expected)) {
+    alert("Correct Order Scanned ✔");
+    handleOutfordelivary(selectedOrder._id);
+  } else {
+    alert("Wrong QR Code ❌");
+  }
+
+  setShowScanner(false);
+  setSelectedOrder(null);
+}}
           />
         </div>
       )}
