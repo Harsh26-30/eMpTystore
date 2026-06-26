@@ -164,16 +164,15 @@ const DeliveryOrderDetail = ({
                             console.log("Scanned:", scanned);
                             console.log("Expected:", selectedOrder._id);
 
-                            if (scanned === String(selectedOrder._id)) {
+                            if (String(scanned).trim() === String(selectedOrder._id).trim()) {
                                 alert("Correct QR ✔");
                             } else {
                                 alert("Wrong QR ❌");
                             }
 
                             setShowScanner(false);
-                        }
+                        }}
                     />
-
                     <button
                         onClick={() => {
                             setShowScanner(false);
