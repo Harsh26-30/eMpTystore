@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import './myOrderStatus.css'
 import Header2 from './header2'
+import OrderQr from "./OrderQr"
 
 const MyOrderStatus = () => {
   const token = localStorage.getItem("token");
