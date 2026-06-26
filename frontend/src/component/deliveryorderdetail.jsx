@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from "axios";
 import "./deliveryorderdetail.css"
 
-const DeliveryOrderDetail = ({ setQrVusibility, setSelectedOrder }) => {
+const DeliveryOrderDetail = ({ setQrVusibility, setSelectedOrder,setmapvisblity }) => {
     const token = localStorage.getItem("token");
     const [clat, setclat] = useState(null);
     const [clong, setclong] = useState(null);
@@ -67,8 +67,11 @@ const DeliveryOrderDetail = ({ setQrVusibility, setSelectedOrder }) => {
                     }
                 );
                 console.log("API id:", res2.data.id);
-                console.log("orders",res2.data.dporders);
-                
+                console.log("orders", res2.data.dporders);
+                if(orders){
+                    setmapvisblity(true)
+                }
+
                 setorders(res2.data.dporders)
                 setCurrentuserid(res2.data.id)
                 setmanagingOrder(res2.data.managingOrder);
@@ -85,9 +88,14 @@ const DeliveryOrderDetail = ({ setQrVusibility, setSelectedOrder }) => {
 
     if (!clat || !clong) return <div>Loading...</div>;
 
-    const visibleOrders = Array.isArray(orders)
-        ? orders
+    const visibleOrders = orders
+        ? (Array.isArray(orders) ? orders : [orders])
         : [];
+
+    console.log("DeliveryOrderDetail rendered");
+    console.log("orders:", orders);
+    console.log("visibleOrders:", visibleOrders);
+    console.log("managingOrder:", managingOrder);
 
     return (
         <div>
@@ -122,9 +130,6 @@ const DeliveryOrderDetail = ({ setQrVusibility, setSelectedOrder }) => {
                             )}
 
                     </div>
-
-
-
                 </div>
 
             ))}

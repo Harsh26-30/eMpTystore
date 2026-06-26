@@ -12,12 +12,45 @@ import OrderQr from "./OrderQr"
 import QrScanner from "./QrScanner";
 import Deliveryorderdetail from "./deliveryorderdetail"
 
+const Routing = ({ start, end, routingRef }) => {    const map = useMapEvents({});
+
+    useEffect(() => {
+        if (!map || !start || !end) return;
+
+        if (!routingRef.current) {
+            routingRef.current = L.Routing.control({
+                waypoints: [
+                    L.latLng(start[0], start[1]),
+                    L.latLng(end[0], end[1]),
+                ],
+                routeWhileDragging: false,
+                addWaypoints: false,
+                draggableWaypoints: false,
+                fitSelectedRoutes: true,
+                show: false,
+                createMarker: () => null,
+            }).addTo(map);
+        } else {
+            routingRef.current.setWaypoints([
+                L.latLng(start[0], start[1]),
+                L.latLng(end[0], end[1]),
+            ]);
+        }
+
+        return () => { };
+    }, [map, start[0], start[1], end[0], end[1]]);
+
+    return null;
+};
+
+
+
 const DeliveryPartnerdashboard = () => {
     const [clat, setclat] = useState(null)
     const [clong, setclong] = useState(null)
     const [destlat, setdestlat] = useState(null)
     const [destlong, setdestlong] = useState(null)
-    const [mapvisblity, setmapvisblity] = useState('False')
+    const [mapvisblity, setmapvisblity] = useState(false)
     const token = localStorage.getItem("token");
     const [heading, setHeading] = useState(0);
     const prevPos = useRef(null);
@@ -25,6 +58,7 @@ const DeliveryPartnerdashboard = () => {
     const [QrVusibility, setQrVusibility] = useState(false);
     const [managingOrder, setmanagingOrder] = useState('')
     const [selectedOrder, setSelectedOrder] = useState(null);
+    const routingRef = useRef(null);   // <-- ADD THIS
 
 
 
@@ -65,7 +99,7 @@ const DeliveryPartnerdashboard = () => {
 
     useEffect(() => {
         const watchId = navigator.geolocation.watchPosition(
-            (position) => {
+            async (position) => {
                 const newLat = position.coords.latitude;
                 const newLng = position.coords.longitude;
 
@@ -79,21 +113,20 @@ const DeliveryPartnerdashboard = () => {
                     setHeading(angle);
                 }
 
-                setInterval(async() => {
-                    await axios.post(
-                        `${import.meta.env.VITE_API_URL}/Updatelatlog`,
-                        {
-                            clatitude: position.coords.latitude,
-                            clongitude: position.coords.longitude
-                        },
-                        {
-                            headers: {
-                                Authorization: `Bearer ${token}`
-                            }
-                        }
-                    );
 
-                }, 10000);
+                await axios.post(
+                    `${import.meta.env.VITE_API_URL}/Updatelatlog`,
+                    {
+                        clatitude: position.coords.latitude,
+                        clongitude: position.coords.longitude
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );
+
 
                 prevPos.current = {
                     lat: newLat,
@@ -142,34 +175,6 @@ const DeliveryPartnerdashboard = () => {
         iconAnchor: [20, 40],
     });
 
-    function Routing({ start, end }) {
-        const map = useMapEvents({});
-
-        useEffect(() => {
-            if (!map || !L.Routing) return;
-
-            const routingControl = L.Routing.control({
-                waypoints: [
-                    L.latLng(start[0], start[1]),
-                    L.latLng(end[0], end[1]),
-                ],
-                routeWhileDragging: false,
-                addWaypoints: false,
-                draggableWaypoints: false,
-                fitSelectedRoutes: true,
-                show: false,
-                createMarker: () => null, // hides default markers
-
-            }).addTo(map);
-
-            return () => {
-                map.removeControl(routingControl);
-            };
-        }, [map, start, end]);
-
-        return null;
-    }
-
     function getBearing(lat1, lon1, lat2, lon2) {
         const dLon = (lon2 - lon1) * Math.PI / 180;
 
@@ -200,7 +205,7 @@ const DeliveryPartnerdashboard = () => {
 
     return (
         <div id='maindpd'>
-            {(mapvisblity === 'True' || managingOrder) && (<MapContainer
+            {(mapvisblity === true || managingOrder) && (<MapContainer
                 center={position}
                 zoom={6}
                 style={{ height: "500px", width: "100%" }}
@@ -222,10 +227,13 @@ const DeliveryPartnerdashboard = () => {
                 )}
 
                 {destlat !== null && destlong !== null && (
-                    <Routing start={position} end={destination} />
-                )}            </MapContainer>)}
+                    <Routing
+                        start={position}
+                        end={destination}
+                        routingRef={routingRef}
+                    />)}            </MapContainer>)}
 
-            <Deliveryorderdetail setQrVusibility={setQrVusibility} setSelectedOrder={setSelectedOrder} />
+            <Deliveryorderdetail setmapvisblity={setmapvisblity} setQrVusibility={setQrVusibility} setSelectedOrder={setSelectedOrder} />
             {QrVusibility === true && (
                 <div
                     style={{
