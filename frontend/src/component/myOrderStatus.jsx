@@ -6,9 +6,9 @@ import Header2 from './header2'
 
 const MyOrderStatus = () => {
   const token = localStorage.getItem("token");
-      const [QrVusibility, setQrVusibility] = useState(false);
-      const [SelectedOrder,setSelectedOrder] = useState(false);
-  
+  const [QrVusibility, setQrVusibility] = useState(false);
+  const [SelectedOrder, setSelectedOrder] = useState(false);
+
 
   const [orders, setOrders] = useState([]);
   useEffect(() => {
@@ -64,49 +64,48 @@ const MyOrderStatus = () => {
             }} >{order.orderStatus === 'Pending' ? "Pending" : order.orderStatus === 'Confirm' ? "Preparing" : order.orderStatus === 'RFD' ? "Ready For Delivery" : order.orderStatus === 'OFD' ? "Out for Delivery" : "Analysing..."}</h4>
           </div>
 
-                                  {managingOrder === order._id && order.delivery_partner_verification === "" && (
-                            <button style={{width:"50%"}} onClick={() => { setQrVusibility(true), setSelectedOrder(order) }}>
-                                QR
-                            </button>
-                        )}
+          <button style={{ width: "50%" }} onClick={() => { setQrVusibility(true), setSelectedOrder(order) }}>
+            QR
+          </button>
+
         </div>
       ))}
-            {QrVusibility === true && (
-                <div
-                    style={{
-                        position: "fixed",
-                        top: 0,
-                        left: 0,
-                        width: "100vw",
-                        height: "100vh",
-                        background: "rgba(0,0,0,0.6)",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        zIndex: 9999,   // 👈 highest layer
-                    }}
-                >
-                    <div
-                        style={{
-                            background: "white",
-                            padding: "20px",
-                            borderRadius: "12px",
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }}
-                    >
-                        {SelectedOrder && <OrderQr value={SelectedOrder._id} />}
-                        <button
-                            onClick={() => setQrVusibility(false)}
-                            style={{ marginTop: "10px" }}
-                        >
-                            Close
-                        </button>
-                    </div>
-                </div>
-            )}     
+      {QrVusibility === true && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            background: "rgba(0,0,0,0.6)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 9999,   // 👈 highest layer
+          }}
+        >
+          <div
+            style={{
+              background: "white",
+              padding: "20px",
+              borderRadius: "12px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {SelectedOrder && <OrderQr value={SelectedOrder._id} />}
+            <button
+              onClick={() => setQrVusibility(false)}
+              style={{ marginTop: "10px" }}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
