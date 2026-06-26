@@ -4,7 +4,7 @@ import Header2 from "./header2";
 import { useState } from 'react';
 import axios from 'axios'
 import QrScanner from "./QrScanner"
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 
 const Order = () => {
@@ -13,6 +13,7 @@ const Order = () => {
   const [userRole, setuserRole] = useState('')
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showScanner, setShowScanner] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -334,10 +335,14 @@ const Order = () => {
   const expected = String(selectedOrder._id);
 
   if (scannedValue.trim().includes(expected)) {
-    alert("Correct Order Scanned ✔");
+    alert("Correct Order Scanned ✔")
+  
     handleOutfordelivary(selectedOrder._id);
+    navigate("/homepage"); 
   } else {
     alert("Wrong QR Code ❌");
+        navigate("/homepage"); 
+
   }
 
   setShowScanner(false);
