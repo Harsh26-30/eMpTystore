@@ -25,6 +25,7 @@ const DeliveryPartnerdashboard = () => {
     const markerRef = useRef(null);
     const [QrVusibility, setQrVusibility] = useState(false);
     const [managingOrder, setmanagingOrder] = useState('')
+    
 
 
     useEffect(() => {
@@ -218,7 +219,7 @@ const DeliveryPartnerdashboard = () => {
                 )}            </MapContainer>)}
 
                 <Deliveryorderdetail orders={orders} setQrVusibility={setQrVusibility}/>
-                {QrVusibility === true && <OrderQr/>}
+                {QrVusibility === true && <OrderQr value={orders._id} />}
         </div>
     )
 }
