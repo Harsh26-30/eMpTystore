@@ -2,12 +2,13 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from "axios";
 import "./deliveryorderdetail.css"
 
-const DeliveryOrderDetail = ({ orders, setQrVusibility, setSelectedOrder }) => {
+const DeliveryOrderDetail = ({ setQrVusibility, setSelectedOrder }) => {
     const token = localStorage.getItem("token");
     const [clat, setclat] = useState(null);
     const [clong, setclong] = useState(null);
     const [managingOrder, setmanagingOrder] = useState('');
     const [scannerOrder, setScannerOrder] = useState(null);
+    const [orders, setorders] = useState(null);
     const [Currentuserid, setCurrentuserid] = useState('')
 
     const prevPos = useRef(null);
@@ -66,6 +67,7 @@ const DeliveryOrderDetail = ({ orders, setQrVusibility, setSelectedOrder }) => {
                     }
                 );
                 console.log("API id:", res2.data.id);
+                setorders(res2.data.dporders)
                 setCurrentuserid(res2.data.id)
                 setmanagingOrder(res2.data.managingOrder);
             } catch (err) {
@@ -82,15 +84,7 @@ const DeliveryOrderDetail = ({ orders, setQrVusibility, setSelectedOrder }) => {
     if (!clat || !clong) return <div>Loading...</div>;
 
     const visibleOrders = Array.isArray(orders)
-        ? orders.filter(order => order.orderstatus === "RFD")
-        : [];
-
-    const visibleOrders2 = Array.isArray(orders)
-        ? orders.filter(order =>
-            order.orderstatus === "OFD" &&
-            String(order.delivery_partner) === String(Currentuserid) &&
-            order.delivery_partner_verification === "Verified"
-        )
+        ? orders
         : [];
 
     return (
@@ -98,7 +92,6 @@ const DeliveryOrderDetail = ({ orders, setQrVusibility, setSelectedOrder }) => {
 
             {visibleOrders.map(order => (
                 <div key={order._id} id="deliveryrequest">
-
                     <div id="box1">
                         <h5>Order Id: {order._id}</h5>
                         <h4>
@@ -112,12 +105,6 @@ const DeliveryOrderDetail = ({ orders, setQrVusibility, setSelectedOrder }) => {
                     </div>
 
                     <div id="box2">
-
-                        {!managingOrder && (
-                            <button onClick={() => handleAcept(order)}>
-                                Accept
-                            </button>
-                        )}
 
                         {managingOrder === order._id && (
                             <button onClick={() => { setQrVusibility(true), setSelectedOrder(order) }}>
@@ -136,35 +123,6 @@ const DeliveryOrderDetail = ({ orders, setQrVusibility, setSelectedOrder }) => {
 
 
 
-                </div>
-
-            ))}
-
-            {visibleOrders2.map(order => (
-                <div key={order._id} id="deliveryrequest">
-
-                    <div id="box1">
-                        <h5>Order Id: {order._id}</h5>
-                        <h4>
-                            {getDistance(
-                                clat,
-                                clong,
-                                order.shopcorrdinates.latitude,
-                                order.shopcorrdinates.longitude
-                            ).toFixed(2)} km
-                        </h4>
-                    </div>
-
-                    <div id="box2">
-
-                        {managingOrder === order._id &&
-                            order.delivery_partner_verification === "Verified" && (
-                                <button onClick={() => setScannerOrder(order)}>
-                                    Scan QR
-                                </button>
-                            )}
-
-                    </div>
                 </div>
 
             ))}

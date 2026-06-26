@@ -245,6 +245,7 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
     managingOrder: finduser.managingOrder,
     slat: orderdata?.shopcorrdinates?.latitude || null,
     slong: orderdata?.shopcorrdinates?.longitude || null,
+    dporders:await Order.findById(finduser.managingOrder) || null
   });
 });
 
@@ -642,14 +643,11 @@ app.post("/readyforDelivary", authMiddleware, async (req, res) => {
 
       if (distance < minDistance && partner.managingOrder === '') {
         minDistance = distance;
-
         nearestPartner = partner;
-
       }
     }
 
-    await User.findByIdAndUpdate(nearestPartner._id)
-
+    await User.findByIdAndUpdate(nearestPartner._id,{managingOrder:orderid})
 
     res.json({ orders: updatedOrder });
 
@@ -1022,32 +1020,6 @@ app.get('/allshops', authMiddleware, async (req, res) => {
     });
   }
 });
-
-app.post("/aceptdelivery", authMiddleware, async (req, res) => {
-  const { orderId } = req.body
-  const finduser = await User.findOne({
-    email: req.user.email
-  })
-  await Order.findByIdAndUpdate(
-    orderId,
-    {
-      delivery_partner: finduser._id
-    },
-    { new: true }
-  );
-
-  if (finduser.role === 'Delivery_partner') {
-
-    await User.findByIdAndUpdate(
-      finduser._id,
-      {
-        managingOrder: orderId
-      },
-      { new: true }
-    );
-  }
-
-})
 
 app.post("/Updatelatlog", authMiddleware, async (req, res) => {
   try {

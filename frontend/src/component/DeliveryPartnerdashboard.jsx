@@ -17,7 +17,6 @@ const DeliveryPartnerdashboard = () => {
     const [clong, setclong] = useState(null)
     const [destlat, setdestlat] = useState(null)
     const [destlong, setdestlong] = useState(null)
-    const [orders, setrorders] = useState([])
     const [mapvisblity, setmapvisblity] = useState('False')
     const token = localStorage.getItem("token");
     const [heading, setHeading] = useState(0);
@@ -32,16 +31,7 @@ const DeliveryPartnerdashboard = () => {
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                const res = await axios.get(
-                    `${import.meta.env.VITE_API_URL}/deliveryorder`,
 
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
-                setrorders(res.data.orders)
 
                 const res2 = await axios.get(
                     `${import.meta.env.VITE_API_URL}/checkuserinfo`,
@@ -235,7 +225,7 @@ const DeliveryPartnerdashboard = () => {
                     <Routing start={position} end={destination} />
                 )}            </MapContainer>)}
 
-            <Deliveryorderdetail orders={orders} setQrVusibility={setQrVusibility} setSelectedOrder={setSelectedOrder} />
+            <Deliveryorderdetail setQrVusibility={setQrVusibility} setSelectedOrder={setSelectedOrder} />
             {QrVusibility === true && (
                 <div
                     style={{
