@@ -62,7 +62,13 @@ async function getRouteDistance(start, end) {
   const response = await fetch(url);
   const data = await response.json();
 
-  return data.routes[0].distance / 1000; // km
+  console.log(data);
+
+  if (!data.routes || data.routes.length === 0) {
+    throw new Error(data.message || "No route found");
+  }
+
+  return data.routes[0].distance / 1000;
 }
 
 const authMiddleware = (req, res, next) => {
@@ -631,7 +637,12 @@ app.post("/readyforDelivary", authMiddleware, async (req, res) => {
       { new: true } // ✅ return updated data
     );
 
-    const start = [clat, clong];
+    const start = {
+      lat: parseFloat(clat),
+      lon: parseFloat(clong)
+    };
+
+
 
     let nearestPartner = null;
     let minDistance = Infinity;
@@ -641,7 +652,10 @@ app.post("/readyforDelivary", authMiddleware, async (req, res) => {
 
       if (partner.managingOrder) continue;
 
-      const end = [partner.dplatitude, partner.dplongitude];
+      const end = {
+        lat: parseFloat(partner.dplatitude),
+        lon: parseFloat(partner.dplongitude)
+      };
 
       const distance = await getRouteDistance(start, end);
 
@@ -663,7 +677,7 @@ app.post("/readyforDelivary", authMiddleware, async (req, res) => {
 
     const user = await User.findById(nearestPartner._id);
 
-    console.log(user.managingOrder,nearestPartner._id,user._id);
+    console.log(user.managingOrder, nearestPartner._id, user._id);
 
     res.json({ orders: updatedOrder });
 
