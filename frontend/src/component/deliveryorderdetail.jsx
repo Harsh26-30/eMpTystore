@@ -13,29 +13,11 @@ const DeliveryOrderDetail = ({
     const [clat, setclat] = useState(null);
     const [clong, setclong] = useState(null);
     const [managingOrder, setmanagingOrder] = useState('');
-    const [scannerOrder, setScannerOrder] = useState(null);
     const [orders, setorders] = useState(null);
     const [Currentuserid, setCurrentuserid] = useState('')
     const [showScanner, setShowScanner] = useState(false);
 
     const prevPos = useRef(null);
-
-    const handleAcept = async (order) => {
-        try {
-            await axios.post(
-                `${import.meta.env.VITE_API_URL}/aceptdelivery`,
-                { orderId: order._id },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-
-        } catch (err) {
-            console.log(err);
-        }
-    };
 
     function getDistance(lat1, lon1, lat2, lon2) {
         const R = 6371;
@@ -73,8 +55,6 @@ const DeliveryOrderDetail = ({
                         },
                     }
                 );
-                console.log("API id:", res2.data.id);
-                console.log("orders", res2.data.dporders);
                 if (orders) {
                     setmapvisblity(true)
                 }
@@ -149,14 +129,14 @@ const DeliveryOrderDetail = ({
                         height: "100vh",
                         background: "rgba(0,0,0,0.7)",
                         display: "flex",
-                        flexDirection:"column",
+                        flexDirection: "column",
                         justifyContent: "center",
                         alignItems: "center",
                         zIndex: 9999,
                     }}
                 >
                     <QrScanner
-                        onScan={(result) => {
+                        onScan={async (result) => {
                             const scanned =
                                 typeof result === "string"
                                     ? result
@@ -167,6 +147,17 @@ const DeliveryOrderDetail = ({
 
                             if (String(scanned).trim() === String(selectedOrder._id).trim()) {
                                 alert("Correct QR ✔");
+                                await axios.post(
+                                    `${import.meta.env.VITE_API_URL}/OrderReached`,{
+                                        orderid:selectedOrder._id,
+                                        dpid : Currentuserid
+                                    },
+                                    {
+                                        headers: {
+                                            Authorization: `Bearer ${token}`,
+                                        },
+                                    }
+                                );
                             } else {
                                 alert("Wrong QR ❌");
                             }
@@ -175,13 +166,13 @@ const DeliveryOrderDetail = ({
                         }}
                     />
                     <button
-                    style={{
-                        width:"70%",
-                        borderRadius:"20px",
-                        color:'#fff',
-                        backgroundColor:"#000"
-                    }}   
-                    onClick={() => {
+                        style={{
+                            width: "70%",
+                            borderRadius: "20px",
+                            color: '#fff',
+                            backgroundColor: "#000"
+                        }}
+                        onClick={() => {
                             setShowScanner(false);
                         }}
                     >

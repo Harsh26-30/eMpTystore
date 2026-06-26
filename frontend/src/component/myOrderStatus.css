@@ -47,7 +47,7 @@
 }
 
 #mainboxmyorderstatus #boxmyorderstatus #orderstatusmyorderstatus {
-   width: 50%;
+   width: 90%;
    height: 12%;
    border-radius: 10px;
    display: flex;
@@ -61,6 +61,22 @@
     color: darkblue;
     font-family: sans-serif;
     
+}
+#mainboxmyorderstatus #boxmyorderstatus #orderstatusmyorderstatus #qrbutton{
+    width: 90%;
+   height: 12%;
+   border-radius: 10px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   background-color: #000;
+   color: #fff;
+   border-radius: 20px;
+   border: none;
+}
+
+#mainboxmyorderstatus #boxmyorderstatus #orderstatusmyorderstatus #qrbutton:hover{
+    background-color: grey;
 }
 
 @media (min-width:839px) {

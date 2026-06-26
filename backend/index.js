@@ -710,6 +710,35 @@ app.post("/Outfordelivary", authMiddleware, async (req, res) => {
   }
 });
 
+
+app.post("/OrderReached", authMiddleware, async (req, res) => {
+  const { orderid,dpid } = req.body
+  try {
+
+    const updatedOrder = await Order.findOneAndUpdate(
+      { _id: orderid },   // 🔍 find by email
+      {
+        orderstatus: "Reached",
+      },
+      { new: true } // ✅ return updated data
+    );
+
+    await Order.findOneAndUpdate(
+      { _id: dpid },   // 🔍 find by email
+      {
+        managingOrder: "",
+      },
+      { new: true } // ✅ return updated data
+    );
+
+    res.json({ orders: updatedOrder });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.post("/Orders", authMiddleware, async (req, res) => {
   try {
     const finduser = await User.findOne({ email: req.user.email });

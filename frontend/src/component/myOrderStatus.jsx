@@ -54,7 +54,8 @@ const MyOrderStatus = () => {
             backgroundColor: order.orderStatus === 'pending' ?
               'grey' : order.orderStatus === 'Confirm' ?
                 'green' : order.orderStatus === 'preparing' ?
-                  'blue' : order.orderStatus === 'OFD' ? 'Yellow' : ''
+                  'blue' : order.orderStatus === 'OFD' ? 'Yellow'
+                    : order.orderStatus === 'Reached' ? 'green' :''
           }}
             id='orderstatusmyorderstatus'>
             <h4 style={{
@@ -62,10 +63,15 @@ const MyOrderStatus = () => {
                 'grey' : order.orderStatus === 'Confirm' ?
                   'darkgreen' : order.orderStatus === 'preparing' ?
                     'darkblue' : order.orderStatus === 'OFD' ? 'orange' : ''
-            }} >{order.orderStatus === 'Pending' ? "Pending" : order.orderStatus === 'Confirm' ? "Preparing" : order.orderStatus === 'RFD' ? "Ready For Delivery" : order.orderStatus === 'OFD' ? "Out for Delivery" : "Analysing..."}</h4>
+            }} >{order.orderStatus === 'Pending' ? "Pending" :
+             order.orderStatus === 'Confirm' ? "Preparing" :
+              order.orderStatus === 'RFD' ? "Ready For Delivery" :
+               order.orderStatus === 'OFD' ? "Out for Delivery" : 
+               order.orderStatus === 'Reached' ? "Reached" :
+                "Analysing..."}</h4>
           </div>
 
-          <button style={{ width: "50%" }} onClick={() => { setQrVusibility(true), setSelectedOrder(order) }}>
+          <button id='qrbutton' style={{ width: "50%" }} onClick={() => { setQrVusibility(true), setSelectedOrder(order) }}>
             QR
           </button>
 
