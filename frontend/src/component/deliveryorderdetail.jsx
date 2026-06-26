@@ -66,7 +66,6 @@ const DeliveryOrderDetail = ({ orders, setQrVusibility, setSelectedOrder }) => {
                     }
                 );
                 setCurrentuserid(res2.data.id)
-                console.log("c",Currentuserid);
                 setmanagingOrder(res2.data.managingOrder);
             } catch (err) {
                 console.log(err);
@@ -74,6 +73,8 @@ const DeliveryOrderDetail = ({ orders, setQrVusibility, setSelectedOrder }) => {
         };
 
         fetchData();
+
+            console.log("c",Currentuserid);
 
 
 
