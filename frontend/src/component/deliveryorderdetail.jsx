@@ -2,13 +2,12 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from "axios";
 import "./deliveryorderdetail.css"
 
-const DeliveryOrderDetail = ({ orders }) => {
+const DeliveryOrderDetail = ({ orders ,setQrVusibility}) => {
     const token = localStorage.getItem("token");
 
     const [clat, setclat] = useState(null);
     const [clong, setclong] = useState(null);
     const [managingOrder, setmanagingOrder] = useState('');
-    const [QrVusibility, setQrVusibility] = useState(false);
     const [scannerOrder, setScannerOrder] = useState(null);
 
     const prevPos = useRef(null);
@@ -89,6 +88,7 @@ const DeliveryOrderDetail = ({ orders }) => {
 
     return (
         <div>
+
             {visibleOrders.map(order => (
                 <div key={order._id} id="deliveryrequest">
 
@@ -126,7 +126,11 @@ const DeliveryOrderDetail = ({ orders }) => {
                             )}
 
                     </div>
+
+                    
+
                 </div>
+                
             ))}
         </div>
     );

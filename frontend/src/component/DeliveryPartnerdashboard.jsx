@@ -23,6 +23,7 @@ const DeliveryPartnerdashboard = () => {
     const [heading, setHeading] = useState(0);
     const prevPos = useRef(null);
     const markerRef = useRef(null);
+    const [QrVusibility, setQrVusibility] = useState(false);
     const [managingOrder, setmanagingOrder] = useState('')
 
 
@@ -216,7 +217,8 @@ const DeliveryPartnerdashboard = () => {
                     <Routing start={position} end={destination} />
                 )}            </MapContainer>)}
 
-                <Deliveryorderdetail orders={orders}/>
+                <Deliveryorderdetail orders={orders} setQrVusibility={setQrVusibility}/>
+                {QrVusibility === true && <OrderQr/>}
         </div>
     )
 }
