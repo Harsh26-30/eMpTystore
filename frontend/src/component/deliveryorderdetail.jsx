@@ -2,13 +2,13 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from "axios";
 import "./deliveryorderdetail.css"
 
-const DeliveryOrderDetail = ({ orders ,setQrVusibility,setSelectedOrder}) => {
+const DeliveryOrderDetail = ({ orders, setQrVusibility, setSelectedOrder }) => {
     const token = localStorage.getItem("token");
     const [clat, setclat] = useState(null);
     const [clong, setclong] = useState(null);
     const [managingOrder, setmanagingOrder] = useState('');
     const [scannerOrder, setScannerOrder] = useState(null);
-    const [Currentuserid,setCurrentuserid] = useState('')
+    const [Currentuserid, setCurrentuserid] = useState('')
 
     const prevPos = useRef(null);
 
@@ -45,7 +45,7 @@ const DeliveryOrderDetail = ({ orders ,setQrVusibility,setSelectedOrder}) => {
         return R * c;
     }
 
-    useEffect( () => {
+    useEffect(() => {
         const watchId = navigator.geolocation.watchPosition(
             (position) => {
                 setclat(position.coords.latitude);
@@ -55,30 +55,31 @@ const DeliveryOrderDetail = ({ orders ,setQrVusibility,setSelectedOrder}) => {
             { enableHighAccuracy: true }
         );
 
-            const fetchData = async () => {
-        try {
-            const res2 = await axios.get(
-                `${import.meta.env.VITE_API_URL}/checkuserinfo`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            setCurrentuserid(res2.data.id)
-            setmanagingOrder(res2.data.managingOrder);
-        } catch (err) {
-            console.log(err);
-        }
-    };
+        const fetchData = async () => {
+            try {
+                const res2 = await axios.get(
+                    `${import.meta.env.VITE_API_URL}/checkuserinfo`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+                setCurrentuserid(res2.data.id)
+                console.log(Currentuserid);
+                setmanagingOrder(res2.data.managingOrder);
+            } catch (err) {
+                console.log(err);
+            }
+        };
 
-    fetchData();
+        fetchData();
 
 
 
         return () => navigator.geolocation.clearWatch(watchId);
     }, [token]);
-    
+
 
     if (!clat || !clong) return <div>Loading...</div>;
 
@@ -86,14 +87,14 @@ const DeliveryOrderDetail = ({ orders ,setQrVusibility,setSelectedOrder}) => {
         ? orders.filter(order => order.orderstatus === "RFD")
         : [];
 
-const visibleOrders2 = Array.isArray(orders)
-  ? orders.filter(order =>
-      Currentuserid &&
-      order.orderstatus === "OFD" &&
-      String(order.delivery_partner) === String(Currentuserid) &&
-      order.delivery_partner_verification === "Verified"
-    )
-  : [];
+    const visibleOrders2 = Array.isArray(orders)
+        ? orders.filter(order =>
+            Currentuserid &&
+            order.orderstatus === "OFD" &&
+            String(order.delivery_partner) === String(Currentuserid) &&
+            order.delivery_partner_verification === "Verified"
+        )
+        : [];
 
     return (
         <div>
@@ -122,7 +123,7 @@ const visibleOrders2 = Array.isArray(orders)
                         )}
 
                         {managingOrder === order._id && (
-                            <button onClick={() =>{ setQrVusibility(true),setSelectedOrder(order)}}>
+                            <button onClick={() => { setQrVusibility(true), setSelectedOrder(order) }}>
                                 QR
                             </button>
                         )}
@@ -136,13 +137,13 @@ const visibleOrders2 = Array.isArray(orders)
 
                     </div>
 
-                    
+
 
                 </div>
-                
+
             ))}
 
-             {visibleOrders2.map(order => (
+            {visibleOrders2.map(order => (
                 <div key={order._id} id="deliveryrequest">
 
                     <div id="box1">
@@ -168,10 +169,10 @@ const visibleOrders2 = Array.isArray(orders)
 
                     </div>
                 </div>
-                
+
             ))}
 
-            
+
         </div>
     );
 };
