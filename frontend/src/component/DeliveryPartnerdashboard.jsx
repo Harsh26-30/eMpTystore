@@ -25,7 +25,7 @@ const DeliveryPartnerdashboard = () => {
     const markerRef = useRef(null);
     const [QrVusibility, setQrVusibility] = useState(false);
     const [managingOrder, setmanagingOrder] = useState('')
-    
+
 
 
     useEffect(() => {
@@ -218,9 +218,44 @@ const DeliveryPartnerdashboard = () => {
                     <Routing start={position} end={destination} />
                 )}            </MapContainer>)}
 
-                <Deliveryorderdetail orders={orders} setQrVusibility={setQrVusibility}/>
-                {QrVusibility === true && <OrderQr value={orders._id} />}
-        </div>
+            <Deliveryorderdetail orders={orders} setQrVusibility={setQrVusibility} />
+            {QrVusibility === true && (
+                <div
+                    style={{
+                        position: "fixed",
+                        top: 0,
+                        left: 0,
+                        width: "100vw",
+                        height: "100vh",
+                        background: "rgba(0,0,0,0.6)",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        zIndex: 9999,   // 👈 highest layer
+                    }}
+                >
+                    <div
+                        style={{
+                            background: "white",
+                            padding: "20px",
+                            borderRadius: "12px",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <OrderQr value={orders._id} />
+
+                        <button
+                            onClick={() => setQrVusibility(false)}
+                            style={{ marginTop: "10px" }}
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            )}        </div>
     )
 }
 
