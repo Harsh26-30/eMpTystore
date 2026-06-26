@@ -10,6 +10,7 @@ import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import axios from "axios";
 import OrderQr from "./OrderQr"
 import QrScanner from "./QrScanner";
+import Deliveryorderdetail from "./deliveryorderdetail"
 
 const DeliveryPartnerdashboard = () => {
     const [clat, setclat] = useState(null)
@@ -23,10 +24,7 @@ const DeliveryPartnerdashboard = () => {
     const prevPos = useRef(null);
     const markerRef = useRef(null);
     const [managingOrder, setmanagingOrder] = useState('')
-    const [QrVusibility, setQrVusibility] = useState(false)
-    const [selectedOrder, setSelectedOrder] = useState(null);
-    const [showScanner, setShowScanner] = useState(false);
-    const [scannerOrder, setScannerOrder] = useState(null);
+
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -228,12 +226,6 @@ const DeliveryPartnerdashboard = () => {
         }
     };
 
-
-    const handleScan = (order) => {
-        setSelectedOrder(order);
-        setShowScanner(true);
-    };
-
     return (
         <div id='maindpd'>
             {(mapvisblity === 'True' || managingOrder) && (<MapContainer
@@ -260,10 +252,130 @@ const DeliveryPartnerdashboard = () => {
                 {destlat !== null && destlong !== null && (
                     <Routing start={position} end={destination} />
                 )}            </MapContainer>)}
-            {
+
+                <Deliveryorderdetail/>
+            {/* {
                 Array.isArray(orders) && orders.length > 0 ? (
                     orders
-                        .filter(order =>  ["RFD", "OFD"].includes(order.orderstatus)).map((order) => (
+                        .filter(order =>  ["RFD"].includes(order.orderstatus)).map((order) => (
+                            <div key={order._id} id='deliveryrequest'>
+                                <div id='box1'>
+                                    <h5>Order Id: {order._id}</h5>
+                                    <h4>
+                                        {getDistance(
+                                            clat,
+                                            clong,
+                                            order.shopcorrdinates.latitude,
+                                            order.shopcorrdinates.longitude
+                                        ).toFixed(2) ?? 'Not Defined'} km
+                                    </h4>
+                                </div>
+
+                                <div id='box2'>
+                                    {!managingOrder && <button onClick={() => handleAcept(order)}>
+                                        Accept
+                                    </button>}
+
+                                    {managingOrder === order._id && <button onClick={() => setQrVusibility(true)}>
+                                        Qr
+                                    </button>}
+
+                                    {String(managingOrder) === String(order._id) &&
+                                        order.delivery_partner_verification === "Verified" && (
+                                            <button onClick={() => setScannerOrder(order)}>
+                                                Scan QR
+                                            </button>
+                                        )}
+
+
+                                    {managingOrder === order._id && QrVusibility && (
+                                        <div
+                                            style={{
+                                                position: "fixed",
+                                                top: 0,
+                                                left: 0,
+                                                width: "100vw",
+                                                height: "100vh",
+                                                background: "rgba(0,0,0,0.7)",
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                alignItems: "center",
+                                                zIndex: 9999,
+                                            }}
+                                        >
+                                            <div
+                                                style={{
+                                                    background: "white",
+                                                    padding: "20px",
+                                                    borderRadius: "10px",
+                                                    display: "flex",
+                                                    flexDirection: "column",
+                                                    justifyContent: "Center",
+                                                    alignItems: "Center"
+                                                }}
+                                            >
+                                                <OrderQr value={order._id} />
+
+                                                <button
+                                                    onClick={() => setQrVusibility(false)}
+                                                    style={{ marginTop: "10px", width: "90%" }}
+                                                >
+                                                    Close
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {(managingOrder === order._id && QrVusibility && order.delivery_partner_verification === "") && (
+                                        <div
+                                            style={{
+                                                position: "fixed",
+                                                top: 0,
+                                                left: 0,
+                                                width: "100vw",
+                                                height: "100vh",
+                                                background: "rgba(0,0,0,0.7)",
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                alignItems: "center",
+                                                zIndex: 9999,
+                                            }}
+                                        >
+                                            <div
+                                                style={{
+                                                    background: "white",
+                                                    padding: "20px",
+                                                    borderRadius: "10px",
+                                                    display: "flex",
+                                                    flexDirection: "column",
+                                                    justifyContentL: "Center",
+                                                    alignItems: "Center"
+                                                }}
+                                            >
+                                                <OrderQr value={order._id} />
+
+                                                <button
+                                                    onClick={() => setQrVusibility(false)}
+                                                    style={{ marginTop: "10px", width: "90%" }}
+                                                >
+                                                    Close
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                </div>
+                            </div>
+                        ))
+                ) : (
+                    <></>
+                )
+            }
+
+                        {
+                Array.isArray(orders) && orders.length > 0 ? (
+                    orders
+                        .filter(order =>  order.).map((order) => (
                             <div key={order._id} id='deliveryrequest'>
                                 <div id='box1'>
                                     <h5>Order Id: {order._id}</h5>
@@ -409,7 +521,7 @@ const DeliveryPartnerdashboard = () => {
                         }}
                     />
                 </div>
-            )}
+            )} */}
 
         </div>
     )
