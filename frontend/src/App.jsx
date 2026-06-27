@@ -19,6 +19,7 @@ import ForgotPassword from './component/forgotPassword'
 import RouteLoader from './component/Routeloder'
 import UserProfile from './component/UserProfile'
 import MyOrderStatus from './component/myOrderStatus'
+import Cart from './component/Cart'
 
 
 function App() {
@@ -199,6 +200,17 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+                    <Route
+            path="/Cart"
+            element={
+              <ProtectedRoute>
+                < Cart />
+              </ProtectedRoute>
+            }
+          />
+
+          
 
         </Routes>
       </RouteLoader>

@@ -65,6 +65,19 @@ const userSchema = new mongoose.Schema({
   seller_key: {
     type: String
   },
+    CartItem: [
+  {
+    productid: String,
+    productname: String,
+    quantity: Number,
+    Seller_Name:String,
+    Seller_id:String,
+    productprice:{
+      type:Number,
+      default:'000'
+    }
+  }
+],
   myproductid: {
     type: [String]
   },

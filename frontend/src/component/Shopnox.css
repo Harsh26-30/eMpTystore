@@ -1,0 +1,73 @@
+#shopnoxmainbox{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+#shopnoxmainbox #header{
+    width: 100%;
+}
+
+#shopnoxmainbox #body{
+    width: 100%;
+}
+
+#Gotocartbuttonbox{
+    background-color: #fff;
+    position: fixed;
+    z-index: 90;
+    bottom: 20px;
+    width: 90%;
+    height: 10%;
+    border-radius: 30px;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    border: 2px solid #000;
+}
+
+#Gotocartbuttonbox button{
+    background-color: #000;
+    color: #fff;
+    width: 30%;
+    height: 70%;
+    border-radius: 30px;
+    border: none;
+    font-size: 20px;
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#Gotocartbuttonbox button h4{
+    font-size: 25px;
+}
+
+#Gotocartbuttonbox button p{
+    font-size: 12px;
+}
+
+#Gotocartbuttonbox button:hover{
+    background-color: grey;
+}
+
+#totalorderdetailed{
+    display: flex;
+    font-family: sans-serif;
+    width: 30%;
+    gap: 5px;
+}
+
+#totalorderdetailed #quantity{
+    background-color: #d5d0d084;
+    width: 15%;
+    height: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #000;
+    font-size: 15px;
+}

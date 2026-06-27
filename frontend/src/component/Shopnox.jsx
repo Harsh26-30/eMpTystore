@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './Shopnox.css'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import DOMPurify from "dompurify";
 
@@ -8,13 +8,15 @@ import DOMPurify from "dompurify";
 const Shopnox = () => {
   const location = useLocation();
   const containerRef = useRef();
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const [UserUI, setUserUI] = useState({});
   const [header, setheader] = useState('');
   const [body, setbody] = useState('');
   const [footer, setfooter] = useState('');
-  const [clat,setclat] = useState(null);
-  const [clong,setclong] = useState(null);
+  const [clat, setclat] = useState(null);
+  const [clong, setclong] = useState(null);
+  const [CartItem, setCartItem] = useState([]);
 
 
   useEffect(() => {
@@ -38,24 +40,37 @@ const Shopnox = () => {
         setbody(res.data.uibody);
         setfooter(res.data.uifooter);
         setUserUI(res.data.productbox);
+
+        const res2 = await axios.get(
+          `${import.meta.env.VITE_API_URL}/checkuserinfo`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        setCartItem(res2.data.CartItem)
+
       } catch (err) {
         console.log(err);
       }
     };
 
     loadUI();
+    console.log("CartItem:", CartItem);
 
-      navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const clatitude = position.coords.latitude;
-                        const clongitude = position.coords.longitude;
-                        setclat(clatitude)
-                        setclong(clongitude)
-                    },
-                    (error) => {
-                        console.log(error.message);
-                    }
-                );
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const clatitude = position.coords.latitude;
+        const clongitude = position.coords.longitude;
+        setclat(clatitude)
+        setclong(clongitude)
+      },
+      (error) => {
+        console.log(error.message);
+      }
+    );
 
   }, [token, location.state.id]);
 
@@ -88,7 +103,7 @@ const Shopnox = () => {
       }
 
       // Buy Product
-      if (action === "buy") {
+      if (action === "Add") {
 
         const quantity = qtyInput.value;
 
@@ -101,15 +116,30 @@ const Shopnox = () => {
 
         if (!permission) return;
 
-        const handlebuy = async () => {
+        const handleadd = async () => {
 
-          await axios.post(`${import.meta.env.VITE_API_URL}/placeOrder`, {
+          //   await axios.post(`${import.meta.env.VITE_API_URL}/placeOrder`, {
+          //     quantity,
+          //     productid: productData._id,
+          //     productname: productData.productname,
+          //     sellerid: productData.productsellerid,
+          //     customerlatitude: clat,
+          //     customerlongitude: clong
+          //   },
+          //     {
+          //       headers: {
+          //         Authorization: `Bearer ${token}`,
+          //       },
+          //     })
+
+          // }
+
+
+          await axios.post(`${import.meta.env.VITE_API_URL}/addItemToCart`, {
             quantity,
             productid: productData._id,
             productname: productData.productname,
             sellerid: productData.productsellerid,
-            customerlatitude:clat,
-            customerlongitude:clong
           },
             {
               headers: {
@@ -119,7 +149,7 @@ const Shopnox = () => {
 
         }
 
-        handlebuy();
+        handleadd();
 
         console.log({
           product: productData,
@@ -165,7 +195,7 @@ const Shopnox = () => {
       data?.productbox1?.productimage || "Productname1id"
     );
 
-    updatedHTML =  updatedHTML.replaceAll(
+    updatedHTML = updatedHTML.replaceAll(
       "{{Productprice1id}}",
       data?.productbox1?.productprice || "0"
     );
@@ -181,7 +211,7 @@ const Shopnox = () => {
       data?.productbox2?.productimage || "Productname1id"
     );
 
-     updatedHTML = updatedHTML.replaceAll(
+    updatedHTML = updatedHTML.replaceAll(
       "{{Productprice2id}}",
       data?.productbox2?.productprice || "Productprice2id"
     );
@@ -196,7 +226,7 @@ const Shopnox = () => {
       data?.productbox3?.productimage || "Productname1id"
     );
 
-     updatedHTML = updatedHTML.replaceAll(
+    updatedHTML = updatedHTML.replaceAll(
       "{{Productprice3id}}",
       data?.productbox3?.productprice || "Productprice3id"
     );
@@ -211,7 +241,7 @@ const Shopnox = () => {
       data?.productbox4?.productimage || "Productname4id"
     );
 
-     updatedHTML = updatedHTML.replaceAll(
+    updatedHTML = updatedHTML.replaceAll(
       "{{Productprice4id}}",
       data?.productbox4?.productprice || "Productprice4id"
     );
@@ -226,7 +256,7 @@ const Shopnox = () => {
       data?.productbox5?.productimage || "Productname5id"
     );
 
-     updatedHTML = updatedHTML.replaceAll(
+    updatedHTML = updatedHTML.replaceAll(
       "{{Productprice5id}}",
       data?.productbox5?.productprice || "Productprice5id"
     );
@@ -241,7 +271,7 @@ const Shopnox = () => {
       data?.productbox6?.productimage || "Productname6id"
     );
 
-     updatedHTML = updatedHTML.replaceAll(
+    updatedHTML = updatedHTML.replaceAll(
       "{{Productprice6id}}",
       data?.productbox6?.productprice || "Productprice6id"
     );
@@ -257,7 +287,7 @@ const Shopnox = () => {
       data?.productbox7?.productimage || "Productname7id"
     );
 
-     updatedHTML = updatedHTML.replaceAll(
+    updatedHTML = updatedHTML.replaceAll(
       "{{Productprice7id}}",
       data?.productbox7?.productprice || "Productprice7id"
     );
@@ -272,7 +302,7 @@ const Shopnox = () => {
       data?.productbox8?.productimage || "Productname8id"
     );
 
-     updatedHTML = updatedHTML.replaceAll(
+    updatedHTML = updatedHTML.replaceAll(
       "{{Productprice8id}}",
       data?.productbox8?.productprice || "Productprice8id"
     );
@@ -281,9 +311,9 @@ const Shopnox = () => {
   };
 
   return (
-    <div ref={containerRef}>
+    <div id='shopnoxmainbox' ref={containerRef}>
 
-      <div
+      <div id='header'
         dangerouslySetInnerHTML={{
           __html: DOMPurify.sanitize(
             renderHTML(header, UserUI)
@@ -291,7 +321,7 @@ const Shopnox = () => {
         }}
       />
 
-      <div
+      <div id='body'
         dangerouslySetInnerHTML={{
           __html: DOMPurify.sanitize(
             renderHTML(body, UserUI)
@@ -299,6 +329,20 @@ const Shopnox = () => {
         }}
       />
 
+      {CartItem.length > 0 && <div id='Gotocartbuttonbox'>
+        {CartItem?.map((item) => (
+          <div key={item.productid} id="totalorderdetailed">
+            <h4 id="quantity">{item.quantity}x</h4>
+            <h4>{item.productname}</h4>
+          </div>
+        ))}
+        <button onClick={() => navigate('/Cart')}>
+          <h4>
+            ₹{CartItem?.reduce((total, item) => total + item.quantity * item.productprice, 0)}
+          </h4>
+          <p>To Cart</p>
+        </button>
+      </div>}
     </div>
   )
 }

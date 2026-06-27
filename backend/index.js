@@ -251,7 +251,8 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
     managingOrder: finduser.managingOrder,
     slat: orderdata?.shopcorrdinates?.latitude || null,
     slong: orderdata?.shopcorrdinates?.longitude || null,
-    dporders: await Order.findById(finduser.managingOrder) || null
+    dporders: await Order.findById(finduser.managingOrder) || null,
+    CartItem: finduser.CartItem
   });
 });
 
@@ -563,6 +564,43 @@ app.post("/updateshoplistcustomerlist", authMiddleware, async (req, res) => {
   }
 });
 
+app.post("/addItemToCart", authMiddleware, async (req, res) => {
+  const finduser = await User.findOne({
+    email: req.user.email
+  })
+  const { quantity, productid, productname, sellerid } = req.body
+  const seller = await User.findById(sellerid)
+  const product = await Product.findById(productid)
+  if (!quantity || !productid || !productname || !sellerid) return
+
+  try {
+
+    const existing = finduser.CartItem.find(
+      item => item.productid === productid
+    );
+
+    if (existing) {
+      existing.quantity += Number(quantity);
+    } else {
+      finduser.CartItem.push({
+        productid,
+        productname,
+        quantity: Number(quantity),
+        Seller_Name: seller.name,
+        Seller_id: sellerid,
+        productprice: product.productprice
+      });
+    }
+
+    await finduser.save();
+  } catch (error) {
+    console.log(error);
+    
+    res.status(500).json({ error: "Server error" });
+  }
+
+})
+
 app.get("/get-user-products", authMiddleware, async (req, res) => {
   try {
     const user = await User.findOne({ email: req.user.email });
@@ -710,9 +748,8 @@ app.post("/Outfordelivary", authMiddleware, async (req, res) => {
   }
 });
 
-
 app.post("/OrderReached", authMiddleware, async (req, res) => {
-  const { orderid,dpid } = req.body
+  const { orderid, dpid } = req.body
   try {
 
     const updatedOrder = await Order.findOneAndUpdate(
