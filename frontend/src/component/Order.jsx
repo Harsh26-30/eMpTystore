@@ -212,10 +212,9 @@ const Order = () => {
                 fontFamily: "sans-serif"
               } : { display: "none" }} className='box3Order' >
                 {order.items.map((item, i) => (
-                  <div key={i} style={{ marginBottom: "8px" }}>
+                  <p key={i} style={{ marginBottom: "8px" }}>
                     {item.productname} {item.quantity}x <br />
-                  </div>
-
+                  </p>
                 ))} <br />
                 Order Value:- {
                   order.items.reduce((sum, item) => {
@@ -261,9 +260,9 @@ const Order = () => {
                 fontFamily: "sans-serif"
               } : { display: "none" }} className='box3Order' >
                 {order.items.map((item, i) => (
-                  <div key={i} style={{ marginBottom: "8px" }}>
+                  <p key={i} style={{ marginBottom: "8px" }}>
                     {item.productname} {item.quantity}x <br />
-                  </div>
+                  </p>
 
                 ))} <br />
                 Order Value:- {
@@ -310,9 +309,9 @@ const Order = () => {
               } : { display: "none" }} className='box3Order' >
                 OrderItems:-
                 {order.items.map((item, i) => (
-                  <div key={i} style={{ marginBottom: "8px" }}>
+                  <p key={i} style={{ marginBottom: "8px" }}>
                     {item.productname} {item.quantity}x <br />
-                  </div>
+                  </p>
 
                 ))} <br />
                 Order Value:- {
