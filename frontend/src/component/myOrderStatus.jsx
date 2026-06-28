@@ -42,11 +42,10 @@ const MyOrderStatus = () => {
         <div key={order._id} id='boxmyorderstatus'>
           <div id='orderdetailmyorderstatus'>
             <h3>Ordered Items:</h3>
-
             {order.items?.map((item, index) => (
               <div key={index}>
                 <p>
-                  {item.productname}  {item.quantity} = ₹{item.price * item.quantity}
+                  {item.productname}  {item.quantity}x
                 </p>
               </div>
             ))}          <h3>Seller Name: {order.sellerOrShopName || "Not mentioned"}</h3>
