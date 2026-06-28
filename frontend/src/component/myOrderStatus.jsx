@@ -52,12 +52,12 @@ const MyOrderStatus = () => {
             ))}          <h3>Seller Name: {order.sellerOrShopName || "Not mentioned"}</h3>
             <h3>Customer Name: {order.customername || "Not mentioned"}</h3>
             <h3>Customer Contact: {order.customerContact || "Not mentioned"}</h3>
-        <h3>
-  Total Amount: ₹
-  {order.items?.reduce((sum, item) => {
-    return sum + (Number(item.price || 0) * Number(item.quantity || 0));
-  }, 0)}
-</h3>
+            <h3>
+              Total Amount: ₹
+              {order.items?.reduce((sum, item) => {
+                return sum + (Number(item.price || 0) * Number(item.quantity || 0));
+              }, 0)}
+            </h3>
           </div>
           <h3>Order Status</h3>
           <div style={{

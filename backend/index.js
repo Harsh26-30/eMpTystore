@@ -263,40 +263,34 @@ app.get("/myCartInfo", authMiddleware, async (req, res) => {
   })
 })
 
-app.post("/myOrderStatus", authMiddleware, async (req, res) => {
-  try {
-    const finduser = await User.findOne({
-      email: req.user.email
-    });
+const orderData = await Promise.all(
+  orders.map(async (order) => {
+    const seller = await User.findById(order.items?.[0]?.sellerid);
 
-    const orders = await Order.find({
-      customerid: finduser._id
-    });
-
-    const orderData = await Promise.all(
-      orders.map(async (order) => {
-        const seller = await User.findById(order.items[0].sellerid);
-        const product = await Product.findById(order.items[0].productid);
+    const enrichedItems = await Promise.all(
+      order.items.map(async (item) => {
+        const product = await Product.findById(item.productid);
 
         return {
-          _id: order._id,
-          orderStatus: order.orderstatus,
-          orderName: order.productname,
-          sellerOrShopName: seller?.name || "Unknown Seller",
-          customerName: order.customername,
-          customerContact: finduser.phoneNo,
-          productImage: product?.productimage || ""
+          productid: item.productid,
+          productname: item.productname,
+          quantity: item.quantity,
+          price: item.price,
+          productimage: product?.productimage || ""
         };
       })
     );
 
-    res.json(orderData);
-
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: error.message });
-  }
-});
+    return {
+      _id: order._id,
+      orderStatus: order.orderstatus,
+      sellerOrShopName: seller?.name || "Unknown Seller",
+      customername: order.customername,
+      customerContact: finduser.phoneNo,
+      items: enrichedItems
+    };
+  })
+);
 
 app.post("/updateaddress", authMiddleware, async (req, res) => {
   try {
