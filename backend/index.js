@@ -263,34 +263,52 @@ app.get("/myCartInfo", authMiddleware, async (req, res) => {
   })
 })
 
-const orderData = await Promise.all(
-  orders.map(async (order) => {
-    const seller = await User.findById(order.items?.[0]?.sellerid);
+app.post("/myOrderStatus", authMiddleware, async (req, res) => {
+  try {
+    const finduser = await User.findOne({
+      email: req.user.email
+    });
 
-    const enrichedItems = await Promise.all(
-      order.items.map(async (item) => {
-        const product = await Product.findById(item.productid);
+    const orders = await Order.find({
+      customerid: finduser._id
+    });
+
+    const orderData = await Promise.all(
+      orders.map(async (order) => {
+        const seller = await User.findById(order.items?.[0]?.sellerid);
+
+        const enrichedItems = await Promise.all(
+          order.items.map(async (item) => {
+            const product = await Product.findById(item.productid);
+
+            return {
+              productid: item.productid,
+              productname: item.productname,
+              quantity: item.quantity,
+              price: item.price,
+              productimage: product?.productimage || ""
+            };
+          })
+        );
 
         return {
-          productid: item.productid,
-          productname: item.productname,
-          quantity: item.quantity,
-          price: item.price,
-          productimage: product?.productimage || ""
+          _id: order._id,
+          orderStatus: order.orderstatus,
+          sellerOrShopName: seller?.name || "Unknown Seller",
+          customername: order.customername,
+          customerContact: finduser.phoneNo,
+          items: enrichedItems
         };
       })
     );
 
-    return {
-      _id: order._id,
-      orderStatus: order.orderstatus,
-      sellerOrShopName: seller?.name || "Unknown Seller",
-      customername: order.customername,
-      customerContact: finduser.phoneNo,
-      items: enrichedItems
-    };
-  })
-);
+    res.json(orderData);
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+});
 
 app.post("/updateaddress", authMiddleware, async (req, res) => {
   try {
