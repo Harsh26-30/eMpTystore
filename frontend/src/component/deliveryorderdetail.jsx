@@ -96,7 +96,7 @@ const DeliveryOrderDetail = ({
                                 clong,
                                 order?.shopcorrdinates?.latitude,
                                 order?.shopcorrdinates?.longitude
-                            )?.toFixed(2)).toFixed(2)} km
+                            )?.toFixed(2)} km
                         </h4>
                     </div>
 
