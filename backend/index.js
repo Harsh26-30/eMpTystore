@@ -707,7 +707,7 @@ app.post("/confirmOrders", authMiddleware, async (req, res) => {
 app.post("/readyforDelivary", authMiddleware, async (req, res) => {
   try {
     const { orderid, clat, clong } = req.body;
-        console.log("clong",clong,"clat",clat);
+    console.log("clong", clong, "clat", clat);
 
 
     const fdp = await User.find({ role: "Delivery_partner" });
@@ -759,7 +759,7 @@ app.post("/readyforDelivary", authMiddleware, async (req, res) => {
       managingOrder: orderid,
     });
 
-    
+
     return res.json({
       message: "Order assigned to delivery partner",
       orders: updatedOrder,
@@ -867,6 +867,12 @@ app.post("/placeOrder", authMiddleware, async (req, res) => {
 
     const { items, customerlatitude, customerlongitude } = req.body;
 
+
+
+    const sellerid = items[0].sellerid;
+    const seller = await User.findById(sellerid);
+
+
     const findsellerMap = {};
 
     const formattedItems = [];
@@ -902,9 +908,13 @@ app.post("/placeOrder", authMiddleware, async (req, res) => {
       customercorrdinates: {
         latitude: customerlatitude,
         longitude: customerlongitude
+      },
+
+      shopcorrdinates: {
+        latitude: seller.shoplatitude,
+        longitude: seller.shoplongitude
       }
     });
-
     await newOrder.save();
 
     finduser.CartItem = [];
