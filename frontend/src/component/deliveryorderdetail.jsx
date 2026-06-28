@@ -92,6 +92,9 @@ const DeliveryOrderDetail = ({
                 <div key={order._id} id="deliveryrequest">
                     <div id="box1">
                         <h5>Order Id: {order._id}</h5>
+                        <h5><a href={`tel:${order.phoneNo}`}>
+                            📞 {order.phoneNo}
+                        </a></h5>
                         <h4>
                             {getDistance(
                                 clat,
