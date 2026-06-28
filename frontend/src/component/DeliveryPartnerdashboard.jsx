@@ -147,7 +147,10 @@ const DeliveryPartnerdashboard = () => {
     }, []);
 
 
-    const position = [clat, clong]
+const position =
+    clat != null && clong != null
+        ? [Number(clat), Number(clong)]
+        : null;
 
     const INDIA_BOUNDS = {
         minLat: 6.5,
@@ -193,7 +196,8 @@ const DeliveryPartnerdashboard = () => {
 
     return (
         <div id='maindpd'>
-            {(mapvisblity === true || managingOrder) && (<MapContainer
+            {(mapvisblity === true || managingOrder) && (
+                <MapContainer
                 center={position}
                 zoom={6}
                 style={{ height: "500px", width: "100%" }}
