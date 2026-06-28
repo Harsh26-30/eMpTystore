@@ -84,7 +84,7 @@
 
 #ordereditemdetailed{
     width: 50%;
-    height: 40%;
+    height: 40px;
     overflow: scroll;
     scrollbar-width: 0px;
 }
