@@ -211,18 +211,18 @@ const Order = () => {
                 textTransform: "capitalize",
                 fontFamily: "sans-serif"
               } : { display: "none" }} className='box3Order' >
-                OrderItems:-
                 {order.items.map((item, i) => (
                   <div key={i} style={{ marginBottom: "8px" }}>
                     {item.productname} {item.quantity}x <br />
                   </div>
 
-                ))}
+                ))} <br />
                 Order Value:- {
                   order.items.reduce((sum, item) => {
                     return sum + (item.quantity * item.price);
                   }, 0)
                 }
+                <br />
                 phoneNo:-{order.phoneNo}
                 {order.orderstatus === 'Pending' ?
                   <button style={{
@@ -260,18 +260,18 @@ const Order = () => {
                 textTransform: "capitalize",
                 fontFamily: "sans-serif"
               } : { display: "none" }} className='box3Order' >
-                OrderItems:-
                 {order.items.map((item, i) => (
                   <div key={i} style={{ marginBottom: "8px" }}>
                     {item.productname} {item.quantity}x <br />
                   </div>
 
-                ))}
+                ))} <br />
                 Order Value:- {
                   order.items.reduce((sum, item) => {
                     return sum + (item.quantity * item.price);
                   }, 0)
                 }
+                <br />
                 phoneNo:-{order.phoneNo}
                 {order.orderstatus === 'Confirm' ?
                   <button style={{
@@ -314,12 +314,13 @@ const Order = () => {
                     {item.productname} {item.quantity}x <br />
                   </div>
 
-                ))}
+                ))} <br />
                 Order Value:- {
                   order.items.reduce((sum, item) => {
                     return sum + (item.quantity * item.price);
                   }, 0)
                 }
+                <br />
                 phoneNo:-{order.phoneNo}
                 {order.orderstatus === 'RFD' ?
                   <button style={{
