@@ -313,7 +313,7 @@ const Order = () => {
                     {item.productname} {item.quantity}x <br />
                   </p>
 
-                ))} <br />
+                ))}
                 Order Value:- {
                   order.items.reduce((sum, item) => {
                     return sum + (item.quantity * item.price);
