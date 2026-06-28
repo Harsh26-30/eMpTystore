@@ -54,7 +54,7 @@ const userSchema = new mongoose.Schema({
   dplongitude: {
     type: String
   },
-   managingOrder: {type:String}
+  managingOrder: { type: String }
   ,
   address: {
     type: String
@@ -65,19 +65,23 @@ const userSchema = new mongoose.Schema({
   seller_key: {
     type: String
   },
-    CartItem: [
-  {
-    productid: String,
-    productname: String,
-    quantity: Number,
-    Seller_Name:String,
-    Seller_id:String,
-    productprice:{
-      type:Number,
-      default:'000'
-    }
-  }
-],
+  CartItem: {
+    type: [
+      {
+        productimg: String,
+        productid: String,
+        productname: String,
+        quantity: Number,
+        Seller_Name: String,
+        Seller_id: String,
+        productprice: {
+          type: Number,
+          default: 0
+        }
+      }
+    ],
+    default: []
+  },
   myproductid: {
     type: [String]
   },

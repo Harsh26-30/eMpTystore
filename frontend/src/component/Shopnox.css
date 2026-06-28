@@ -58,7 +58,6 @@
     display: flex;
     font-family: sans-serif;
     width: 30%;
-    gap: 5px;
 }
 
 #totalorderdetailed #quantity{

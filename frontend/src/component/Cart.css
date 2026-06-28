@@ -1,0 +1,162 @@
+#mainboxcart {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#mainboxcart #Items {
+    width: 90%;
+    height: 10%;
+    border-radius: 20px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px;
+    gap: 10px;
+    box-shadow: 2px 2px 20px 1px #000;
+}
+
+#mainboxcart #Items img {
+    width: 25%;
+    height: 92%;
+    border: none;
+    border-radius: 20px;
+}
+
+#mainboxcart #Items #itemdetail {
+    width: 50%;
+    height: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+#mainboxcart #Items #itemdetail p {
+    font-family: sans-serif;
+    letter-spacing: 0.25px;
+    font-weight: 600;
+    font-size: 20px;
+    margin-left: 2px;
+    line-height: 12px;
+
+
+}
+
+#mainboxcart #Items #itemdetail p span {
+    font-family: sans-serif;
+    letter-spacing: 0.25px;
+    font-weight: 600;
+    font-size: 12px;
+    color: rgba(155, 149, 149, 0.691);
+}
+
+#mainboxcart #Items #itemquanity {
+    width: 25%;
+    height: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+#mainboxcart #Items #itemquanity input{
+    width: 50%;
+    height: 30%;
+    border: none;
+    background-color: rgb(234, 237, 239);
+    text-align: center;
+}
+#mainboxcart #Items #itemquanity button{
+    width: 25%;
+    height: 30%;
+}
+
+#TotalAmountToPayBox{
+    background-color: rgb(232, 229, 229);
+    width: 100%;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;gap: 2px;
+    font-family: sans-serif;
+}
+
+#TotalAmountToPayBox #Allcharges{
+    width: 100%;
+}
+
+#TotalAmountToPayBox #Allcharges #internalcharges{
+    width: 100%;
+    height: 30px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px;
+}
+
+#TotalAmountToPayBox #Allcharges #internalcharges h5{
+    width: 70%;
+    display: flex;
+}
+
+#TotalAmountToPayBox #Allcharges #internalcharges p{
+    width: 30%;
+    text-align: center;
+}
+
+#TotalAmountToPayBox #Allcharges #internalcharges h5 span{
+    background-color: #d5d0d0d0;
+    width: 10%;
+    height: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+    margin-left: 2px;
+}
+
+#TotalAmountToPayBox #Allcharges #externalcharges{
+    width: 100%;
+    height: 50px;
+}
+#TotalAmountToPayBox #Allcharges #externalcharges .externalcharge{
+    display: flex;
+    height: 30px;
+    justify-content: flex-start;
+}
+
+#TotalAmountToPayBox #Allcharges #externalcharges .externalcharge h5{
+    width: 70%;
+    padding: 10px;
+}
+
+#TotalAmountToPayBox #Allcharges #externalcharges p{
+    width: 30%;
+    text-align: center;
+}
+
+#TotalAmountToPayBox  #Totalamountpay{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    height: 70px;
+}
+
+#TotalAmountToPayBox  #Totalamountpay button{
+    background-color: #000;
+    color: #fff;
+    width: 30%;
+    height: 80%;
+    border-radius: 30px;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#TotalAmountToPayBox  #Totalamountpay button:hover{
+    background-color: grey;
+}

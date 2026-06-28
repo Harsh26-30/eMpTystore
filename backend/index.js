@@ -256,6 +256,13 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
   });
 });
 
+app.get("/myCartInfo", authMiddleware, async (req, res) => {
+  const finduser = await User.findOne({ email: req.user.email });
+  res.json({
+    CartItem: finduser.CartItem
+  })
+})
+
 app.post("/myOrderStatus", authMiddleware, async (req, res) => {
   try {
     const finduser = await User.findOne({
@@ -569,11 +576,15 @@ app.post("/addItemToCart", authMiddleware, async (req, res) => {
     email: req.user.email
   })
   const { quantity, productid, productname, sellerid } = req.body
-  const seller = await User.findById(sellerid)
-  const product = await Product.findById(productid)
   if (!quantity || !productid || !productname || !sellerid) return
 
   try {
+    const seller = await User.findById(sellerid)
+    const product = await Product.findById(productid)
+
+    if (!finduser.CartItem) {
+      finduser.CartItem = [];
+    }
 
     const existing = finduser.CartItem.find(
       item => item.productid === productid
@@ -583,6 +594,7 @@ app.post("/addItemToCart", authMiddleware, async (req, res) => {
       existing.quantity += Number(quantity);
     } else {
       finduser.CartItem.push({
+        productimg: product.productimage,
         productid,
         productname,
         quantity: Number(quantity),
@@ -595,11 +607,52 @@ app.post("/addItemToCart", authMiddleware, async (req, res) => {
     await finduser.save();
   } catch (error) {
     console.log(error);
-    
+
     res.status(500).json({ error: "Server error" });
   }
 
 })
+
+app.post("/updateCartItemQuanity", authMiddleware, async (req, res) => {
+  try {
+    const { quantity, productid } = req.body;
+
+    const finduser = await User.findOne({
+      email: req.user.email
+    });
+
+    if (!finduser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const existing = finduser.CartItem.find(
+      item => item.productid === productid
+    );
+
+    if (!existing) {
+      return res.status(404).json({ message: "Item not found" });
+    }
+
+    if (Number(quantity) === 0) {
+      finduser.CartItem = finduser.CartItem.filter(
+        item => item.productid !== productid
+      );
+    } else {
+      existing.quantity = Number(quantity);
+    }
+
+    await finduser.save();
+
+    res.json({
+      message: "Cart updated",
+      CartItem: finduser.CartItem
+    });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Server Error" });
+  }
+});
 
 app.get("/get-user-products", authMiddleware, async (req, res) => {
   try {

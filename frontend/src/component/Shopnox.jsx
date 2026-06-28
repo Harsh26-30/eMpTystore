@@ -19,46 +19,44 @@ const Shopnox = () => {
   const [CartItem, setCartItem] = useState([]);
 
 
-  useEffect(() => {
+  const loadUI = async () => {
+    try {
 
-    const loadUI = async () => {
-      try {
-
-        const res = await axios.post(
-          `${import.meta.env.VITE_API_URL}/uidata`,
-          {
-            id: location.state.id
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/uidata`,
+        {
+          id: location.state.id
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        }
+      );
 
-        setheader(res.data.uiheader);
-        setbody(res.data.uibody);
-        setfooter(res.data.uifooter);
-        setUserUI(res.data.productbox);
+      setheader(res.data.uiheader);
+      setbody(res.data.uibody);
+      setfooter(res.data.uifooter);
+      setUserUI(res.data.productbox);
 
-        const res2 = await axios.get(
-          `${import.meta.env.VITE_API_URL}/checkuserinfo`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+      const res2 = await axios.get(
+        `${import.meta.env.VITE_API_URL}/checkuserinfo`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-        setCartItem(res2.data.CartItem)
+      setCartItem(res2.data.CartItem)
 
-      } catch (err) {
-        console.log(err);
-      }
-    };
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
+  useEffect(() => {
     loadUI();
-    console.log("CartItem:", CartItem);
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -81,37 +79,15 @@ const Shopnox = () => {
       const action = e.target.dataset.action;
       const product = e.target.dataset.product;
 
-      // Find quantity input
-      const qtyInput = containerRef.current.querySelector(
-        `[data-quantity="${product}"]`
-      );
-
-      // Increase Quantity
-      if (action === "increase") {
-
-        qtyInput.value =
-          Number(qtyInput.value) + 1;
-      }
-
-      // Decrease Quantity
-      if (action === "decrease") {
-
-        if (Number(qtyInput.value) > 1) {
-          qtyInput.value =
-            Number(qtyInput.value) - 1;
-        }
-      }
 
       // Buy Product
       if (action === "Add") {
-
-        const quantity = qtyInput.value;
 
         const productData =
           UserUI[`productbox${product}`];
 
         const permission = window.confirm(
-          `Buy ${quantity} quantity of ${productData.productname}?`
+          `Add ${1} quantity of ${productData.productname}?`
         );
 
         if (!permission) return;
@@ -136,7 +112,7 @@ const Shopnox = () => {
 
 
           await axios.post(`${import.meta.env.VITE_API_URL}/addItemToCart`, {
-            quantity,
+            quantity:1,
             productid: productData._id,
             productname: productData.productname,
             sellerid: productData.productsellerid,
@@ -147,15 +123,15 @@ const Shopnox = () => {
               },
             })
 
+          loadUI();
+
+
         }
 
         handleadd();
-
-        console.log({
-          product: productData,
-          quantity
-        });
       }
+
+      loadUI();
     };
 
     const container =
@@ -343,6 +319,7 @@ const Shopnox = () => {
           <p>To Cart</p>
         </button>
       </div>}
+
     </div>
   )
 }
