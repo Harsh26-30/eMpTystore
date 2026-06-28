@@ -40,9 +40,6 @@ const MyOrderStatus = () => {
       <Header2 />
       {orders.map((order) => (
         <div key={order._id} id='boxmyorderstatus'>
-          <div id='box1myorderstatus'>
-            <img src={order.productImage} alt="Product Image" />
-          </div>
           <div id='orderdetailmyorderstatus'>
             <h3>Odered Item: {order.items[0].productname || "Not mentioned"}</h3>
             <h3>Seller Name: {order.sellerOrShopName || "Not mentioned"}</h3>

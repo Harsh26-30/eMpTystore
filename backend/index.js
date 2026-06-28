@@ -285,7 +285,6 @@ app.post("/myOrderStatus", authMiddleware, async (req, res) => {
           sellerOrShopName: seller?.name || "Unknown Seller",
           customerName: order.customername,
           customerContact: finduser.phoneNo,
-          productImage: product?.productimage || ""
         };
       })
     );
