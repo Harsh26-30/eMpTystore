@@ -211,17 +211,19 @@ const Order = () => {
                 textTransform: "capitalize",
                 fontFamily: "sans-serif"
               } : { display: "none" }} className='box3Order' >
+                OrderItems:-
                 {order.items.map((item, i) => (
                   <div key={i} style={{ marginBottom: "8px" }}>
-                    OrderItems:- {item.productname} {item.quantity}x <br />
-                    phoneNo:-{order.phoneNo} <br />
-                    Order Value:- {
-                      order.items.reduce((sum, item) => {
-                        return sum + (item.quantity * item.price);
-                      }, 0)
-                    }
+                    {item.productname} {item.quantity}x <br />
                   </div>
+
                 ))}
+                Order Value:- {
+                  order.items.reduce((sum, item) => {
+                    return sum + (item.quantity * item.price);
+                  }, 0)
+                }
+                phoneNo:-{order.phoneNo}
                 {order.orderstatus === 'Pending' ?
                   <button style={{
                     backgroundColor: "#000",
@@ -258,17 +260,19 @@ const Order = () => {
                 textTransform: "capitalize",
                 fontFamily: "sans-serif"
               } : { display: "none" }} className='box3Order' >
+                OrderItems:-
                 {order.items.map((item, i) => (
                   <div key={i} style={{ marginBottom: "8px" }}>
-                    OrderItems:- {item.productname} {item.quantity}x <br />
-                    phoneNo:-{order.phoneNo} <br />
-                    Order Value:- {
-                      order.items.reduce((sum, item) => {
-                        return sum + (item.quantity * item.price);
-                      }, 0)
-                    }
+                    {item.productname} {item.quantity}x <br />
                   </div>
+
                 ))}
+                Order Value:- {
+                  order.items.reduce((sum, item) => {
+                    return sum + (item.quantity * item.price);
+                  }, 0)
+                }
+                phoneNo:-{order.phoneNo}
                 {order.orderstatus === 'Confirm' ?
                   <button style={{
                     backgroundColor: "#000",
@@ -304,17 +308,19 @@ const Order = () => {
                 textTransform: "capitalize",
                 fontFamily: "sans-serif"
               } : { display: "none" }} className='box3Order' >
+                OrderItems:-
                 {order.items.map((item, i) => (
                   <div key={i} style={{ marginBottom: "8px" }}>
-                    OrderItems:- {item.productname} {item.quantity}x <br />
-                    phoneNo:-{order.phoneNo} <br />
-                    Order Value:- {
-                      order.items.reduce((sum, item) => {
-                        return sum + (item.quantity * item.price);
-                      }, 0)
-                    }
+                    {item.productname} {item.quantity}x <br />
                   </div>
+
                 ))}
+                Order Value:- {
+                  order.items.reduce((sum, item) => {
+                    return sum + (item.quantity * item.price);
+                  }, 0)
+                }
+                phoneNo:-{order.phoneNo}
                 {order.orderstatus === 'RFD' ?
                   <button style={{
                     backgroundColor: "#000",
