@@ -89,6 +89,8 @@
     margin-left: 5px;
     display: flex;
     gap: 10px;
+    height: 30%;
+    overflow: scroll;
 }
 
 @media (min-width:839px) {
