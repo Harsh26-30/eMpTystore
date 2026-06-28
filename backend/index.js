@@ -707,6 +707,8 @@ app.post("/confirmOrders", authMiddleware, async (req, res) => {
 app.post("/readyforDelivary", authMiddleware, async (req, res) => {
   try {
     const { orderid, clat, clong } = req.body;
+        console.log("clong",clong,"clat",clat);
+
 
     const fdp = await User.find({ role: "Delivery_partner" });
 
@@ -757,6 +759,7 @@ app.post("/readyforDelivary", authMiddleware, async (req, res) => {
       managingOrder: orderid,
     });
 
+    
     return res.json({
       message: "Order assigned to delivery partner",
       orders: updatedOrder,

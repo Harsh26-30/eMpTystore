@@ -127,8 +127,7 @@ const DeliveryPartnerdashboard = () => {
                         }
                     }
                 );
-
-
+                
                 prevPos.current = {
                     lat: newLat,
                     lng: newLng,
@@ -191,18 +190,6 @@ const DeliveryPartnerdashboard = () => {
 
         return (bearing + 360) % 360;
     }
-
-    // ✅ correct zoom tracker
-    // function ZoomTracker() {
-    //     useMapEvents({
-    //         zoomend: (e) => {
-    //             // setZoom(e.target.getZoom())
-    //         },
-    //     })
-    //     return null
-    // }
-
-
 
     return (
         <div id='maindpd'>
