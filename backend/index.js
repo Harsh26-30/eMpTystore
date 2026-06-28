@@ -670,41 +670,29 @@ app.get("/get-user-products", authMiddleware, async (req, res) => {
 });
 
 app.post("/confirmOrders", authMiddleware, async (req, res) => {
-
   const { orderid } = req.body;
 
   try {
-
-    // 1. Find order first
     const order = await Order.findById(orderid);
 
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
 
-    // 2. Find product
-    const product = await Product.findById(order.productid);
-
-    if (!product) {
-      return res.status(404).json({ message: "Product not found" });
+    // ✅ LOOP ITEMS (THIS IS THE FIX)
+    for (let item of order.items) {
+      await Product.findByIdAndUpdate(item.productid, {
+        $inc: {
+          totalstock: -Number(item.quantity || 0),
+          unitsold: Number(item.quantity || 0)
+        }
+      });
     }
 
-    // 3. Update order status
+    // update order status
     const updatedOrder = await Order.findByIdAndUpdate(
       orderid,
       { orderstatus: "Confirm" },
-      { new: true }
-    );
-
-    // 4. Reduce stock properly
-    await Product.findByIdAndUpdate(
-      order.productid,
-      {
-        $inc: {
-          totalstock: -Number(order.quantity),
-          unitsold: Number(order.quantity)
-        }
-      },
       { new: true }
     );
 
@@ -717,38 +705,41 @@ app.post("/confirmOrders", authMiddleware, async (req, res) => {
 });
 
 app.post("/readyforDelivary", authMiddleware, async (req, res) => {
-  const { orderid, clat, clong } = req.body
-  const fdp = await User.find({ 'role': 'Delivery_partner' })
   try {
+    const { orderid, clat, clong } = req.body;
+
+    const fdp = await User.find({ role: "Delivery_partner" });
+
     const updatedOrder = await Order.findOneAndUpdate(
-      { _id: orderid },   // 🔍 find by email
-      {
-        orderstatus: "RFD"
-      },
-      { new: true } // ✅ return updated data
+      { _id: orderid },
+      { orderstatus: "RFD" },
+      { new: true }
     );
 
     const start = {
       lat: parseFloat(clat),
-      lon: parseFloat(clong)
+      lon: parseFloat(clong),
     };
-
-
 
     let nearestPartner = null;
     let minDistance = Infinity;
 
     for (const partner of fdp) {
       if (!partner.dplatitude || !partner.dplongitude) continue;
-
       if (partner.managingOrder) continue;
 
       const end = {
         lat: parseFloat(partner.dplatitude),
-        lon: parseFloat(partner.dplongitude)
+        lon: parseFloat(partner.dplongitude),
       };
 
-      const distance = await getRouteDistance(start, end);
+      let distance;
+      try {
+        distance = await getRouteDistance(start, end);
+      } catch (err) {
+        console.log("Distance error for partner:", partner.email);
+        continue;
+      }
 
       if (distance < minDistance) {
         minDistance = distance;
@@ -758,23 +749,23 @@ app.post("/readyforDelivary", authMiddleware, async (req, res) => {
 
     if (!nearestPartner) {
       return res.status(404).json({
-        message: "No available delivery partner found."
+        message: "No available delivery partner found.",
       });
     }
 
     await User.findByIdAndUpdate(nearestPartner._id, {
-      managingOrder: orderid
+      managingOrder: orderid,
     });
 
-    const user = await User.findById(nearestPartner._id);
-
-    console.log(user.managingOrder, nearestPartner._id, user._id);
-
-    res.json({ orders: updatedOrder });
+    return res.json({
+      message: "Order assigned to delivery partner",
+      orders: updatedOrder,
+      partner: nearestPartner._id,
+    });
 
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ error: err.message });
+    console.log("READY FOR DELIVERY ERROR:", err);
+    return res.status(500).json({ error: err.message });
   }
 });
 
@@ -836,14 +827,12 @@ app.post("/Orders", authMiddleware, async (req, res) => {
     if (!finduser) {
       return res.status(404).json({ message: "User not found" });
     }
+
     const orders = await Order.find({
-      sellerid: finduser._id   // no need for toString if ObjectId
+      "items.sellerid": finduser._id
     });
 
-
-    console.log(orders); // true or false
-
-    res.json({ orders: orders });
+    res.json({ orders });
 
   } catch (err) {
     console.log(err);
@@ -866,45 +855,69 @@ app.get("/deliveryorder", authMiddleware, async (req, res) => {
 });
 
 app.post("/placeOrder", authMiddleware, async (req, res) => {
-  const { quantity, sellerid, productid, productname, customerlatitude, customerlongitude } = req.body;
-  const finduser = await User.findOne({ email: req.user.email });
-  const findseller = await User.findById(sellerid)
-
   try {
+    const finduser = await User.findOne({ email: req.user.email });
+
+    if (!finduser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const { items, customerlatitude, customerlongitude } = req.body;
+
+    const findsellerMap = {};
+
+    const formattedItems = [];
+
+    for (let item of items) {
+      let findseller = findsellerMap[item.sellerid];
+
+      if (!findseller) {
+        findseller = await User.findById(item.sellerid);
+        findsellerMap[item.sellerid] = findseller;
+      }
+
+      const product = await Product.findById(item.productid);
+
+      if (!findseller || !product) continue;
+
+      formattedItems.push({
+        productid: item.productid,
+        productname: item.productname,
+        quantity: item.quantity,
+        sellerid: item.sellerid,
+        price: product.productprice
+      });
+    }
     const newOrder = new Order({
       customerid: finduser._id,
       customername: finduser.name,
       customeremail: finduser.email,
-      address: finduser.address,
-      country: finduser.country,
-      state: finduser.state,
-      district: finduser.district,
-      pincode: finduser.pincode,
       phoneNo: finduser.phoneNo,
-      productid,
-      productname,
-      quantity,
-      sellerid,
+
+      items: formattedItems,
+
       customercorrdinates: {
         latitude: customerlatitude,
         longitude: customerlongitude
-      },
-      shopcorrdinates: {
-        latitude: findseller.shoplatitude,
-        longitude: findseller.shoplongitude
-      },
-
-      orderstatus: "Pending"
+      }
     });
 
     await newOrder.save();
+
+    finduser.CartItem = [];
+    await finduser.save();
+
+    return res.json({
+      success: true,
+      message: "Order placed successfully",
+      order: newOrder
+    });
 
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: err.message });
   }
 });
-
 app.post("/add-product", upload.single("image"), authMiddleware, async (req, res) => {
   try {
     // ✅ Check if file is uploaded

@@ -12,27 +12,31 @@ const orderSchema = new mongoose.Schema({
     address: { type: String },
     pincode: { type: String },
 
-    productname: { type: String },
-    productid: { type: String },
-    quantity: { type: Number },
-
+    items: [
+  {
+    productid: { type: String, required: true },
+    productname: { type: String, required: true },
+    quantity: { type: Number, required: true },
     sellerid: { type: String, required: true },
+    price: { type: Number }
+  }
+],
 
     delivery_partner: { type: String },
 
-    delivery_partner_verification:{
-         type :String,
-         default:'Not Verified'
-        },
+    delivery_partner_verification: {
+        type: String,
+        default: 'Not Verified'
+    },
 
     customercorrdinates: {
-        latitude: { type: String },
-        longitude: { type: String }
+        latitude: { type: Number },
+        longitude: { type: Number }
     },
-    
+
     shopcorrdinates: {
-        latitude: { type: String },
-        longitude: { type: String }
+        latitude: { type: Number },
+        longitude: { type: Number }
     },
 
 

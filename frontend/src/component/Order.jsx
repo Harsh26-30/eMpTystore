@@ -17,55 +17,58 @@ const Order = () => {
   const [clat, setclat] = useState('')
   const [clong, setclong] = useState('')
 
-  useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const clatitude = position.coords.latitude;
-            const clongitude = position.coords.longitude;
-            setclat(clatitude)
-            setclong(clongitude)
-          },
-          (error) => {
-            console.log(error.message);
-          }
-        );
+  const fetchOrders = async () => {
+    try {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const clatitude = position.coords.latitude;
+          const clongitude = position.coords.longitude;
+          setclat(clatitude)
+          setclong(clongitude)
+        },
+        (error) => {
+          console.log(error.message);
+        }
+      );
 
-        const res = await axios.post(
-          `${import.meta.env.VITE_API_URL}/Orders`,
-          {}, // empty body
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        console.log(res.data.orders);
-        setrorders(res.data.orders)
-      } catch (err) {
-        console.error(err);
-      }
-    };
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/Orders`,
+        {}, // empty body
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(res.data.orders);
+      setrorders(res.data.orders)
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+
+  const fun1 = async () => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/checkuserinfo`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setuserRole(res.data.role);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+
+  useEffect(() => {
+
 
     fetchOrders();
-
-    const fun1 = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/checkuserinfo`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setuserRole(res.data.role);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
     fun1();
   }, [token]);
 
@@ -82,8 +85,9 @@ const Order = () => {
         }
       );
     }
-  }
+    fetchOrders();
 
+  }
   // const printAllOrders = (orders) => {
   //   const win = window.open("", "", "width=800,height=600");
 
@@ -156,6 +160,7 @@ const Order = () => {
           },
         }
       );
+      fetchOrders();
 
     } catch (err) {
       console.log("REAL ERROR:", err.response?.data); // 👈 IMPORTANT
@@ -179,7 +184,7 @@ const Order = () => {
           },
         }
       );
-
+      fetchOrders();
     } catch (err) {
       console.log("REAL ERROR:", err.response?.data); // 👈 IMPORTANT
     }
@@ -206,13 +211,17 @@ const Order = () => {
                 textTransform: "capitalize",
                 fontFamily: "sans-serif"
               } : { display: "none" }} className='box3Order' >
-                <p>
-                  productid:-{order.productid}<br />
-                  productname:-{order.productname}<br />
-                  customeremail:-{order.customeremail} <br />
-                  phoneNo:-{order.phoneNo}<br />
-                  quantity:-{order.quantity}
-                </p>
+                {order.items.map((item, i) => (
+                  <div key={i} style={{ marginBottom: "8px" }}>
+                    OrderItems:- {item.productname} {item.quantity}x <br />
+                    phoneNo:-{order.phoneNo} <br />
+                    Order Value:- {
+                      order.items.reduce((sum, item) => {
+                        return sum + (item.quantity * item.price);
+                      }, 0)
+                    }
+                  </div>
+                ))}
                 {order.orderstatus === 'Pending' ?
                   <button style={{
                     backgroundColor: "#000",
@@ -249,14 +258,17 @@ const Order = () => {
                 textTransform: "capitalize",
                 fontFamily: "sans-serif"
               } : { display: "none" }} className='box3Order' >
-                <p>
-                  productid:-{order.productid}<br />
-                  productname:-{order.productname}<br />
-                  customeremail:-{order.customeremail} <br />
-                  customerid:-{order.customerid}<br />
-                  phoneNo:-{order.phoneNo}<br />
-                  quantity:-{order.quantity}
-                </p>
+                {order.items.map((item, i) => (
+                  <div key={i} style={{ marginBottom: "8px" }}>
+                    OrderItems:- {item.productname} {item.quantity}x <br />
+                    phoneNo:-{order.phoneNo} <br />
+                    Order Value:- {
+                      order.items.reduce((sum, item) => {
+                        return sum + (item.quantity * item.price);
+                      }, 0)
+                    }
+                  </div>
+                ))}
                 {order.orderstatus === 'Confirm' ?
                   <button style={{
                     backgroundColor: "#000",
@@ -292,14 +304,17 @@ const Order = () => {
                 textTransform: "capitalize",
                 fontFamily: "sans-serif"
               } : { display: "none" }} className='box3Order' >
-                <p>
-                  productid:-{order.productid}<br />
-                  productname:-{order.productname}<br />
-                  customeremail:-{order.customeremail} <br />
-                  customerid:-{order.customerid}<br />
-                  phoneNo:-{order.phoneNo}<br />
-                  quantity:-{order.quantity}
-                </p>
+                {order.items.map((item, i) => (
+                  <div key={i} style={{ marginBottom: "8px" }}>
+                    OrderItems:- {item.productname} {item.quantity}x <br />
+                    phoneNo:-{order.phoneNo} <br />
+                    Order Value:- {
+                      order.items.reduce((sum, item) => {
+                        return sum + (item.quantity * item.price);
+                      }, 0)
+                    }
+                  </div>
+                ))}
                 {order.orderstatus === 'RFD' ?
                   <button style={{
                     backgroundColor: "#000",

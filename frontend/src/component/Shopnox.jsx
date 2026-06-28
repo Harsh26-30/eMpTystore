@@ -14,8 +14,6 @@ const Shopnox = () => {
   const [header, setheader] = useState('');
   const [body, setbody] = useState('');
   const [footer, setfooter] = useState('');
-  const [clat, setclat] = useState(null);
-  const [clong, setclong] = useState(null);
   const [CartItem, setCartItem] = useState([]);
 
 
@@ -58,17 +56,6 @@ const Shopnox = () => {
   useEffect(() => {
     loadUI();
 
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const clatitude = position.coords.latitude;
-        const clongitude = position.coords.longitude;
-        setclat(clatitude)
-        setclong(clongitude)
-      },
-      (error) => {
-        console.log(error.message);
-      }
-    );
 
   }, [token, location.state.id]);
 
@@ -93,23 +80,6 @@ const Shopnox = () => {
         if (!permission) return;
 
         const handleadd = async () => {
-
-          //   await axios.post(`${import.meta.env.VITE_API_URL}/placeOrder`, {
-          //     quantity,
-          //     productid: productData._id,
-          //     productname: productData.productname,
-          //     sellerid: productData.productsellerid,
-          //     customerlatitude: clat,
-          //     customerlongitude: clong
-          //   },
-          //     {
-          //       headers: {
-          //         Authorization: `Bearer ${token}`,
-          //       },
-          //     })
-
-          // }
-
 
           await axios.post(`${import.meta.env.VITE_API_URL}/addItemToCart`, {
             quantity:1,

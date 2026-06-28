@@ -10,6 +10,8 @@ const Cart = () => {
     const token = localStorage.getItem("token");
     const [totalAmount, settotalAmount] = useState()
     const navigate = useNavigate()
+    const [clat, setclat] = useState(null);
+    const [clong, setclong] = useState(null);
 
 
     const fun = async (e) => {
@@ -39,6 +41,18 @@ const Cart = () => {
 
 
     useEffect(() => {
+
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const clatitude = position.coords.latitude;
+                const clongitude = position.coords.longitude;
+                setclat(clatitude)
+                setclong(clongitude)
+            },
+            (error) => {
+                console.log(error.message);
+            }
+        );
 
         fun();
     }, [])
@@ -83,6 +97,38 @@ const Cart = () => {
         fun();
     };
 
+   const handleclickorder = async () => {
+  try {
+    const orderItems = CartItem.map(item => ({
+      productid: item.productid,
+      productname: item.productname,
+      quantity: item.quantity,
+      sellerid: item.Seller_id
+    }));
+
+    await axios.post(
+      `${import.meta.env.VITE_API_URL}/placeOrder`,
+      {
+        items: orderItems,
+        customerlatitude: clat,
+        customerlongitude: clong
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    console.log(orderItems);
+
+
+    alert("Order placed successfully");
+  } catch (err) {
+    console.log(err);
+    alert("Order failed");
+  }
+};
     return (
         <div id='mainboxcart'>
             <Header2 />
@@ -123,8 +169,10 @@ const Cart = () => {
                     </div>
                 </div>
                 <div id='Totalamountpay'>
-                    <h3>Total Amount</h3>
-                    <button><p>₹{totalAmount}</p><span>Pay</span></button>
+                    <div>
+                        <h3>Total Amount</h3>
+                    </div>
+                    <button onClick={handleclickorder}><p>₹{totalAmount}</p><span>Order Now</span></button>
                 </div>
 
 
