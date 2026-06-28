@@ -55,14 +55,14 @@ const DeliveryOrderDetail = ({
                         },
                     }
                 );
-                if (orders) {
-                    setmapvisblity(true)
+                if (res2.data.dporders) {
+                    setmapvisblity(true);
                 }
 
                 setorders(res2.data.dporders)
                 setCurrentuserid(res2.data.id)
                 setmanagingOrder(res2.data.managingOrder);
-                
+
             } catch (err) {
                 console.log(err);
             }
@@ -74,17 +74,19 @@ const DeliveryOrderDetail = ({
     }, [token]);
 
 
-    if (!clat || !clong) return <div>Loading...</div>;
-
+    if (clat == null || clong == null) return <div>Loading...</div>;
     const visibleOrders = orders
         ? (Array.isArray(orders) ? orders : [orders])
+            .filter(o =>
+                o?.shopcorrdinates?.latitude &&
+                o?.shopcorrdinates?.longitude
+            )
         : [];
-
     return (
         <div>
 
             {visibleOrders.map(order => (
-                
+
                 <div key={order._id} id="deliveryrequest">
                     <div id="box1">
                         <h5>Order Id: {order._id}</h5>
@@ -92,9 +94,9 @@ const DeliveryOrderDetail = ({
                             {getDistance(
                                 clat,
                                 clong,
-                                order.shopcorrdinates.latitude,
-                                order.shopcorrdinates.longitude
-                            ).toFixed(2)} km
+                                order?.shopcorrdinates?.latitude,
+                                order?.shopcorrdinates?.longitude
+                            )?.toFixed(2)).toFixed(2)} km
                         </h4>
                     </div>
 
@@ -146,10 +148,10 @@ const DeliveryOrderDetail = ({
                             if (String(scanned).trim() === String(selectedOrder._id).trim()) {
                                 alert("Correct QR ✔");
                                 await axios.post(
-                                    `${import.meta.env.VITE_API_URL}/OrderReached`,{
-                                        orderid:selectedOrder._id,
-                                        dpid : Currentuserid
-                                    },
+                                    `${import.meta.env.VITE_API_URL}/OrderReached`, {
+                                    orderid: selectedOrder._id,
+                                    dpid: Currentuserid
+                                },
                                     {
                                         headers: {
                                             Authorization: `Bearer ${token}`,
