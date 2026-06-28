@@ -16,6 +16,8 @@
     justify-content: flex-start;
     border-radius: 20px;
     background-color:#dadada ;
+    overflow: scroll;
+    scrollbar-width: 0px;
 
 }
 
@@ -43,6 +45,8 @@
     justify-content: flex-start;
     border-radius: 20px;
     background-color:#dadada ;
+        overflow: scroll;
+    scrollbar-width: 0px;
 
 }
 
@@ -70,6 +74,8 @@
     justify-content: flex-start;
     border-radius: 20px;
     background-color:#dadada ;
+        overflow: scroll;
+    scrollbar-width: 0px;
 
 }
 
