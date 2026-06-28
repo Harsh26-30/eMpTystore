@@ -79,6 +79,13 @@
     background-color: grey;
 }
 
+#ordereditemdetailed p{
+    font-size: 10px;
+    font-weight: 600;
+    color: grey;
+    margin-left: 5px;
+}
+
 @media (min-width:839px) {
     
     #mainboxmyorderstatus #boxmyorderstatus{

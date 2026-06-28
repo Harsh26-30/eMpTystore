@@ -43,7 +43,7 @@ const MyOrderStatus = () => {
           <div id='orderdetailmyorderstatus'>
             <h3>Ordered Items:</h3>
             {order.items?.map((item, index) => (
-              <div key={index}>
+              <div id='ordereditemdetailed' key={index}>
                 <p>
                   {item.productname}  {item.quantity}x
                 </p>
