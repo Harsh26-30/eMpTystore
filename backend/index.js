@@ -283,7 +283,7 @@ app.post("/myOrderStatus", authMiddleware, async (req, res) => {
           orderStatus: order.orderstatus,
           orderName: order.productname,
           sellerOrShopName: seller?.name || "Unknown Seller",
-          customerName: finduser.name,
+          customerName: order.customername,
           customerContact: finduser.phoneNo,
           productImage: product?.productimage || ""
         };

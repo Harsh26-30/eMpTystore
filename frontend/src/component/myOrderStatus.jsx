@@ -44,9 +44,9 @@ const MyOrderStatus = () => {
             <img src={order.productImage} alt="Product Image" />
           </div>
           <div id='orderdetailmyorderstatus'>
-            <h3>Odered Item: {order.orderName || "Not mentioned"}</h3>
+            <h3>Odered Item: {order.items[0].productname || "Not mentioned"}</h3>
             <h3>Seller Name: {order.sellerOrShopName || "Not mentioned"}</h3>
-            <h3>Customer Name: {order.customerName || "Not mentioned"}</h3>
+            <h3>Customer Name: {order.customername || "Not mentioned"}</h3>
             <h3>Customer Contact: {order.customerContact || "Not mentioned"}</h3>
           </div>
           <h3>Order Status</h3>
