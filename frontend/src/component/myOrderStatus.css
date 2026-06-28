@@ -33,19 +33,15 @@
     border-radius: 20px;
 }
 
-#mainboxmyorderstatus #boxmyorderstatus #box1myorderstatus img{
-    width: 100%;
-    height: 100%;
-    border-radius: 20px;
-}
 
 #mainboxmyorderstatus #boxmyorderstatus #orderdetailmyorderstatus{
     width: 90%;
-    height: 25%;
+    height: 40%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
+    background-color: red
 }
 
 #mainboxmyorderstatus #boxmyorderstatus #orderstatusmyorderstatus {

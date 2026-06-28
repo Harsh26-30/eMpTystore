@@ -48,7 +48,8 @@ const MyOrderStatus = () => {
                   {item.productname}  {item.quantity}x
                 </p>
               </div>
-            ))}          <h3>Seller Name: {order.sellerOrShopName || "Not mentioned"}</h3>
+            ))}
+            <h3>Seller Name: {order.sellerOrShopName || "Not mentioned"}</h3>
             <h3>Customer Name: {order.customername || "Not mentioned"}</h3>
             <h3>Customer Contact: {order.customerContact || "Not mentioned"}</h3>
             <h3>
@@ -58,7 +59,6 @@ const MyOrderStatus = () => {
               }, 0)}
             </h3>
           </div>
-          <h3>Order Status</h3>
           <div style={{
             backgroundColor: order.orderStatus === 'pending' ?
               'grey' : order.orderStatus === 'Confirm' ?
