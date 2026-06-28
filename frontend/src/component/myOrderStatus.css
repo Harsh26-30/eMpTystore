@@ -82,6 +82,13 @@
     background-color: grey;
 }
 
+#ordereditemdetailed{
+    width: 50%;
+    height: 40%;
+    overflow: scroll;
+    scrollbar-width: 0px;
+}
+
 #ordereditemdetailed p{
     font-size: 10px;
     font-weight: 600;
@@ -89,8 +96,6 @@
     margin-left: 5px;
     display: flex;
     gap: 10px;
-    height: 30%;
-    overflow: scroll;
 }
 
 @media (min-width:839px) {
