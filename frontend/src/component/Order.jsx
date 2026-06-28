@@ -367,10 +367,9 @@ const Order = () => {
                 alert("Correct Order Scanned ✔")
 
                 handleOutfordelivary(selectedOrder._id);
-                navigate("/homepage");
               } else {
                 alert("Wrong QR Code ❌");
-                navigate("/homepage");
+                navigate("/home");
 
               }
 

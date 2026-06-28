@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from "axios";
 import "./deliveryorderdetail.css"
 import QrScanner from "./QrScanner";
+import { useNavigate } from "react-router-dom";
 
 const DeliveryOrderDetail = ({
     setQrVusibility,
@@ -16,6 +17,7 @@ const DeliveryOrderDetail = ({
     const [orders, setorders] = useState(null);
     const [Currentuserid, setCurrentuserid] = useState('')
     const [showScanner, setShowScanner] = useState(false);
+    const navigate = useNavigate();
 
     const prevPos = useRef(null);
 
@@ -142,9 +144,6 @@ const DeliveryOrderDetail = ({
                                     ? result
                                     : result?.text;
 
-                            console.log("Scanned:", scanned);
-                            console.log("Expected:", selectedOrder._id);
-
                             if (String(scanned).trim() === String(selectedOrder._id).trim()) {
                                 alert("Correct QR ✔");
                                 await axios.post(
@@ -158,8 +157,11 @@ const DeliveryOrderDetail = ({
                                         },
                                     }
                                 );
+                                navigate("/home");
                             } else {
                                 alert("Wrong QR ❌");
+                                navigate("/home");
+
                             }
 
                             setShowScanner(false);
