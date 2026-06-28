@@ -10,7 +10,6 @@
     width: 90%;
     height: 30vh;
     margin-top: 20px;
-
     border-radius: 20px;
     border: 2px solid #000;
     padding: 10px;
@@ -80,13 +79,6 @@
 
 #mainboxmyorderstatus #boxmyorderstatus  #qrbutton:hover{
     background-color: grey;
-}
-
-#ordereditemdetailed{
-    width: 50%;
-    height: 40px;
-    overflow: scroll;
-    scrollbar-width: 0px;
 }
 
 #ordereditemdetailed p{
