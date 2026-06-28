@@ -151,7 +151,7 @@ const position =
     clat != null && clong != null
         ? [Number(clat), Number(clong)]
         : null;
-        console.log('positiolatandlog,clat,clong');
+        console.log('positiolatandlog',clat,clong);
         
 
     const INDIA_BOUNDS = {
@@ -166,7 +166,7 @@ const position =
     }
 
     const destination = [destlat, destlong]; // Delhi example
-        console.log('desttination,destlat,destlong');
+        console.log('desttination',destlat,destlong);
 
 
     const riderIcon = L.icon({
