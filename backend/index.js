@@ -275,7 +275,7 @@ app.post("/myOrderStatus", authMiddleware, async (req, res) => {
 
     const orderData = await Promise.all(
       orders.map(async (order) => {
-        const seller = await User.findById(order.sellerid);
+        const seller = await User.findById(order.items[0].sellerid);
         const product = await Product.findById(order.productid);
 
         return {
