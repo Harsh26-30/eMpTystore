@@ -2,64 +2,55 @@ import { Html5Qrcode } from "html5-qrcode";
 import { useEffect, useRef } from "react";
 
 const QrScanner = ({ onScan }) => {
-  const qrRef = useRef(null);
-  const scannedRef = useRef(false);
+  const scannerRef = useRef(null);
 
   useEffect(() => {
     const qr = new Html5Qrcode("reader");
-    qrRef.current = qr;
+    scannerRef.current = qr;
 
-    const start = async () => {
+    const startCamera = async () => {
       try {
         const devices = await Html5Qrcode.getCameras();
 
-        if (!devices.length) return;
+        if (!devices || devices.length === 0) {
+          console.log("No cameras found");
+          return;
+        }
 
-        let camera =
-          devices.find(
-            d =>
-              d.label.toLowerCase().includes("back") ||
-              d.label.toLowerCase().includes("rear") ||
-              d.label.toLowerCase().includes("environment")
-          ) || devices[devices.length - 1];
+        // 🔥 Try to find BACK camera
+        let backCamera = devices.find((d) =>
+          d.label.toLowerCase().includes("back") ||
+          d.label.toLowerCase().includes("rear") ||
+          d.label.toLowerCase().includes("environment")
+        );
+
+        // fallback if not found
+        if (!backCamera) {
+          backCamera = devices[devices.length - 1];
+        }
 
         await qr.start(
-          camera.id,
+          backCamera.id,
           {
             fps: 10,
-            qrbox: 250,
+            qrbox: { width: 250, height: 250 },
           },
-          async (decodedText) => {
-            if (scannedRef.current) return;
-            scannedRef.current = true;
-
-            await onScan(decodedText);
-
-            try {
-              if (qr.isScanning) {
-                await qr.stop();
-              }
-              await qr.clear();
-            } catch (err) {
-              console.log(err);
-            }
+          (text) => {
+            console.log("SCAN:", text);
+            onScan(text);
+            qr.stop();
           },
-          () => { }
+          () => {}
         );
-      } catch (e) {
-        console.log(e);
+      } catch (err) {
+        console.log("Camera error:", err);
       }
     };
 
-    start();
+    startCamera();
 
     return () => {
-      if (qrRef.current) {
-        qrRef.current
-          .stop()
-          .then(() => qrRef.current.clear())
-          .catch(() => { });
-      }
+      qr.stop().catch(() => {});
     };
   }, []);
 
@@ -67,8 +58,11 @@ const QrScanner = ({ onScan }) => {
     <div
       id="reader"
       style={{
-        width: "350px",
-        height: "350px",
+        width: "100%",
+        maxWidth: "400px",
+        height: "400px",
+        margin: "auto",
+        background: "black",
       }}
     />
   );

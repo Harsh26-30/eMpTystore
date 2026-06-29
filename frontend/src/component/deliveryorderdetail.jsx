@@ -187,37 +187,31 @@ const DeliveryOrderDetail = ({
                 >
                     <QrScanner
                         onScan={async (result) => {
-                            try {
-                                const scanned =
-                                    typeof result === "string"
-                                        ? result
-                                        : result?.text;
+                            const scanned =
+                                typeof result === "string"
+                                    ? result
+                                    : result?.text;
 
-                                console.log("Scanned:", scanned);
-                                console.log("Selected:", selectedOrder);
-
-                                if (String(scanned).trim() === String(selectedOrder._id).trim()) {
-                                    await axios.post(
-                                        `${import.meta.env.VITE_API_URL}/OrderReached`,
-                                        {
-                                            orderid: selectedOrder._id,
-                                            dpid: Currentuserid,
+                            if (String(scanned).trim() === String(selectedOrder._id).trim()) {
+                                alert("Correct QR ✔");
+                                await axios.post(
+                                    `${import.meta.env.VITE_API_URL}/OrderReached`, {
+                                    orderid: selectedOrder._id,
+                                    dpid: Currentuserid
+                                },
+                                    {
+                                        headers: {
+                                            Authorization: `Bearer ${token}`,
                                         },
-                                        {
-                                            headers: {
-                                                Authorization: `Bearer ${token}`,
-                                            },
-                                        }
-                                    );
+                                    }
+                                );
+                            } else {
+                                alert("Wrong QR ❌");
+                                navigate("/home");
 
-                                    setShowScanner(false);
-                                } else {
-                                    alert("Wrong QR");
-                                    setShowScanner(false);
-                                }
-                            } catch (err) {
-                                console.error("Scan Error:", err);
                             }
+
+                            setShowScanner(false);
                         }}
                     />
                     <button
