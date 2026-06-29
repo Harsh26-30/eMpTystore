@@ -33,8 +33,8 @@ const Cart = () => {
         }
 
         if (!cartItems) {
-    console.error("THIS IS UNDEFINED!");
-}
+            console.error("THIS IS UNDEFINED!");
+        }
 
         const totalAmount =
             cartItems.reduce(

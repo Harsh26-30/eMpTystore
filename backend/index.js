@@ -183,13 +183,20 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
   const finduser2 = await User.find({
     _id: { $in: finduser.shoporseller }
   });
-
   if (!finduser.managingOrder) {
     return res.json({
       id: finduser._id,
       role: finduser.role,
       managingOrder: null,
-      dporders: null
+      dporders: null,
+
+      CartItem: finduser.CartItem || [],
+      shops: finduser2 || [],
+      myproductdata: [],
+      useruidata: finduser.ui,
+      shopOpenOrNot: finduser.shopOpenOrNot,
+      slat: null,
+      slong: null
     });
   }
   const orderdata = await Order.findById(finduser.managingOrder)
