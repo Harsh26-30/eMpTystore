@@ -187,32 +187,37 @@ const DeliveryOrderDetail = ({
                 >
                     <QrScanner
                         onScan={async (result) => {
-                            const scanned =
-                                typeof result === "string"
-                                    ? result
-                                    : result?.text;
+                            try {
+                                const scanned =
+                                    typeof result === "string"
+                                        ? result
+                                        : result?.text;
 
-                            if (String(scanned).trim() === String(selectedOrder._id).trim()) {
-                                alert("Correct QR ✔");
-                                await axios.post(
-                                    `${import.meta.env.VITE_API_URL}/OrderReached`, {
-                                    orderid: selectedOrder._id,
-                                    dpid: Currentuserid
-                                },
-                                    {
-                                        headers: {
-                                            Authorization: `Bearer ${token}`,
+                                console.log("Scanned:", scanned);
+                                console.log("Selected:", selectedOrder);
+
+                                if (String(scanned).trim() === String(selectedOrder._id).trim()) {
+                                    await axios.post(
+                                        `${import.meta.env.VITE_API_URL}/OrderReached`,
+                                        {
+                                            orderid: selectedOrder._id,
+                                            dpid: Currentuserid,
                                         },
-                                    }
-                                );
-                                navigate("/home");
-                            } else {
-                                alert("Wrong QR ❌");
-                                navigate("/home");
+                                        {
+                                            headers: {
+                                                Authorization: `Bearer ${token}`,
+                                            },
+                                        }
+                                    );
 
+                                    setShowScanner(false);
+                                } else {
+                                    alert("Wrong QR");
+                                    setShowScanner(false);
+                                }
+                            } catch (err) {
+                                console.error("Scan Error:", err);
                             }
-
-                            setShowScanner(false);
                         }}
                     />
                     <button
