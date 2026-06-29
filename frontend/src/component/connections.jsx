@@ -19,8 +19,7 @@ const Connections = () => {
             },
           }
         );
-        setShops(res.data.shops);
-
+        setShops(Array.isArray(res.data.shops) ? res.data.shops : []);
       } catch (err) {
         console.log(err);
       }
@@ -35,7 +34,7 @@ const Connections = () => {
       {shops.length > 0 ? (shops.map((shop, index) => (
         <div id='Shopnoxs'
           style={{
-            opacity:shop.shopOpenOrNot === 'Closed' ? 0.4 : 1 ,
+            opacity: shop.shopOpenOrNot === 'Closed' ? 0.4 : 1,
             backgroundColor: shop.ui.generalinfo.BackgroundColor || "transparent",
             backgroundImage: shop.ui.generalinfo.Backgroundimage
               ? `url(${shop.ui.generalinfo.Backgroundimage})`
@@ -44,12 +43,13 @@ const Connections = () => {
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat"
           }}
-          key={index} onClick={() => { shop.shopOpenOrNot === 'Open' ? 
+          key={index} onClick={() => {
+            shop.shopOpenOrNot === 'Open' ?
             navigate("/Shopnox", {
               state: {
                 id: shop._id
               }
-            }) : alert(`${shop.ui.generalinfo.BusinessName } is closed Currently`)
+            }) : alert(`${shop.ui.generalinfo.BusinessName} is closed Currently`)
           }}>
           <h3 style={{ color: shop.ui.generalinfo.TextColor }}>{shop.ui.generalinfo.BusinessName}</h3>
         </div>
