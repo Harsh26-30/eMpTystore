@@ -12,6 +12,8 @@ const Header2 = ({ setmanagehomepagevisible, managehomepagevisible }) => {
   const token = localStorage.getItem("token");
   const [userRole, setuserRole] = useState('')
   const [shopOpenOrNot, setShopOpenOrNot] = useState(false);
+  const [onServiceOrNot, setonServiceOrNot] = useState(false);
+
 
 
   useEffect(() => {
@@ -29,6 +31,7 @@ const Header2 = ({ setmanagehomepagevisible, managehomepagevisible }) => {
         );
         setuserRole(res.data.role);
         setShopOpenOrNot(res.data.shopOpenOrNot);
+        setonServiceOrNot(res.data.onServiceOrNot);
       } catch (err) {
         console.log(err);
       }
@@ -50,6 +53,21 @@ const Header2 = ({ setmanagehomepagevisible, managehomepagevisible }) => {
       console.log(err);
     }
   };
+
+
+  const handledponServiceorNotToggle = async () => {
+    try {
+      alert(`You are now ${onServiceOrNot === 'Yes' ? 'Not in Service' : 'in Service'}`);
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/dponServiceorNotToggle`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setonServiceOrNot(res.data.onServiceOrNot);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <div id='mainboxheader2'>
       <div id='box2header2'>
@@ -61,6 +79,14 @@ const Header2 = ({ setmanagehomepagevisible, managehomepagevisible }) => {
                 <div style={{ backgroundColor: shopOpenOrNot === 'Open' ? 'green' : 'red' }} id='ShopOpenornotcircle'></div><br />
               </div>
               <h5 style={{ color: shopOpenOrNot === 'Open' ? 'Green' : 'Red' }} id='ShopOpenornottext'>{shopOpenOrNot === 'Open' ? 'Open' : 'Closed'}</h5>
+            </button>
+          )}
+          {userRole === 'Delivery_partner' && (
+            <button onClick={handledponServiceorNotToggle} className='ShopOpenornotbox1'>
+              <div style={{ backgroundColor: onServiceOrNot === 'Yes' ? 'white' : 'grey', display: 'flex', alignItems: 'center', justifyContent: onServiceOrNot === 'Yes' ? 'flex-start' : 'flex-end' }} id='ShopOpenornotbox2'>
+                <div style={{ backgroundColor: onServiceOrNot === 'Yes' ? 'purple' : 'black',border:'2px solid white' }} id='ShopOpenornotcircle'></div><br />
+              </div>
+              <h5 style={{ color: onServiceOrNot === 'Yes' ? 'purple' : 'white' }} id='ShopOpenornottext'>{onServiceOrNot === 'Yes' ? 'On Service' : 'Not In Service'}</h5>
             </button>
           )}
           {userRole === 'Customer' && (

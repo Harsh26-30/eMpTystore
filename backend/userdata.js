@@ -95,6 +95,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "Closed"
   },
+   onServiceOrNot: {
+    type: String,
+    default: "No"
+  },
   ui: {
     generalinfo: {
       logo: { type: String },

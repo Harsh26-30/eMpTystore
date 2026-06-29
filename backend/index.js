@@ -264,6 +264,7 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
     myproductdata: findproduct,
     shops: finduser2,
     shopOpenOrNot: finduser.shopOpenOrNot,
+    onServiceOrNot: finduser.onServiceOrNot,
     managingOrder: finduser.managingOrder,
     slat: orderdata?.shopcorrdinates?.latitude || null,
     slong: orderdata?.shopcorrdinates?.longitude || null,
@@ -770,7 +771,7 @@ app.post("/readyforDelivary", authMiddleware, async (req, res) => {
         continue;
       }
 
-      if (distance < minDistance) {
+      if (distance < minDistance && partner.onServiceOrNot === "Yes") {
         minDistance = distance;
         nearestPartner = partner;
       }
@@ -1395,6 +1396,28 @@ app.post("/toggleShopOpenOrNot", authMiddleware, async (req, res) => {
 
   } catch (err) {
     console.log("TOGGLE SHOP OPEN OR NOT ERROR:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+app.post("/dponServiceorNotToggle", authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.user.email });
+
+    console.log("Before:", user.onServiceOrNot);
+
+    user.onServiceOrNot =
+      user.onServiceOrNot === "Yes" ? "No" : "Yes";
+
+    console.log("After:", user.onServiceOrNot);
+
+    await user.save();
+
+    res.json({
+      onServiceOrNot: user.onServiceOrNot,
+    });
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 });
