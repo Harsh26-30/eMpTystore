@@ -137,8 +137,8 @@ const DeliveryOrderDetail = ({
                 <div key={order._id} id="deliveryrequest">
                     <div id="box1">
                         <h5>Order Id: {order._id}</h5>
-                        {showScanner && <h5><a href={`tel:${order.phoneNo}`}>
-                            📞 {order.phoneNo}
+                        {managingOrder === order._id && order.delivery_partner_verification === "Verified" && <h5><a href={`tel:${order.phoneNo}`}>
+                            Contact:- {order.phoneNo}
                         </a></h5>}
                         <h4>
                             {getDistance(
