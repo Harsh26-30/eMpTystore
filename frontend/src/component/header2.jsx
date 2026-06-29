@@ -34,9 +34,6 @@ const Header2 = ({ setmanagehomepagevisible, managehomepagevisible }) => {
 
   useEffect(() => {
     if (!token) return;
-
-
-
     fun1();
   }, [token]);
 
@@ -48,7 +45,6 @@ const Header2 = ({ setmanagehomepagevisible, managehomepagevisible }) => {
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setShopOpenOrNot(res.data.shopOpenOrNot);
       fun1();
     } catch (err) {
       console.log(err);
@@ -64,7 +60,6 @@ const Header2 = ({ setmanagehomepagevisible, managehomepagevisible }) => {
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setonServiceOrNot(res.data.onServiceOrNot);
       fun1();
     } catch (err) {
       console.log(err);
