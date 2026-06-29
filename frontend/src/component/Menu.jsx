@@ -42,7 +42,6 @@ const Menu = () => {
         <div id='mainboxMenu'>
              <h2>Menu</h2>
             <div id='box2Menu'>
-               
 
                 <button id='menubutton' onClick={() => navigate("/Key")}>
                     Key

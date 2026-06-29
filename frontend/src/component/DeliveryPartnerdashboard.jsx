@@ -127,7 +127,7 @@ const DeliveryPartnerdashboard = () => {
                         }
                     }
                 );
-                
+
                 prevPos.current = {
                     lat: newLat,
                     lng: newLng,
@@ -147,12 +147,12 @@ const DeliveryPartnerdashboard = () => {
     }, []);
 
 
-const position =
-    clat != null && clong != null
-        ? [Number(clat), Number(clong)]
-        : null;
-        console.log('positiolatandlog',clat,clong);
-        
+    const position =
+        clat != null && clong != null
+            ? [Number(clat), Number(clong)]
+            : null;
+    console.log('positiolatandlog', clat, clong);
+
 
     const INDIA_BOUNDS = {
         minLat: 6.5,
@@ -166,7 +166,7 @@ const position =
     }
 
     const destination = [destlat, destlong]; // Delhi example
-        console.log('desttination',destlat,destlong);
+    console.log('desttination', destlat, destlong);
 
 
     const riderIcon = L.icon({
@@ -199,34 +199,34 @@ const position =
 
     return (
         <div id='maindpd'>
-            {(mapvisblity === true || managingOrder) && (
+            {(mapvisblity === true || managingOrder !== '' && managingOrder) && (
                 <MapContainer
-                center={position}
-                zoom={6}
-                style={{ height: "500px", width: "100%" }}
-            >
-                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-
-                <Marker
-                    position={position}
-                    icon={riderIcon}
-                    ref={markerRef}
+                    center={position}
+                    zoom={6}
+                    style={{ height: "500px", width: "100%" }}
                 >
-                    <Popup>Your Location</Popup>
-                </Marker>
+                    <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
-                {destlat && destlong && (
-                    <Marker position={[destlat, destlong]} icon={shopIcon}>
-                        <Popup>Shop Location</Popup>
+                    <Marker
+                        position={position}
+                        icon={riderIcon}
+                        ref={markerRef}
+                    >
+                        <Popup>Your Location</Popup>
                     </Marker>
-                )}
 
-                {destlat !== null && destlong !== null && (
-                    <Routing
-                        start={position}
-                        end={destination}
-                        routingRef={routingRef}
-                    />)}            </MapContainer>)}
+                    {destlat && destlong && (
+                        <Marker position={[destlat, destlong]} icon={shopIcon}>
+                            <Popup>Shop Location</Popup>
+                        </Marker>
+                    )}
+
+                    {destlat !== null && destlong !== null && (
+                        <Routing
+                            start={position}
+                            end={destination}
+                            routingRef={routingRef}
+                        />)}            </MapContainer>)}
 
             <Deliveryorderdetail
                 setQrVusibility={setQrVusibility}
@@ -269,7 +269,8 @@ const position =
                         </button>
                     </div>
                 </div>
-            )}        </div>
+            )}
+        </div>
     )
 }
 

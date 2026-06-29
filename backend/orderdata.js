@@ -57,6 +57,8 @@ const orderSchema = new mongoose.Schema({
         type: String,
         default: "COD"
     },
+    paymeentStatus:{type:String},
+    paymentId:{type:String},
 
     weight: {
         type: Number,

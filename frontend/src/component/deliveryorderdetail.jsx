@@ -37,6 +37,30 @@ const DeliveryOrderDetail = ({
         return R * c;
     }
 
+
+    const fetchData = async () => {
+        try {
+            const res2 = await axios.get(
+                `${import.meta.env.VITE_API_URL}/checkuserinfo`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            if (res2.data.dporders) {
+                setmapvisblity(true);
+            }
+
+            setorders(res2.data.dporders)
+            setCurrentuserid(res2.data.id)
+            setmanagingOrder(res2.data.managingOrder);
+
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     useEffect(() => {
         const watchId = navigator.geolocation.watchPosition(
             (position) => {
@@ -46,29 +70,6 @@ const DeliveryOrderDetail = ({
             (error) => console.log(error),
             { enableHighAccuracy: true }
         );
-
-        const fetchData = async () => {
-            try {
-                const res2 = await axios.get(
-                    `${import.meta.env.VITE_API_URL}/checkuserinfo`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
-                if (res2.data.dporders) {
-                    setmapvisblity(true);
-                }
-
-                setorders(res2.data.dporders)
-                setCurrentuserid(res2.data.id)
-                setmanagingOrder(res2.data.managingOrder);
-
-            } catch (err) {
-                console.log(err);
-            }
-        };
 
         fetchData();
 
@@ -84,15 +85,59 @@ const DeliveryOrderDetail = ({
                 o?.shopcorrdinates?.longitude
             )
         : [];
+
+
+    // Wait until data is fetched
+    if (orders === null) {
+        setTimeout(() => {
+            fetchData()
+        }, 10000);
+        return <div id='ordersnull'>
+            <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                width="100%"
+                style={{
+                    mixBlendMode: "soft-light"
+                }}
+            >
+                <source src="\InShot_20260629_090941280.mp4" type="video/mp4" />
+                <h2>Wait... Currently No Order Asign To You Keep Refresh The Page</h2>
+            </video>
+        </div>;
+    }
+
+    // No order assigned
+    if (!managingOrder) {
+        return (
+            <div id="noAssignedOrder">
+                <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    width="100%"
+                    style={{
+                        mixBlendMode: "soft-light"
+                    }}
+                >
+                    <source src="\InShot_20260629_090941280.mp4" type="video/mp4" />
+                    <h2>Wait... Currently No Order Asign To You Keep Refresh The Page</h2>
+                </video>
+            </div>
+        );
+    }
+
     return (
         <div>
-
             {visibleOrders.map(order => (
 
                 <div key={order._id} id="deliveryrequest">
                     <div id="box1">
                         <h5>Order Id: {order._id}</h5>
-                     {showScanner &&  <h5><a href={`tel:${order.phoneNo}`}>
+                        {showScanner && <h5><a href={`tel:${order.phoneNo}`}>
                             📞 {order.phoneNo}
                         </a></h5>}
                         <h4>

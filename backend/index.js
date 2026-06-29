@@ -16,6 +16,7 @@ const bcrypt = require("bcrypt");
 const SECRET = process.env.JWT_SECRET || "secretkey";
 const multer = require("multer");
 const cloudinary = require("./cloudinary");
+const { log } = require('console');
 
 const upload = multer({ dest: "uploads/" });
 
@@ -183,6 +184,14 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
     _id: { $in: finduser.shoporseller }
   });
 
+  if (!finduser.managingOrder) {
+    return res.json({
+      id: finduser._id,
+      role: finduser.role,
+      managingOrder: null,
+      dporders: null
+    });
+  }
   const orderdata = await Order.findById(finduser.managingOrder)
 
   const findproduct = await Product.find({
@@ -686,7 +695,6 @@ app.post("/confirmOrders", authMiddleware, async (req, res) => {
 
   try {
     const order = await Order.findById(orderid);
-
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
