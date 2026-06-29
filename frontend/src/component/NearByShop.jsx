@@ -24,8 +24,7 @@ const NearByShop = () => {
                         },
                     }
                 );
-                setShops(res.data.shops);
-
+                setShops(Array.isArray(res.data.shops) ? res.data.shops : []);
 
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
@@ -96,10 +95,10 @@ const NearByShop = () => {
                             clong,
                             shop.shoplatitude,
                             shop.shoplongitude
-                        ).toFixed(2)?? 'Not Defined'} km
+                        ).toFixed(2) ?? 'Not Defined'} km
                     </h4>
                 </div>
-            ))):<></>}
+            ))) : <></>}
 
         </div>
     )
