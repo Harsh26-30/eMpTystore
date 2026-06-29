@@ -233,6 +233,8 @@ const DeliveryPartnerdashboard = () => {
                 setSelectedOrder={setSelectedOrder}
                 selectedOrder={selectedOrder}
                 setmapvisblity={setmapvisblity}
+                setdestlat={setdestlat}
+                setdestlong={setdestlong}
             />
             {QrVusibility === true && (
                 <div

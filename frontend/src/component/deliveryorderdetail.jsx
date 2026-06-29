@@ -8,7 +8,9 @@ const DeliveryOrderDetail = ({
     setQrVusibility,
     setSelectedOrder,
     selectedOrder,
-    setmapvisblity
+    setmapvisblity,
+    setdestlong,
+    setdestlat
 }) => {
     const token = localStorage.getItem("token");
     const [clat, setclat] = useState(null);
@@ -55,6 +57,8 @@ const DeliveryOrderDetail = ({
             setorders(res2.data.dporders)
             setCurrentuserid(res2.data.id)
             setmanagingOrder(res2.data.managingOrder);
+            setdestlong(res2.data.slong)
+            setdestlat(res2.data.slat)
 
         } catch (err) {
             console.log(err);
