@@ -24,7 +24,8 @@ const NearByShop = () => {
                         },
                     }
                 );
-                setShops(Array.isArray(res.data.shops) ? res.data.shops : []);
+                setShops(res.data.shops);
+
 
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
@@ -44,6 +45,10 @@ const NearByShop = () => {
         };
 
         fun1();
+
+        if (!shops) {
+    console.error("THIS IS UNDEFINED! shops");
+}
 
     }, [token]);
 
@@ -95,10 +100,10 @@ const NearByShop = () => {
                             clong,
                             shop.shoplatitude,
                             shop.shoplongitude
-                        ).toFixed(2) ?? 'Not Defined'} km
+                        ).toFixed(2)?? 'Not Defined'} km
                     </h4>
                 </div>
-            ))) : <></>}
+            ))):<></>}
 
         </div>
     )

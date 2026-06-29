@@ -32,6 +32,10 @@ const Cart = () => {
             navigate(-1);
         }
 
+        if (!cartItems) {
+    console.error("THIS IS UNDEFINED!");
+}
+
         const totalAmount =
             cartItems.reduce(
                 (sum, item) => sum + item.quantity * Number(item.productprice),

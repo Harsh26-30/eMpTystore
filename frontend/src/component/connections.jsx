@@ -19,13 +19,18 @@ const Connections = () => {
             },
           }
         );
-        setShops(Array.isArray(res.data.shops) ? res.data.shops : []);
+        setShops(res.data.shops);
+
       } catch (err) {
         console.log(err);
       }
     };
 
     fun1();
+
+    if (!shops) {
+      console.error("THIS IS UNDEFINED!");
+    }
   }, [token]);
 
   return (
