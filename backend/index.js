@@ -780,7 +780,6 @@ app.post("/readyforDelivary", authMiddleware, async (req, res) => {
         { orderstatus: "RFD" },
         { new: true }
       );
-
     }
 
     await User.findByIdAndUpdate(nearestPartner._id, {

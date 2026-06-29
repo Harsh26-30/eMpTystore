@@ -165,6 +165,8 @@ const Order = () => {
     } catch (err) {
       console.log("REAL ERROR:", err.response?.data); // 👈 IMPORTANT
     }
+    fetchOrders();
+
   };
 
   const handleScan = (order) => {
@@ -184,10 +186,11 @@ const Order = () => {
           },
         }
       );
-      fetchOrders();
     } catch (err) {
       console.log("REAL ERROR:", err.response?.data); // 👈 IMPORTANT
     }
+    fetchOrders();
+
   };
 
   return (
