@@ -14,6 +14,11 @@ const Header2 = ({ setmanagehomepagevisible, managehomepagevisible }) => {
   const [shopOpenOrNot, setShopOpenOrNot] = useState(false);
   const [onServiceOrNot, setonServiceOrNot] = useState(false);
 
+
+
+  useEffect(() => {
+    if (!token) return;
+
     const fun1 = async () => {
       try {
         const res = await axios.get(
@@ -32,8 +37,6 @@ const Header2 = ({ setmanagehomepagevisible, managehomepagevisible }) => {
       }
     };
 
-  useEffect(() => {
-    if (!token) return;
     fun1();
   }, [token]);
 
@@ -45,7 +48,7 @@ const Header2 = ({ setmanagehomepagevisible, managehomepagevisible }) => {
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      fun1();
+      setShopOpenOrNot(res.data.shopOpenOrNot);
     } catch (err) {
       console.log(err);
     }
@@ -60,7 +63,7 @@ const Header2 = ({ setmanagehomepagevisible, managehomepagevisible }) => {
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      fun1();
+      setonServiceOrNot(res.data.onServiceOrNot);
     } catch (err) {
       console.log(err);
     }
