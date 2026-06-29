@@ -26,16 +26,19 @@ const Cart = () => {
 
 
         setCartItem(res2.data.CartItem)
-        if (res2.data.CartItem.length === 0) {
+        const cartItems = res2.data.CartItem || [];
+
+        if (cartItems.length === 0) {
             navigate(-1);
         }
+
         const totalAmount =
-            res2.data.CartItem.reduce(
-                (sum, item) =>
-                    sum + item.quantity * Number(item.productprice),
+            cartItems.reduce(
+                (sum, item) => sum + item.quantity * Number(item.productprice),
                 0
             ) + 30 + 2;
-        settotalAmount(totalAmount)
+
+        settotalAmount(totalAmount);
 
     }
 
@@ -97,38 +100,38 @@ const Cart = () => {
         fun();
     };
 
-   const handleclickorder = async () => {
-  try {
-    const orderItems = CartItem.map(item => ({
-      productid: item.productid,
-      productname: item.productname,
-      quantity: item.quantity,
-      sellerid: item.Seller_id
-    }));
+    const handleclickorder = async () => {
+        try {
+            const orderItems = CartItem.map(item => ({
+                productid: item.productid,
+                productname: item.productname,
+                quantity: item.quantity,
+                sellerid: item.Seller_id
+            }));
 
-    await axios.post(
-      `${import.meta.env.VITE_API_URL}/placeOrder`,
-      {
-        items: orderItems,
-        customerlatitude: clat,
-        customerlongitude: clong
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+            await axios.post(
+                `${import.meta.env.VITE_API_URL}/placeOrder`,
+                {
+                    items: orderItems,
+                    customerlatitude: clat,
+                    customerlongitude: clong
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
 
-    console.log(orderItems);
+            console.log(orderItems);
 
 
-    alert("Order placed successfully");
-  } catch (err) {
-    console.log(err);
-    alert("Order failed");
-  }
-};
+            alert("Order placed successfully");
+        } catch (err) {
+            console.log(err);
+            alert("Order failed");
+        }
+    };
     return (
         <div id='mainboxcart'>
             <Header2 />

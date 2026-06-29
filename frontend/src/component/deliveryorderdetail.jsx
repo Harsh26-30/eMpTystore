@@ -14,7 +14,7 @@ const DeliveryOrderDetail = ({
     const [clat, setclat] = useState(null);
     const [clong, setclong] = useState(null);
     const [managingOrder, setmanagingOrder] = useState('');
-    const [orders, setorders] = useState([null]);
+    const [orders, setorders] = useState(null);
     const [Currentuserid, setCurrentuserid] = useState('')
     const [showScanner, setShowScanner] = useState(false);
     const navigate = useNavigate();
@@ -52,15 +52,8 @@ const DeliveryOrderDetail = ({
                 setmapvisblity(true);
             }
 
-            const dpOrders = res2.data.dporders;
-
-            if (Array.isArray(dpOrders)) {
-                setorders(dpOrders);
-            } else if (dpOrders) {
-                setorders([dpOrders]);
-            } else {
-                setorders([]);
-            } setCurrentuserid(res2.data.id)
+            setorders(res2.data.dporders)
+            setCurrentuserid(res2.data.id)
             setmanagingOrder(res2.data.managingOrder);
 
         } catch (err) {
