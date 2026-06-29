@@ -354,33 +354,38 @@ const Order = () => {
           }}
         >
           <QrScanner
-            onScan={(result) => {
-              const scannedValue =
-                typeof result === "string"
-                  ? result
-                  : result?.text;   // 👈 IMPORTANT FIX
+            onScan={async (result) => {
+              try {
+                const scanned =
+                  typeof result === "string"
+                    ? result
+                    : result?.text;
 
-              console.log("SCANNED VALUE:", scannedValue);
+                console.log("Scanned:", scanned);
+                console.log("Selected:", selectedOrder);
 
-              if (!scannedValue) {
-                alert("No QR data detected");
-                return;
+                if (String(scanned).trim() === String(selectedOrder._id).trim()) {
+                  await axios.post(
+                    `${import.meta.env.VITE_API_URL}/OrderReached`,
+                    {
+                      orderid: selectedOrder._id,
+                      dpid: Currentuserid,
+                    },
+                    {
+                      headers: {
+                        Authorization: `Bearer ${token}`,
+                      },
+                    }
+                  );
+
+                  setShowScanner(false);
+                } else {
+                  alert("Wrong QR");
+                  setShowScanner(false);
+                }
+              } catch (err) {
+                console.error("Scan Error:", err);
               }
-
-              const expected = String(selectedOrder._id);
-
-              if (scannedValue.trim().includes(expected)) {
-                alert("Correct Order Scanned ✔")
-
-                handleOutfordelivary(selectedOrder._id);
-              } else {
-                alert("Wrong QR Code ❌");
-                navigate("/home");
-
-              }
-
-              setShowScanner(false);
-              setSelectedOrder(null);
             }}
           />
         </div>
