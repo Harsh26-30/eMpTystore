@@ -3,10 +3,10 @@ import { useEffect, useRef } from "react";
 
 const QrScanner = ({ onScan }) => {
   const scannerRef = useRef(null);
-  const scannedRef = useRef(false);
 
   useEffect(() => {
-    let isMounted = true;
+    const qr = new Html5Qrcode("reader");
+    scannerRef.current = qr;
 
     const startCamera = async () => {
       try {
@@ -17,16 +17,17 @@ const QrScanner = ({ onScan }) => {
           return;
         }
 
-        let backCamera =
-          devices.find(
-            (d) =>
-              d.label.toLowerCase().includes("back") ||
-              d.label.toLowerCase().includes("rear") ||
-              d.label.toLowerCase().includes("environment")
-          ) || devices[devices.length - 1];
+        // 🔥 Try to find BACK camera
+        let backCamera = devices.find((d) =>
+          d.label.toLowerCase().includes("back") ||
+          d.label.toLowerCase().includes("rear") ||
+          d.label.toLowerCase().includes("environment")
+        );
 
-        const qr = new Html5Qrcode("reader");
-        scannerRef.current = qr;
+        // fallback if not found
+        if (!backCamera) {
+          backCamera = devices[devices.length - 1];
+        }
 
         await qr.start(
           backCamera.id,
@@ -34,26 +35,10 @@ const QrScanner = ({ onScan }) => {
             fps: 10,
             qrbox: { width: 250, height: 250 },
           },
-          async (decodedText) => {
-            if (scannedRef.current) return;
-
-            scannedRef.current = true;
-
-            console.log("SCAN:", decodedText);
-
-            try {
-              await onScan(decodedText);
-            } catch (err) {
-              console.error(err);
-            }
-
-            try {
-              if (scannerRef.current?.isScanning) {
-                await scannerRef.current.stop();
-              }
-            } catch (e) {
-              console.log(e);
-            }
+          (text) => {
+            console.log("SCAN:", text);
+            onScan(text);
+            qr.stop();
           },
           () => {}
         );
@@ -62,21 +47,12 @@ const QrScanner = ({ onScan }) => {
       }
     };
 
-    if (isMounted) {
-      startCamera();
-    }
+    startCamera();
 
     return () => {
-      isMounted = false;
-
-      if (scannerRef.current) {
-        scannerRef.current
-          .stop()
-          .then(() => scannerRef.current.clear())
-          .catch(() => {});
-      }
+      qr.stop().catch(() => {});
     };
-  }, [onScan]);
+  }, []);
 
   return (
     <div
@@ -86,7 +62,7 @@ const QrScanner = ({ onScan }) => {
         maxWidth: "400px",
         height: "400px",
         margin: "auto",
-        background: "#000",
+        background: "black",
       }}
     />
   );
