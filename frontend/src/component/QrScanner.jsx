@@ -35,12 +35,15 @@ const QrScanner = ({ onScan }) => {
             fps: 10,
             qrbox: { width: 250, height: 250 },
           },
-          (text) => {
+          async (text) => {
             console.log("SCAN:", text);
-            onScan(text);
-            qr.stop();
+
+            await qr.stop();
+            await qr.clear();
+
+            await onScan(text);
           },
-          () => {}
+          () => { }
         );
       } catch (err) {
         console.log("Camera error:", err);
@@ -50,7 +53,9 @@ const QrScanner = ({ onScan }) => {
     startCamera();
 
     return () => {
-      qr.stop().catch(() => {});
+      qr.stop()
+        .then(() => qr.clear())
+        .catch(() => { });
     };
   }, []);
 
