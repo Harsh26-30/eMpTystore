@@ -205,6 +205,11 @@ const DeliveryOrderDetail = ({
                                         },
                                     }
                                 );
+                                alert("Wrong QR");
+
+                                setShowScanner(false);
+
+                                navigate("/home");
                             } else {
                                 alert("Wrong QR ❌");
                                 navigate("/home");

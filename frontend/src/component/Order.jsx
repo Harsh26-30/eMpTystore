@@ -373,10 +373,15 @@ const Order = () => {
                 alert("Correct Order Scanned ✔")
 
                 handleOutfordelivary(selectedOrder._id);
-              } else {
-                alert("Wrong QR Code ❌");
-                navigate("/home");
+                setShowScanner(false);
 
+                navigate("/home");
+              } else {
+                alert("Wrong Order QR");
+
+                setShowScanner(false);
+
+                navigate("/home");
               }
 
               setShowScanner(false);

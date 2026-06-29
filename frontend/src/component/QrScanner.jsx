@@ -3,6 +3,8 @@ import { useEffect, useRef } from "react";
 
 const QrScanner = ({ onScan }) => {
   const scannerRef = useRef(null);
+  let scanned = false;
+
 
   useEffect(() => {
     const qr = new Html5Qrcode("reader");
@@ -36,12 +38,15 @@ const QrScanner = ({ onScan }) => {
             qrbox: { width: 250, height: 250 },
           },
           (text) => {
+            if (scanned) return;
+            scanned = true;
+
             console.log("SCAN:", text);
             onScan(text);
-            qr.stop();
-          },
-          () => {}
-        );
+
+            // stop after giving result
+            qr.stop().catch(() => { });
+          };
       } catch (err) {
         console.log("Camera error:", err);
       }
@@ -50,7 +55,7 @@ const QrScanner = ({ onScan }) => {
     startCamera();
 
     return () => {
-      qr.stop().catch(() => {});
+      qr.stop().catch(() => { });
     };
   }, []);
 
