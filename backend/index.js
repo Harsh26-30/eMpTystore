@@ -1404,8 +1404,16 @@ app.post("/dponServiceorNotToggle", authMiddleware, async (req, res) => {
   try {
     const user = await User.findOne({ email: req.user.email });
 
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    console.log("Before:", user.onServiceOrNot);
+
     user.onServiceOrNot =
       user.onServiceOrNot === "Yes" ? "No" : "Yes";
+
+    console.log("After:", user.onServiceOrNot);
 
     await user.save();
 
