@@ -737,14 +737,7 @@ app.post("/readyforDelivary", authMiddleware, async (req, res) => {
     const { orderid, clat, clong } = req.body;
     console.log("clong", clong, "clat", clat);
 
-
     const fdp = await User.find({ role: "Delivery_partner" });
-
-    const updatedOrder = await Order.findOneAndUpdate(
-      { _id: orderid },
-      { orderstatus: "RFD" },
-      { new: true }
-    );
 
     const start = {
       lat: parseFloat(clat),
@@ -781,11 +774,19 @@ app.post("/readyforDelivary", authMiddleware, async (req, res) => {
       return res.status(404).json({
         message: "No available delivery partner found.",
       });
+    } else {
+      const updatedOrder = await Order.findOneAndUpdate(
+        { _id: orderid },
+        { orderstatus: "RFD" },
+        { new: true }
+      );
+
     }
 
     await User.findByIdAndUpdate(nearestPartner._id, {
       managingOrder: orderid,
     });
+
 
 
     return res.json({
@@ -1404,12 +1405,8 @@ app.post("/dponServiceorNotToggle", authMiddleware, async (req, res) => {
   try {
     const user = await User.findOne({ email: req.user.email });
 
-    console.log("Before:", user.onServiceOrNot);
-
     user.onServiceOrNot =
       user.onServiceOrNot === "Yes" ? "No" : "Yes";
-
-    console.log("After:", user.onServiceOrNot);
 
     await user.save();
 
