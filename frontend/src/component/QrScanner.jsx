@@ -33,15 +33,18 @@ const QrScanner = ({ onScan }) => {
             if (scannedRef.current) return;
             scannedRef.current = true;
 
-            // Stop scanning FIRST
-            try {
-              await qr.pause(true);
-            } catch {}
-
-            // Let parent handle everything
             await onScan(decodedText);
+
+            try {
+              if (qr.isScanning) {
+                await qr.stop();
+              }
+              await qr.clear();
+            } catch (err) {
+              console.log(err);
+            }
           },
-          () => {}
+          () => { }
         );
       } catch (e) {
         console.log(e);
@@ -55,7 +58,7 @@ const QrScanner = ({ onScan }) => {
         qrRef.current
           .stop()
           .then(() => qrRef.current.clear())
-          .catch(() => {});
+          .catch(() => { });
       }
     };
   }, []);
