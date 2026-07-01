@@ -194,7 +194,8 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
       myproductdata: [],
       useruidata: finduser.ui,
       shopOpenOrNot: finduser.shopOpenOrNot,
-      onServiceOrNot: finduser.onServiceOrNot, // ✅ Add this  
+      onServiceOrNot: finduser.onServiceOrNot,
+      shopTotalBussiness: finduser.shopTotalBussiness, // ✅ Add this  
       slat: null,
       slong: null
     });
