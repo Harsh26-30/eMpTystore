@@ -825,31 +825,37 @@ app.post("/Outfordelivary", authMiddleware, async (req, res) => {
 });
 
 app.post("/OrderReached", authMiddleware, async (req, res) => {
-  const { orderid, dpid } = req.body
+  const { orderid, dpid } = req.body;
+
   try {
-    const seller = await User.findById(order.items[0].sellerid);
-    const updatedOrder = await Order.findOneAndUpdate(
-      { _id: orderid },   // 🔍 find by email
+    const order = await Order.findById(orderid);
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    const updatedOrder = await Order.findByIdAndUpdate(
+      orderid,
       {
         orderstatus: "Reached",
       },
-      { new: true } // ✅ return updated data
+      { new: true }
     );
 
-    await User.findOneAndUpdate(
-      { _id: dpid },   // 🔍 find by email
+    await User.findByIdAndUpdate(
+      dpid,
       {
         managingOrder: "",
-      },
-      { new: true } // ✅ return updated data
+      }
     );
 
-    await User.findOneAndUpdate(
-      { _id: seller },
+    await User.findByIdAndUpdate(
+      order.items[0].sellerid,
       {
-        shopTotalBussiness: { $inc: { $value: updatedOrder.totalAmount } }
-      },
-      { new: true }
+        $inc: {
+          shopTotalBussiness: updatedOrder.totalAmount,
+        },
+      }
     );
 
     res.json({ orders: updatedOrder });
