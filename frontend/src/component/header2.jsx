@@ -12,7 +12,7 @@ const Header2 = ({ setmanagehomepagevisible, managehomepagevisible }) => {
   const token = localStorage.getItem("token");
   const [userRole, setuserRole] = useState('')
   const [shopOpenOrNot, setShopOpenOrNot] = useState(false);
-  const [onServiceOrNot, setonServiceOrNot] = useState(false);
+  const [onServiceOrNot, setonServiceOrNot] = useState("No");
 
 
 
