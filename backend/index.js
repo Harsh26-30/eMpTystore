@@ -849,15 +849,18 @@ app.post("/OrderReached", authMiddleware, async (req, res) => {
       }
     );
 
+    const totalAmount = order.items.reduce((sum, item) => {
+      return sum + item.price * item.quantity;
+    }, 0);
+
     await User.findByIdAndUpdate(
       order.items[0].sellerid,
       {
         $inc: {
-          shopTotalBussiness: updatedOrder.totalAmount,
-        },
+          shopTotalBussiness: totalAmount
+        }
       }
     );
-
     res.json({ orders: updatedOrder });
 
   } catch (err) {
