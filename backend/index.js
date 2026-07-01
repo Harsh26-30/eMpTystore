@@ -189,12 +189,12 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
       role: finduser.role,
       managingOrder: null,
       dporders: null,
-    CartItem: finduser.CartItem || [],
+      CartItem: finduser.CartItem || [],
       shops: finduser2 || [],
       myproductdata: [],
       useruidata: finduser.ui,
       shopOpenOrNot: finduser.shopOpenOrNot,
-        onServiceOrNot: finduser.onServiceOrNot, // ✅ Add this  
+      onServiceOrNot: finduser.onServiceOrNot, // ✅ Add this  
       slat: null,
       slong: null
     });
@@ -850,7 +850,7 @@ app.post("/OrderReached", authMiddleware, async (req, res) => {
     );
 
     await User.findByIdAndUpdate(
-      order.items[0].Seller_id,
+      order.items[0].sellerid,
       {
         $inc: {
           shopTotalBussiness: updatedOrder.totalAmount,

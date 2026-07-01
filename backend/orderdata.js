@@ -13,14 +13,14 @@ const orderSchema = new mongoose.Schema({
     pincode: { type: String },
 
     items: [
-  {
-    productid: { type: String, required: true },
-    productname: { type: String, required: true },
-    quantity: { type: Number, required: true },
-    sellerid: { type: String, required: true },
-    price: { type: Number }
-  }
-],
+        {
+            productid: { type: String, required: true },
+            productname: { type: String, required: true },
+            quantity: { type: Number, required: true },
+            sellerid: { type: String, required: true },
+            price: { type: Number }
+        }
+    ],
 
     delivery_partner: { type: String },
 
@@ -57,8 +57,8 @@ const orderSchema = new mongoose.Schema({
         type: String,
         default: "COD"
     },
-    paymeentStatus:{type:String},
-    paymentId:{type:String},
+    paymeentStatus: { type: String },
+    paymentId: { type: String },
 
     weight: {
         type: Number,
