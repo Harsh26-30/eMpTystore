@@ -11,7 +11,7 @@ const aboutUs = () => {
                 <a href="#howWorks">How Works</a>
                 <a href="#Customer">Customer</a>
                 <a href="#Seller">Seller</a>
-                <a href="">Delivery Partner</a>
+                {/* <a href="">Delivery Partner</a> */}
             </div>
 
             <section style={{ "marginTop": '90px' }} id='emptyStore'>
