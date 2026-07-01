@@ -3,10 +3,47 @@
     height: 100vh;
 }
 
-.hmh3{
+.hmh3 {
     font-family: sans-serif;
     margin-top: 10px;
     font-size: 40px;
     color: grey;
     text-shadow: 2px 2px 2px #000;
+}
+
+#AboutUsbtn {
+    position: fixed;
+    z-index: 1000;
+    width: 200px;
+    height: 50px;
+    bottom: 90px;
+    right: 40px;
+    font-size: 20px;
+    border-radius: 30px;
+    color: #fff;
+    background-color: black;
+    animation: pulse 1.5s infinite;
+
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    25% {
+        transform: scale(1.25);
+    }
+
+    50% {
+        transform: scale(1.50);
+    }
+    
+    75% {
+        transform: scale(1.25);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }

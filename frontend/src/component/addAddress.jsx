@@ -28,7 +28,7 @@ const handleSubmit = async (e) => {
 
         console.log(res.data); // debug
 
-        if (res.data.success) {
+        if (res.data.success) {z
             navigate("/home");
         }
 

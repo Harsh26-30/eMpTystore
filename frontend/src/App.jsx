@@ -20,6 +20,7 @@ import RouteLoader from './component/Routeloder'
 import UserProfile from './component/UserProfile'
 import MyOrderStatus from './component/myOrderStatus'
 import Cart from './component/Cart'
+import AboutUs from './component/aboutUs'
 
 
 function App() {
@@ -201,7 +202,7 @@ function App() {
             }
           />
 
-                    <Route
+          <Route
             path="/Cart"
             element={
               <ProtectedRoute>
@@ -210,7 +211,16 @@ function App() {
             }
           />
 
-          
+
+          <Route
+            path="/AboutUs"
+            element={
+              <ProtectedRoute>
+                < AboutUs />
+              </ProtectedRoute>
+            }
+          />
+
 
         </Routes>
       </RouteLoader>

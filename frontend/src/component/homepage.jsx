@@ -9,11 +9,13 @@ import Connections from "./connections";
 import axios from 'axios'
 import NearByShop from "./NearByShop"
 import DeliveryPartnerdashboard from "./DeliveryPartnerdashboard"
+import { useNavigate } from "react-router-dom";
+import ShopTotalBussiness from "./shopTotalBussiness";
 
 function Homepage() {
   const [managehomepagevisible, setmanagehomepagevisible] = useState('Order');
   const token = localStorage.getItem("token");
-
+  const navigate = useNavigate('')
   const [userRole, setuserRole] = useState('')
 
 
@@ -73,6 +75,7 @@ useEffect(() => {
   return (
     <div id="mainboxhomepage">
       <Header2 managehomepagevisible={managehomepagevisible} setmanagehomepagevisible={setmanagehomepagevisible} />
+      {userRole === "Seller"  && <ShopTotalBussiness />}
       {userRole === "Seller" && managehomepagevisible === 'Order' && <Order />}
       {userRole === "Seller" && managehomepagevisible === 'Product' && <Product />}
       {userRole === "Seller" && managehomepagevisible === 'UI' && <UI />}
@@ -81,6 +84,7 @@ useEffect(() => {
       {userRole === "Customer" && <h3 className="hmh3">Your Connections</h3>}
       {userRole === "Customer" && <Connections />}
       {userRole === "Delivery_partner" && <DeliveryPartnerdashboard/>}
+      <button id="AboutUsbtn" onClick={()=>navigate('/AboutUs')}>Know About Us</button>
       {/* <Footer/> */}
     </div>
   );

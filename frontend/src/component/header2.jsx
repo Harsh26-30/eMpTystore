@@ -71,7 +71,7 @@ const Header2 = ({ setmanagehomepagevisible, managehomepagevisible }) => {
   return (
     <div id='mainboxheader2'>
       <div id='box2header2'>
-        <img src="\E.png" alt="logo" />
+        <img onClick={()=>navigate('/home')} src="\E.png" alt="logo" />
         <div id='box23header2' style={{ width: userRole === 'Seller' ? '50%' : '40%' }}>
           {userRole === 'Seller' && (
             <button onClick={handleShopOpenOrNotToggle} className='ShopOpenornotbox1'>

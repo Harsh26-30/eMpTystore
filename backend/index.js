@@ -269,7 +269,8 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
     slat: orderdata?.shopcorrdinates?.latitude || null,
     slong: orderdata?.shopcorrdinates?.longitude || null,
     dporders: await Order.findById(finduser.managingOrder) || null,
-    CartItem: finduser.CartItem
+    CartItem: finduser.CartItem,
+    shopTotalBussiness: finduser.shopTotalBussiness || 0
   });
 });
 
@@ -826,7 +827,7 @@ app.post("/Outfordelivary", authMiddleware, async (req, res) => {
 app.post("/OrderReached", authMiddleware, async (req, res) => {
   const { orderid, dpid } = req.body
   try {
-
+    const seller = await User.findById(order.items[0].sellerid);
     const updatedOrder = await Order.findOneAndUpdate(
       { _id: orderid },   // 🔍 find by email
       {
@@ -841,6 +842,14 @@ app.post("/OrderReached", authMiddleware, async (req, res) => {
         managingOrder: "",
       },
       { new: true } // ✅ return updated data
+    );
+
+    await User.findOneAndUpdate(
+      { _id: seller },
+      {
+        shopTotalBussiness: { $inc: { $value: updatedOrder.totalAmount } }
+      },
+      { new: true }
     );
 
     res.json({ orders: updatedOrder });

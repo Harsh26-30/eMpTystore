@@ -85,6 +85,10 @@ const userSchema = new mongoose.Schema({
   myproductid: {
     type: [String]
   },
+  shopTotalBussiness: {
+    type: Number,
+    default: 0
+  },
   customer: {
     type: [String]
   },
