@@ -850,7 +850,7 @@ app.post("/OrderReached", authMiddleware, async (req, res) => {
     );
 
     await User.findByIdAndUpdate(
-      order.items[0].sellerid,
+      order.items[0].Seller_id,
       {
         $inc: {
           shopTotalBussiness: updatedOrder.totalAmount,
