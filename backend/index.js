@@ -189,12 +189,12 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
       role: finduser.role,
       managingOrder: null,
       dporders: null,
-
-      CartItem: finduser.CartItem || [],
+    CartItem: finduser.CartItem || [],
       shops: finduser2 || [],
       myproductdata: [],
       useruidata: finduser.ui,
       shopOpenOrNot: finduser.shopOpenOrNot,
+        onServiceOrNot: finduser.onServiceOrNot, // ✅ Add this  
       slat: null,
       slong: null
     });

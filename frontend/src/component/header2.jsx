@@ -30,6 +30,7 @@ const Header2 = ({ setmanagehomepagevisible, managehomepagevisible }) => {
           }
         );
         setuserRole(res.data.role);
+        console.log("API:", res.data.onServiceOrNot);
         setShopOpenOrNot(res.data.shopOpenOrNot);
         setonServiceOrNot(res.data.onServiceOrNot);
       } catch (err) {
