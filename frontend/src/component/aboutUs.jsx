@@ -89,12 +89,12 @@ const aboutUs = () => {
                 <h3>Seller</h3>
                 <div id='content'>
                     <object
-                        data="\1000017795.pdf"
+                        data="\1000017805.pdf"
                         type="application/pdf"
                         width="100%"
                         height="800px">
                         <p>Your browser doesn't support PDFs.
-                            <a href="1000017795.pdf">Download the PDF</a>.
+                            <a href="\1000017805.pdf">Download the PDF</a>.
                         </p>
                     </object>
                 </div>
