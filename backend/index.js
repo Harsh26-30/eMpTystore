@@ -1390,7 +1390,6 @@ app.post("/signup", async (req, res) => {
     `
         );
 
-        console.log("Brevo response:", result);
       } catch (err) {
         console.log("Email error:");
         console.log(err.response?.data);
@@ -1417,31 +1416,63 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+// app.post("/resendOTP", authMiddleware, async (req, res) => {
+//    try {
+
+//       const createOtp = generateOTP();
+//       await OTPData.findOneAndUpdate(
+//         { email },
+//         {
+//           otp: createOtp,
+//           status: "pending",
+//           expiresAt: new Date(Date.now() + 5 * 60 * 1000) // 5 minutes
+//         },
+//         { upsert: true, new: true }
+//       );
+
+//       try {
+//         console.log("Sending email to:", email);
+
+//         const result = await sendMail(
+//           email,
+//           "Your Empty Store OTP",
+//           `
+//       <h2>OTP Verification</h2>
+//       <p>Your OTP is <b>${createOtp}</b></p>
+//     `
+//         );
+
+//         console.log("Brevo response:", result);
+//       } catch (err) {
+//         console.log("Email error:");
+//         console.log(err.response?.data);
+//         console.log(err.message);
+//       }
+
+//     } catch (err) {
+//       console.log(err);
+//       res.status(500).json({ error: err.message });
+//     }
+// });
+
 app.post("/verifyOTP", authMiddleware, async (req, res) => {
   try {
     const { otp } = req.body;
-
-    console.log("Entered OTP:", otp);
-    console.log("User Email:", req.user.email);
 
     const otpData = await OTPData.findOne({ email: req.user.email });
 
     console.log("OTP Data:", otpData);
 
     if (!otpData) {
-      return res.status(404).json({ message: "OTP not found" });
+      return res.json({ message: "OTP not found" });
     }
 
-    console.log("DB OTP:", otpData.otp);
-    console.log("Expires At:", otpData.expiresAt);
-    console.log("Current Time:", new Date());
-
     if (new Date() > otpData.expiresAt) {
-      return res.status(400).json({ message: "OTP expired" });
+      return res.json({ message: "OTP expired" });
     }
 
     if (String(otpData.otp) !== String(otp).trim()) {
-      return res.status(400).json({ message: "Invalid OTP" });
+      return res.json({ message: "Invalid OTP" });
     }
 
     await User.updateOne(
