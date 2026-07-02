@@ -10,6 +10,7 @@ const User = require("./userdata");
 const Product = require("./productdata");
 const Order = require("./orderdata");
 const Request = require("./request");
+const OTPData = require("./otpVerificationData");
 const Ui = require("./Uidata");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
@@ -25,12 +26,15 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
   .catch(err => console.log(err));
 
-
 const allowedOrigins = [
   "http://localhost:5173",
   "https://emptystore.in",
   "https://www.emptystore.in"
 ];
+
+function generateOTP() {
+  return Math.floor(100000 + Math.random() * 900000);
+}
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -1358,21 +1362,42 @@ app.post("/signup", async (req, res) => {
     });
 
     await newUser.save();
-    try {
-      const info = await sendMail(
-        email,
-        "Welcome to Empty Store 🎉",
-        `
-    <h2>Welcome to Empty Store!</h2>
-    <p>Hello <b>${name}</b>,</p>
-    <p>Your account has been created successfully.</p>
-    `
-      );
 
+      try {
+
+    const createOtp = generateOTP();
+    await OTPData.findOneAndUpdate(
+      { email: req.user.email },
+      {
+        otp: createOtp,
+        status: "pending",
+        expiresAt: new Date(Date.now() + 5 * 60 * 1000) // 5 minutes
+      },
+      { upsert: true, new: true }
+    );
+    try {
+      await sendMail(
+        req.user.email,
+        "Your Empty Store OTP",
+        `
+    <h2>OTP Verification</h2>
+    <p>Hello <b>${name}</b>,</p>
+    <p>Your OTP is:</p>
+    <h1>${createOtp}</h1>
+    <p>This OTP is valid for 5 minutes.</p>
+    <p>If you didn't request this, please ignore this email.</p>
+  `
+      );
       console.log("EMAIL SENT SUCCESS:", info);
     } catch (err) {
       console.error("EMAIL FAILED:", err);
     }
+
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: err.message });
+  }
 
     const token = jwt.sign(
       { email },
@@ -1389,6 +1414,9 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+// app.post("/manageOTP", authMiddleware, async (req, res) => {
+
+// });
 
 app.post("/login", async (req, res) => {
   try {
