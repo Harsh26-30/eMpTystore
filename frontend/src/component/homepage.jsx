@@ -18,7 +18,7 @@ function Homepage() {
   const token = localStorage.getItem("token");
   const navigate = useNavigate('')
   const [userRole, setuserRole] = useState('')
-  const [userEmailVerification ,setemailverificationvisibility] = useState(false)
+  const [userEmailVerification ,setemailverificationvisibility] = useState()
 
 
   useEffect(() => {
