@@ -28,7 +28,9 @@ const EmailVerification = ({ setemailverificationvisibility }) => {
                 },
             }
         );
-        setemailverificationvisibility(res2.data.userEmailVerification)
+        if (res2.data.userEmailVerification === true) {
+            setemailverificationvisibility(res2.data.userEmailVerification)
+        }
     }
     return (
         <div id='mainboxemailVerification'>
