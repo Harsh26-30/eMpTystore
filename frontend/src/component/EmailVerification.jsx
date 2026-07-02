@@ -57,7 +57,7 @@ const handleClick = async () => {
                 <div id='emailVerificationbtn'>
                     <button onClick={handleClick}>Verify</button>
                 </div>
-                <p id='erroemsg'>{errorMessage}</p>
+                <p style={{color:"red",marginTop:"20px"}} id='erroemsg'>{errorMessage}</p>
             </div>
         </div>
     )
