@@ -1421,40 +1421,46 @@ app.post("/verifyOTP", authMiddleware, async (req, res) => {
   try {
     const { otp } = req.body;
 
+    console.log("Entered OTP:", otp);
+    console.log("User Email:", req.user.email);
+
     const otpData = await OTPData.findOne({ email: req.user.email });
+
+    console.log("OTP Data:", otpData);
+
     if (!otpData) {
       return res.status(404).json({ message: "OTP not found" });
     }
+
+    console.log("DB OTP:", otpData.otp);
+    console.log("Expires At:", otpData.expiresAt);
+    console.log("Current Time:", new Date());
 
     if (new Date() > otpData.expiresAt) {
       return res.status(400).json({ message: "OTP expired" });
     }
 
-    if (otpData.otp !== otp) {
+    if (String(otpData.otp) !== String(otp).trim()) {
       return res.status(400).json({ message: "Invalid OTP" });
     }
 
-    otpData.status = "verified";
-    await otpData.save();
-
-await OTPData.deleteOne({ email: req.user.email });
-
-    // Optional: update user verification status
     await User.updateOne(
       { email: req.user.email },
       { userEmailVerification: true }
     );
 
-    res.json({
+    await OTPData.deleteOne({ email: req.user.email });
+
+    return res.json({
       success: true,
       message: "OTP verified successfully"
     });
 
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error(err);
+    return res.status(500).json({ message: err.message });
   }
 });
-
 app.post("/login", async (req, res) => {
   try {
     const { email, pass } = req.body;

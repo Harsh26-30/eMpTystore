@@ -18,6 +18,7 @@ const EmailVerification = ({ setemailverificationvisibility }) => {
                 }
             }
         );
+        console.log(res.data);
         setemailverificationvisibility(res.data.sucess);
         setErrorMessage(res.data.message);
     }
