@@ -5,7 +5,7 @@ import './EmailVerification.css'
 const EmailVerification = ({ setemailverificationvisibility }) => {
     const token = localStorage.getItem("token");
     const [enteredOTP, setEnteredOTP] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');   
+    const [errorMessage, setErrorMessage] = useState('');
     const handleClick = async () => {
         const res = await axios.post(
             `${import.meta.env.VITE_API_URL}/verifyOTP`,
@@ -19,8 +19,16 @@ const EmailVerification = ({ setemailverificationvisibility }) => {
             }
         );
         console.log(res.data);
-        setemailverificationvisibility(res.data.sucess);
         setErrorMessage(res.data.message);
+        const res2 = await axios.get(
+            `${import.meta.env.VITE_API_URL}/checkuserinfo`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        setemailverificationvisibility(res2.data.userEmailVerification)
     }
     return (
         <div id='mainboxemailVerification'>
