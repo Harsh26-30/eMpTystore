@@ -1375,23 +1375,25 @@ app.post("/signup", async (req, res) => {
         },
         { upsert: true, new: true }
       );
+
       try {
-        await sendMail(
+        console.log("Sending email to:", email);
+
+        const result = await sendMail(
           email,
           "Your Empty Store OTP",
           `
-    <h2>OTP Verification</h2>
-    <p>Hello <b>${name}</b>,</p>
-    <p>Your OTP is:</p>
-    <h1>${createOtp}</h1>
-    <p>This OTP is valid for 5 minutes.</p>
-    <p>If you didn't request this, please ignore this email.</p>
-  `
+      <h2>OTP Verification</h2>
+      <p>Your OTP is <b>${createOtp}</b></p>
+    `
         );
-      } catch (err) {
-        console.error("EMAIL FAILED:", err);
-      }
 
+        console.log("Brevo response:", result);
+      } catch (err) {
+        console.log("Email error:");
+        console.log(err.response?.data);
+        console.log(err.message);
+      }
 
     } catch (err) {
       console.log(err);
