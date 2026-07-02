@@ -17,7 +17,7 @@ const SECRET = process.env.JWT_SECRET || "secretkey";
 const multer = require("multer");
 const cloudinary = require("./cloudinary");
 const { log } = require('console');
-const sendMail =  require("./sendMail.js"); // Adjust the path if needed
+const sendMail = require("./sendMail.js"); // Adjust the path if needed
 
 const upload = multer({ dest: "uploads/" });
 
@@ -1358,19 +1358,20 @@ app.post("/signup", async (req, res) => {
     });
 
     await newUser.save();
-
     try {
-      await sendMail(
+      const info = await sendMail(
         email,
         "Welcome to Empty Store 🎉",
         `
-        <h2>Welcome to Empty Store!</h2>
-        <p>Hello <b>${name}</b>,</p>
-        <p>Your account has been created successfully.</p>
-        `
+    <h2>Welcome to Empty Store!</h2>
+    <p>Hello <b>${name}</b>,</p>
+    <p>Your account has been created successfully.</p>
+    `
       );
+
+      console.log("EMAIL SENT SUCCESS:", info);
     } catch (err) {
-      console.log("Email Error:", err.message);
+      console.error("EMAIL FAILED:", err);
     }
 
     const token = jwt.sign(
