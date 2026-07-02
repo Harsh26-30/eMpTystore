@@ -1388,7 +1388,6 @@ app.post("/signup", async (req, res) => {
     <p>If you didn't request this, please ignore this email.</p>
   `
         );
-        console.log("EMAIL SENT SUCCESS:", info);
       } catch (err) {
         console.error("EMAIL FAILED:", err);
       }
