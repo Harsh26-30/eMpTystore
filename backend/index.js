@@ -1363,23 +1363,23 @@ app.post("/signup", async (req, res) => {
 
     await newUser.save();
 
-      try {
-
-    const createOtp = generateOTP();
-    await OTPData.findOneAndUpdate(
-      { email: req.user.email },
-      {
-        otp: createOtp,
-        status: "pending",
-        expiresAt: new Date(Date.now() + 5 * 60 * 1000) // 5 minutes
-      },
-      { upsert: true, new: true }
-    );
     try {
-      await sendMail(
-        req.user.email,
-        "Your Empty Store OTP",
-        `
+
+      const createOtp = generateOTP();
+      await OTPData.findOneAndUpdate(
+        { email },
+        {
+          otp: createOtp,
+          status: "pending",
+          expiresAt: new Date(Date.now() + 5 * 60 * 1000) // 5 minutes
+        },
+        { upsert: true, new: true }
+      );
+      try {
+        await sendMail(
+          email,
+          "Your Empty Store OTP",
+          `
     <h2>OTP Verification</h2>
     <p>Hello <b>${name}</b>,</p>
     <p>Your OTP is:</p>
@@ -1387,17 +1387,17 @@ app.post("/signup", async (req, res) => {
     <p>This OTP is valid for 5 minutes.</p>
     <p>If you didn't request this, please ignore this email.</p>
   `
-      );
-      console.log("EMAIL SENT SUCCESS:", info);
+        );
+        console.log("EMAIL SENT SUCCESS:", info);
+      } catch (err) {
+        console.error("EMAIL FAILED:", err);
+      }
+
+
     } catch (err) {
-      console.error("EMAIL FAILED:", err);
+      console.log(err);
+      res.status(500).json({ error: err.message });
     }
-
-
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ error: err.message });
-  }
 
     const token = jwt.sign(
       { email },
