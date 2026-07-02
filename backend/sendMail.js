@@ -1,9 +1,8 @@
 const nodemailer = require("nodemailer");
-require("dotenv").config();
 
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT),
+  host: "smtp-relay.brevo.com",
+  port: 587,
   secure: false,
   auth: {
     user: process.env.SMTP_USER,
@@ -13,7 +12,7 @@ const transporter = nodemailer.createTransport({
 
 const sendMail = async (to, subject, html) => {
   return await transporter.sendMail({
-    from: `"Empty Store" <${process.env.EMAIL_FROM}>`,
+    from: `"Empty Store" <${process.env.SMTP_USER}>`,
     to,
     subject,
     html

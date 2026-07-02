@@ -17,7 +17,7 @@ const SECRET = process.env.JWT_SECRET || "secretkey";
 const multer = require("multer");
 const cloudinary = require("./cloudinary");
 const { log } = require('console');
-const sendMail = require("./sendMail.js"); // Adjust the path if needed
+const sendMail = require("./sendMail.js");
 
 const upload = multer({ dest: "uploads/" });
 
