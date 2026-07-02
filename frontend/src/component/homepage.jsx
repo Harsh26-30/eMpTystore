@@ -11,12 +11,14 @@ import NearByShop from "./NearByShop"
 import DeliveryPartnerdashboard from "./DeliveryPartnerdashboard"
 import { useNavigate } from "react-router-dom";
 import ShopTotalBussiness from "./shopTotalBussiness";
+import EmailVerification from './EmailVerification'
 
 function Homepage() {
   const [managehomepagevisible, setmanagehomepagevisible] = useState('Order');
   const token = localStorage.getItem("token");
   const navigate = useNavigate('')
   const [userRole, setuserRole] = useState('')
+  const [userEmailVerification ,setemailverificationvisibility] = useState(false)
 
 
   useEffect(() => {
@@ -32,6 +34,7 @@ function Homepage() {
           }
         );
         setuserRole(res.data.role);
+        setemailverificationvisibility(res.data.userEmailVerification)
       } catch (err) {
         console.log(err);
       }
@@ -40,51 +43,52 @@ function Homepage() {
     fun1();
   }, [token]);
 
-useEffect(() => {
-  if (userRole === 'Seller') {
+  useEffect(() => {
+    if (userRole === 'Seller') {
 
-    navigator.geolocation.getCurrentPosition(
-  async (position) => {
-    try {
-      await axios.post(
-        `${import.meta.env.VITE_API_URL}/Updatelatlog`,
-        {
-          clatitude: position.coords.latitude,
-          clongitude: position.coords.longitude
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          try {
+            await axios.post(
+              `${import.meta.env.VITE_API_URL}/Updatelatlog`,
+              {
+                clatitude: position.coords.latitude,
+                clongitude: position.coords.longitude
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`
+                }
+              }
+            );
+
+
+          } catch (err) {
+            console.log(err);
           }
+        },
+        (error) => {
+          console.log(error);
         }
       );
-
-
-    } catch (err) {
-      console.log(err);
     }
-  },
-  (error) => {
-    console.log(error);
-  }
-);
-  }
-}, [userRole, token]);
+  }, [userRole, token]);
 
 
   return (
     <div id="mainboxhomepage">
       <Header2 managehomepagevisible={managehomepagevisible} setmanagehomepagevisible={setmanagehomepagevisible} />
-      {userRole === "Seller"  && <ShopTotalBussiness />}
+      {userRole === "Seller" && <ShopTotalBussiness />}
       {userRole === "Seller" && managehomepagevisible === 'Order' && <Order />}
       {userRole === "Seller" && managehomepagevisible === 'Product' && <Product />}
       {userRole === "Seller" && managehomepagevisible === 'UI' && <UI />}
       {userRole === "Customer" && <h3 className="hmh3">Near By Shops</h3>}
-      {userRole === "Customer" && <NearByShop/>}
+      {userRole === "Customer" && <NearByShop />}
       {userRole === "Customer" && <h3 className="hmh3">Your Connections</h3>}
       {userRole === "Customer" && <Connections />}
-      {userRole === "Delivery_partner" && <DeliveryPartnerdashboard/>}
-      <button id="AboutUsbtn" onClick={()=>navigate('/AboutUs')}>Know About Us</button>
+      {userRole === "Delivery_partner" && <DeliveryPartnerdashboard />}
+      {userEmailVerification === true && <EmailVerification />}
+      <button id="AboutUsbtn" onClick={() => navigate('/AboutUs')}>Know About Us</button>
       {/* <Footer/> */}
     </div>
   );

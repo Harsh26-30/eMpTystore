@@ -17,6 +17,7 @@ const SECRET = process.env.JWT_SECRET || "secretkey";
 const multer = require("multer");
 const cloudinary = require("./cloudinary");
 const { log } = require('console');
+const sendMail =  require("./sendMail.js"); // Adjust the path if needed
 
 const upload = multer({ dest: "uploads/" });
 
@@ -271,7 +272,8 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
     slong: orderdata?.shopcorrdinates?.longitude || null,
     dporders: await Order.findById(finduser.managingOrder) || null,
     CartItem: finduser.CartItem,
-    shopTotalBussiness: finduser.shopTotalBussiness || 0
+    shopTotalBussiness: finduser.shopTotalBussiness || 0,
+    userEmailVerification: finduser.userEmailVerification
   });
 });
 
@@ -349,7 +351,7 @@ app.post("/updateaddress", authMiddleware, async (req, res) => {
     const seller_key = `${user._id}_${format(user.email)}_${format(user.name)}`;
 
     const updatedUser = await User.findOneAndUpdate(
-      { email: user.email },
+      { email: req.user.email },
       {
         address,
         country,
@@ -1345,6 +1347,20 @@ app.post("/signup", async (req, res) => {
     });
 
     await newUser.save();
+
+    try {
+      await sendMail(
+        email,
+        "Welcome to Empty Store 🎉",
+        `
+        <h2>Welcome to Empty Store!</h2>
+        <p>Hello <b>${name}</b>,</p>
+        <p>Your account has been created successfully.</p>
+        `
+      );
+    } catch (err) {
+      console.log("Email Error:", err.message);
+    }
 
     const token = jwt.sign(
       { email },
