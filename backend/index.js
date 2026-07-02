@@ -1417,12 +1417,11 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-app.post("/verifyOTP",authMiddleware, async (req, res) => {
+app.post("/verifyOTP", authMiddleware, async (req, res) => {
   try {
     const { otp } = req.body;
 
-    const otpData = await OTPData.findOne({ email });
-
+    const otpData = await OTPData.findOne({ email: req.user.email });
     if (!otpData) {
       return res.status(404).json({ message: "OTP not found" });
     }
