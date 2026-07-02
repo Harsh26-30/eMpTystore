@@ -196,7 +196,7 @@ app.put("/updateprofilePicture", upload.single("profilePicture"), authMiddleware
 
 app.get("/checkuserinfo", authMiddleware, async (req, res) => {
   const finduser = await User.findOne({ email: req.user.email });
-  console.log("DB value:", finduser.userEmailVerification);
+
   const finduser2 = await User.find({
     _id: { $in: finduser.shoporseller }
   });

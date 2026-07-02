@@ -18,7 +18,7 @@ function Homepage() {
   const token = localStorage.getItem("token");
   const navigate = useNavigate('')
   const [userRole, setuserRole] = useState('')
-  const [userEmailVerification ,setemailverificationvisibility] = useState()
+  const [userEmailVerification, setemailverificationvisibility] = useState()
 
 
   useEffect(() => {
@@ -35,7 +35,8 @@ function Homepage() {
         );
         setuserRole(res.data.role);
         setemailverificationvisibility(res.data.userEmailVerification)
-        console.log(res.data.userEmailVerification);
+        console.log("Full response:", res.data);
+        console.log("Verification:", res.data.userEmailVerification);
       } catch (err) {
         console.log(err);
       }
