@@ -1416,44 +1416,42 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-// app.post("/resendOTP", authMiddleware, async (req, res) => {
-//    try {
+app.post("/resendOTP", authMiddleware, async (req, res) => {
+   try {
 
-//       const createOtp = generateOTP();
-//       await OTPData.findOneAndUpdate(
-//         { email },
-//         {
-//           otp: createOtp,
-//           status: "pending",
-//           expiresAt: new Date(Date.now() + 5 * 60 * 1000) // 5 minutes
-//         },
-//         { upsert: true, new: true }
-//       );
+      const createOtp = generateOTP();
+      await OTPData.findOneAndUpdate(
+        { email:req.user.email },
+        {
+          otp: createOtp,
+          status: "pending",
+          expiresAt: new Date(Date.now() + 5 * 60 * 1000) // 5 minutes
+        },
+        { upsert: true, new: true }
+      );
 
-//       try {
-//         console.log("Sending email to:", email);
+      try {
 
-//         const result = await sendMail(
-//           email,
-//           "Your Empty Store OTP",
-//           `
-//       <h2>OTP Verification</h2>
-//       <p>Your OTP is <b>${createOtp}</b></p>
-//     `
-//         );
+        const result = await sendMail(
+          req.user.email,
+          "Your Empty Store OTP",
+          `
+      <h2>OTP Verification</h2>
+      <p>Your New OTP is <b>${createOtp}</b></p>
+    `
+        );
 
-//         console.log("Brevo response:", result);
-//       } catch (err) {
-//         console.log("Email error:");
-//         console.log(err.response?.data);
-//         console.log(err.message);
-//       }
+      } catch (err) {
+        console.log("Email error:");
+        console.log(err.response?.data);
+        console.log(err.message);
+      }
 
-//     } catch (err) {
-//       console.log(err);
-//       res.status(500).json({ error: err.message });
-//     }
-// });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ error: err.message });
+    }
+});
 
 app.post("/verifyOTP", authMiddleware, async (req, res) => {
   try {

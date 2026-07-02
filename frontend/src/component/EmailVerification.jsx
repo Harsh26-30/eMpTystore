@@ -6,41 +6,59 @@ const EmailVerification = ({ setemailverificationvisibility }) => {
     const token = localStorage.getItem("token");
     const [enteredOTP, setEnteredOTP] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-const handleClick = async () => {
-    try {
-        const res = await axios.post(
-            `${import.meta.env.VITE_API_URL}/verifyOTP`,
-            {
-                otp: enteredOTP
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            }
-        );
-
-        setErrorMessage(res.data.message);
-
-        const res2 = await axios.get(
-            `${import.meta.env.VITE_API_URL}/checkuserinfo`,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
+    const handleClick = async () => {
+        try {
+            const res = await axios.post(
+                `${import.meta.env.VITE_API_URL}/verifyOTP`,
+                {
+                    otp: enteredOTP
                 },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            setErrorMessage(res.data.message);
+
+            const res2 = await axios.get(
+                `${import.meta.env.VITE_API_URL}/checkuserinfo`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            if (res2.data.userEmailVerification === true) {
+                setemailverificationvisibility(true);
             }
-        );
 
-        if (res2.data.userEmailVerification === true) {
-            setemailverificationvisibility(true);
+        } catch (err) {
+            setErrorMessage(
+                err.response?.data?.message || "Something went wrong"
+            );
         }
-
-    } catch (err) {
-        setErrorMessage(
-            err.response?.data?.message || "Something went wrong"
-        );
-    }
-};
+    };
+    const handleClickResendOTP = async () => {  
+        try {
+            const res = await axios.post(
+                `${import.meta.env.VITE_API_URL}/resendOTP`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+            setErrorMessage();
+        } catch (err) {
+            setErrorMessage(
+                err.response?.data?.message || "Something went wrong"
+            );
+        }
+    };
     return (
         <div id='mainboxemailVerification'>
             <div id='emailVerificationbox2'>
@@ -57,7 +75,12 @@ const handleClick = async () => {
                 <div id='emailVerificationbtn'>
                     <button onClick={handleClick}>Verify</button>
                 </div>
-                <p style={{color:"red",marginTop:"20px"}} id='erroemsg'>{errorMessage}</p>
+             {errorMessage && (
+                <div id='emailVerificationbtn'>
+                    <button onClick={handleClickResendOTP}>Resend OTP</button>
+                </div>
+            )}
+            <p style={{ color: "red", marginTop: "20px" }} id='erroemsg'>{errorMessage}</p>
             </div>
         </div>
     )
