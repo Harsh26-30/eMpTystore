@@ -1437,7 +1437,7 @@ app.post("/verifyOTP", authMiddleware, async (req, res) => {
     otpData.status = "verified";
     await otpData.save();
 
-    delete otpData.otp;
+await OTPData.deleteOne({ email: req.user.email });
 
     // Optional: update user verification status
     await User.updateOne(
