@@ -1415,9 +1415,44 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-// app.post("/manageOTP", authMiddleware, async (req, res) => {
+app.post("/verifyOTP",authMiddleware, async (req, res) => {
+  try {
+    const { otp } = req.body;
 
-// });
+    const otpData = await OTPData.findOne({ email });
+
+    if (!otpData) {
+      return res.status(404).json({ message: "OTP not found" });
+    }
+
+    if (new Date() > otpData.expiresAt) {
+      return res.status(400).json({ message: "OTP expired" });
+    }
+
+    if (otpData.otp !== otp) {
+      return res.status(400).json({ message: "Invalid OTP" });
+    }
+
+    otpData.status = "verified";
+    await otpData.save();
+
+    delete otpData.otp;
+
+    // Optional: update user verification status
+    await User.updateOne(
+      { email: req.user.email },
+      { userEmailVerification: true }
+    );
+
+    res.json({
+      success: true,
+      message: "OTP verified successfully"
+    });
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 app.post("/login", async (req, res) => {
   try {

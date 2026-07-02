@@ -87,7 +87,7 @@ function Homepage() {
       {userRole === "Customer" && <h3 className="hmh3">Your Connections</h3>}
       {userRole === "Customer" && <Connections />}
       {userRole === "Delivery_partner" && <DeliveryPartnerdashboard />}
-      {userEmailVerification === true && <EmailVerification />}
+      {userEmailVerification === true && <EmailVerification setemailverificationvisibility={setemailverificationvisibility} />}
       <button id="AboutUsbtn" onClick={() => navigate('/AboutUs')}>Know About Us</button>
       {/* <Footer/> */}
     </div>
