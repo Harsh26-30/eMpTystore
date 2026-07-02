@@ -35,6 +35,7 @@ function Homepage() {
         );
         setuserRole(res.data.role);
         setemailverificationvisibility(res.data.userEmailVerification)
+        console.log(res.data.userEmailVerification);
       } catch (err) {
         console.log(err);
       }
