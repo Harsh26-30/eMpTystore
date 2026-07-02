@@ -213,6 +213,7 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
       shopOpenOrNot: finduser.shopOpenOrNot,
       onServiceOrNot: finduser.onServiceOrNot,
       shopTotalBussiness: finduser.shopTotalBussiness, // ✅ Add this  
+      userEmailVerification: finduser.userEmailVerification,
       slat: null,
       slong: null
     });
