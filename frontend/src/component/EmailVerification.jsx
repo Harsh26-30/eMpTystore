@@ -6,7 +6,8 @@ const EmailVerification = ({ setemailverificationvisibility }) => {
     const token = localStorage.getItem("token");
     const [enteredOTP, setEnteredOTP] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const handleClick = async () => {
+const handleClick = async () => {
+    try {
         const res = await axios.post(
             `${import.meta.env.VITE_API_URL}/verifyOTP`,
             {
@@ -18,8 +19,9 @@ const EmailVerification = ({ setemailverificationvisibility }) => {
                 }
             }
         );
-        console.log(res.data);
+
         setErrorMessage(res.data.message);
+
         const res2 = await axios.get(
             `${import.meta.env.VITE_API_URL}/checkuserinfo`,
             {
@@ -28,10 +30,17 @@ const EmailVerification = ({ setemailverificationvisibility }) => {
                 },
             }
         );
+
         if (res2.data.userEmailVerification === true) {
-            setemailverificationvisibility(res2.data.userEmailVerification)
+            setemailverificationvisibility(true);
         }
+
+    } catch (err) {
+        setErrorMessage(
+            err.response?.data?.message || "Something went wrong"
+        );
     }
+};
     return (
         <div id='mainboxemailVerification'>
             <div id='emailVerificationbox2'>
