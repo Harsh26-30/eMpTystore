@@ -55,7 +55,9 @@ const EmailVerification = ({ setemailverificationvisibility }) => {
                     }
                 }
             );
+            if(res.data.success === true){
             setresendbuttonvisible(res.data.success);
+            }
             console.log("resend data of sucess",res.data.success);
         } catch (err) {
             setErrorMessage(
