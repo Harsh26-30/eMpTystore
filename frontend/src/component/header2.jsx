@@ -1,6 +1,6 @@
 import React from 'react'
 import './header2.css'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import axios from 'axios'
@@ -9,6 +9,7 @@ import axios from 'axios'
 
 const Header2 = ({ setmanagehomepagevisible, managehomepagevisible }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const token = localStorage.getItem("token");
   const [userRole, setuserRole] = useState('')
   const [shopOpenOrNot, setShopOpenOrNot] = useState(false);
@@ -95,15 +96,15 @@ const Header2 = ({ setmanagehomepagevisible, managehomepagevisible }) => {
               <img src="\format_list_bulleted_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="Search" />
             </button>
           )}
-          <button onClick={() => { navigate("/searchbox"); }}>
+          {/* <button onClick={() => { navigate("/searchbox"); }}>
             <img src="\search_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="Search" />
-          </button>
+          </button> */}
           <button onClick={() => { navigate("/Menu"); }}>
             <img src="\menu_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="More" />
           </button>
         </div>
       </div>
-      {(userRole === 'Seller') && (
+      {(userRole === 'Seller' && location.pathname === '/home') && (
         <div id='box3header2'>
           <button
             style={{

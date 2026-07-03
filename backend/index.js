@@ -495,8 +495,9 @@ app.get("/Request", authMiddleware, async (req, res) => {
   }
 });
 
-app.post("/becomeseller", authMiddleware, async (req, res) => {
+app.post("/requestupdateuserrole", authMiddleware, async (req, res) => {
   try {
+    const { upgradeTo } = req.body;
 
     // Request
     const finduser = await User.findOne({ email: req.user.email });
@@ -515,12 +516,56 @@ app.post("/becomeseller", authMiddleware, async (req, res) => {
       district: finduser.district,
       pincode: finduser.pincode,
       seller_key: finduser.seller_key,
-      requestof: "seller"
+      requestof: upgradeTo
     });
 
     await newRequest.save();
 
     res.json({ msg: "your request has been recorded" })
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get("/checkrequeststatus", authMiddleware, async (req, res) => {
+  try {
+    const finduser = await User.findOne({ email: req.user.email });
+
+    if (!finduser) {
+      return res.status(404).json({
+        success: false,
+        error: "User not found"
+      });
+    }
+
+    const request = await Request.findOne({ email: req.user.email });
+
+    // No pending request
+    if (!request) {
+      return res.json({
+        success: true,
+        msg: ""
+      });
+    }
+
+    // Request is still pending
+    if (finduser.role !== request.requestof) {
+      return res.json({
+        success: true,
+        msg: `Your request to become a ${request.requestof} is pending.
+Within 24 hours we will update your account.`
+      });
+    }
+
+    // Role updated, remove request
+    await Request.deleteOne({ email: req.user.email });
+
+    return res.json({
+      success: false,
+      msg: ""
+    });
 
   } catch (err) {
     console.log(err);
@@ -997,6 +1042,7 @@ app.post("/placeOrder", authMiddleware, async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
 app.post("/add-product", upload.single("image"), authMiddleware, async (req, res) => {
   try {
     // ✅ Check if file is uploaded
@@ -1417,42 +1463,42 @@ app.post("/signup", async (req, res) => {
 });
 
 app.post("/resendOTP", authMiddleware, async (req, res) => {
-   try {
+  try {
 
-      const createOtp = generateOTP();
-      await OTPData.findOneAndUpdate(
-        { email:req.user.email },
-        {
-          otp: createOtp,
-          status: "pending",
-          expiresAt: new Date(Date.now() + 5 * 60 * 1000) // 5 minutes
-        },
-        { upsert: true, new: true }
-      );
+    const createOtp = generateOTP();
+    await OTPData.findOneAndUpdate(
+      { email: req.user.email },
+      {
+        otp: createOtp,
+        status: "pending",
+        expiresAt: new Date(Date.now() + 5 * 60 * 1000) // 5 minutes
+      },
+      { upsert: true, new: true }
+    );
 
-      try {
+    try {
 
-        const result = await sendMail(
-          req.user.email,
-          "Your Empty Store OTP",
-          `
+      const result = await sendMail(
+        req.user.email,
+        "Your Empty Store OTP",
+        `
       <h2>OTP Verification</h2>
       <p>Your New OTP is <b>${createOtp}</b></p>
     `
-        );
+      );
 
-        return res.json({ success: true, message: "OTP resent successfully to " + req.user.email });
-
-      } catch (err) {
-        console.log("Email error:");
-        console.log(err.response?.data);
-        console.log(err.message);
-      }
+      return res.json({ success: true, message: "OTP resent successfully to " + req.user.email });
 
     } catch (err) {
-      console.log(err);
-      res.status(500).json({ error: err.message });
+      console.log("Email error:");
+      console.log(err.response?.data);
+      console.log(err.message);
     }
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: err.message });
+  }
 });
 
 app.post("/verifyOTP", authMiddleware, async (req, res) => {
@@ -1468,7 +1514,7 @@ app.post("/verifyOTP", authMiddleware, async (req, res) => {
     }
 
     if (new Date() > otpData.expiresAt) {
-      return res.json({ message: "OTP expired", success: false  });
+      return res.json({ message: "OTP expired", success: false });
     }
 
     if (String(otpData.otp) !== String(otp).trim()) {

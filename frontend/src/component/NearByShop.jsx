@@ -103,7 +103,18 @@ const NearByShop = () => {
                         ).toFixed(2)?? 'Not Defined'} km
                     </h4>
                 </div>
-            ))):<></>}
+            ))):<>      <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    width="100%"
+                    style={{
+                        mixBlendMode: "soft-light"
+                    }}
+                >
+                    <source src="\InShot_20260703_074047463.mp4" type="video/mp4" />
+                </video></>}
 
         </div>
     )

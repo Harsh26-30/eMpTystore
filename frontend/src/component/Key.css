@@ -1,13 +1,53 @@
 #mainboxkey{
 height: 100vh;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: flex-start;
 }
 
+#userCurrentRole{
+    height: 20%;
+    margin-top: 10%;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #c9c4c4;
+    border-radius: 20px;
+}
+
+#msgbox{
+      height: 10%;
+    margin-top: 10%;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: #e6f779;
+    border-radius: 20px;
+    padding: 10px;
+
+}
+
+#msgbox p{
+    font-size: 20px;
+    font-weight: bold;
+    color: #000;
+}
 
 #boxrequestkey{
     height: 20%;
     margin-top: 10%;
+    width: 90%;
     display: flex;
-    justify-content: space-evenly;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #c9c4c4;
+    border-radius: 20px;
 }
 
 #boxrequestkey h3{
@@ -15,11 +55,14 @@ height: 100vh;
 }
 
 #boxrequestkey button{
-    height: 20%;
+    height: 30%;
     width: 30%;
     background-color: black;
     color: #fff;
     border-radius: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    user-select: none;
 }
 
 #boxrequestkey button:focus{

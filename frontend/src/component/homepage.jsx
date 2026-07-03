@@ -86,8 +86,8 @@ function Homepage() {
       {userRole === "Seller" && managehomepagevisible === 'UI' && <UI />}
       {userRole === "Customer" && <h3 className="hmh3">Near By Shops</h3>}
       {userRole === "Customer" && <NearByShop />}
-      {userRole === "Customer" && <h3 className="hmh3">Your Connections</h3>}
-      {userRole === "Customer" && <Connections />}
+      {/* {userRole === "Customer" && <h3 className="hmh3">Your Connections</h3>}
+      {userRole === "Customer" && <Connections />} */}
       {userRole === "Delivery_partner" && <DeliveryPartnerdashboard />}
       {userEmailVerification === false && <EmailVerification setemailverificationvisibility={setemailverificationvisibility} />}
       <button id="AboutUsbtn" onClick={() => navigate('/AboutUs')}>Know About Us</button>

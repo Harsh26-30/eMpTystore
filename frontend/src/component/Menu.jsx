@@ -44,7 +44,7 @@ const Menu = () => {
             <div id='box2Menu'>
 
                 <button id='menubutton' onClick={() => navigate("/Key")}>
-                    Key
+                    Role
                 </button>
 
                 {(userRole === 'Seller' || userRole === 'Admin' ) && (
