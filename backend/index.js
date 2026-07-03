@@ -1441,7 +1441,7 @@ app.post("/resendOTP", authMiddleware, async (req, res) => {
     `
         );
 
-        return res.json({ success: true, message: "OTP resent successfully" });
+        return res.json({ success: true, message: "OTP resent successfully to " + req.user.email });
 
       } catch (err) {
         console.log("Email error:");

@@ -57,6 +57,7 @@ const EmailVerification = ({ setemailverificationvisibility }) => {
             );
             if(res.data.success === true){
             setresendbuttonvisible(res.data.success);
+             setErrorMessage(res.data.message);
             }
             console.log("resend data of sucess",res.data.success);
         } catch (err) {
@@ -77,7 +78,7 @@ const EmailVerification = ({ setemailverificationvisibility }) => {
                         value={enteredOTP}
                         onChange={(e) => setEnteredOTP(e.target.value)}
                     />
-                    <p style={{ color: resendbuttonvisible ? "green" : "red", marginTop: "20px" }} id='erroemsg'>{errorMessage}</p>
+                    <p style={{ color: resendbuttonvisible === true ? "green" : "red", marginTop: "20px" }} id='erroemsg'>{errorMessage}</p>
 
                 </div>
                 <div id='emailVerificationbtn'>
