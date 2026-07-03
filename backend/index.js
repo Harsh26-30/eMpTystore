@@ -1441,6 +1441,8 @@ app.post("/resendOTP", authMiddleware, async (req, res) => {
     `
         );
 
+        return res.json({ success: true, message: "OTP resent successfully" });
+
       } catch (err) {
         console.log("Email error:");
         console.log(err.response?.data);
@@ -1462,15 +1464,15 @@ app.post("/verifyOTP", authMiddleware, async (req, res) => {
     console.log("OTP Data:", otpData);
 
     if (!otpData) {
-      return res.json({ message: "OTP not found" });
+      return res.json({ message: "OTP not found", success: false });
     }
 
     if (new Date() > otpData.expiresAt) {
-      return res.json({ message: "OTP expired" });
+      return res.json({ message: "OTP expired", success: false  });
     }
 
     if (String(otpData.otp) !== String(otp).trim()) {
-      return res.json({ message: "Invalid OTP" });
+      return res.json({ message: "Invalid OTP", success: false });
     }
 
     await User.updateOne(

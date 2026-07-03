@@ -6,8 +6,8 @@
 }
 
 #addAddressbox2{
-    height: 50%;
-    width: 90%;
+    height: 60%;
+    min-width: 40vw;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -39,6 +39,7 @@
 
 #formaddAddress fieldset legend{
     color: #fff;
+    text-transform: capitalize;
 }
 
 #formaddAddress fieldset input{
@@ -58,8 +59,28 @@
 }
 
 #formaddAddress button{
-    width: 50%;
+    width: 45%;
     height: 13%;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border-radius: 15px;
+}
+
+#buttonboxaddAddress{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    height: 7%;
+
+}
+
+#buttonboxaddAddress button{
+    width: 60%;
+    height:100%;
+    font-size: 10px;
+    font-weight: bold;
     border-radius: 15px;
 }
 
