@@ -200,25 +200,7 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
   const finduser2 = await User.find({
     _id: { $in: finduser.shoporseller }
   });
-  if (!finduser.managingOrder) {
-    return res.json({
-      id: finduser._id,
-      role: finduser.role,
-      managingOrder: null,
-      dporders: null,
-      CartItem: finduser.CartItem || [],
-      shops: finduser2 || [],
-      myproductdata: [],
-      useruidata: finduser.ui,
-      shopOpenOrNot: finduser.shopOpenOrNot,
-      onServiceOrNot: finduser.onServiceOrNot,
-      shopTotalBussiness: finduser.shopTotalBussiness, // ✅ Add this  
-      userEmailVerification: finduser.userEmailVerification,
-          userPhoneNoVerification:finduser.userPhoneNoVerification,
-      slat: null,
-      slong: null
-    });
-  }
+  
   const orderdata = await Order.findById(finduser.managingOrder)
 
   const findproduct = await Product.find({
@@ -256,6 +238,39 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
   const findproductid8 = finduser.ui.productbox.productbox8id
     ? await Product.findById(finduser.ui.productbox.productbox8id)
     : null;
+
+    if (!finduser.managingOrder) {
+    return res.json({
+      id: finduser._id,
+      role: finduser.role,
+      managingOrder: null,
+      dporders: null,
+      CartItem: finduser.CartItem || [],
+      shops: finduser2 || [],
+      myproductdata: [],
+      useruidata: finduser.ui,
+          productbox: {
+
+      BusinessName: finduser.ui.generalinfo.BusinessName,
+      productbox1: findproductid1,
+      productbox2: findproductid2,
+      productbox3: findproductid3,
+      productbox4: findproductid4,
+      productbox5: findproductid5,
+      productbox6: findproductid6,
+      productbox7: findproductid7,
+      productbox8: findproductid8
+
+    },
+      shopOpenOrNot: finduser.shopOpenOrNot,
+      onServiceOrNot: finduser.onServiceOrNot,
+      shopTotalBussiness: finduser.shopTotalBussiness, // ✅ Add this  
+      userEmailVerification: finduser.userEmailVerification,
+          userPhoneNoVerification:finduser.userPhoneNoVerification,
+      slat: null,
+      slong: null
+    });
+  }
 
   res.json({
     id: finduser._id,
