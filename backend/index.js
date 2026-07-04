@@ -214,6 +214,7 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
       onServiceOrNot: finduser.onServiceOrNot,
       shopTotalBussiness: finduser.shopTotalBussiness, // ✅ Add this  
       userEmailVerification: finduser.userEmailVerification,
+          userPhoneNoVerification:finduser.userPhoneNoVerification,
       slat: null,
       slong: null
     });
@@ -290,7 +291,8 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
     dporders: await Order.findById(finduser.managingOrder) || null,
     CartItem: finduser.CartItem,
     shopTotalBussiness: finduser.shopTotalBussiness || 0,
-    userEmailVerification: finduser.userEmailVerification
+    userEmailVerification: finduser.userEmailVerification,
+    userPhoneNoVerification:finduser.userPhoneNoVerification
   });
 });
 
@@ -798,6 +800,100 @@ app.post("/confirmOrders", authMiddleware, async (req, res) => {
   }
 });
 
+app.post("/handlerejectorder", authMiddleware, async (req, res) => {
+  const { selectedReason, orderid } = req.body;
+
+  try {
+    const updatedOrder = await Order.findByIdAndUpdate(
+      orderid,
+      {
+        orderstatus: "Rejected",
+        rejectReason: selectedReason
+      },
+      {
+        returnDocument: "after"
+      }
+    );
+
+if (selectedReason === "Wrong Contact") {
+  const findcustomer = await User.findById(updatedOrder.customerid);
+
+  if (findcustomer) {
+    await User.findByIdAndUpdate(
+      findcustomer._id,
+      {
+        userPhoneNoVerification: false
+      }
+    );
+  }
+}
+
+    if (!updatedOrder) {
+      return res.status(404).json({
+        message: "Order not found"
+      });
+    }
+
+    res.json({
+      success: true,
+      order: updatedOrder
+    });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      error: err.message
+    });
+  }
+});
+
+app.post("/updatePhoneNo", authMiddleware, async (req, res) => {
+  const { phoneNo } = req.body;
+
+  try {
+    if (!phoneNo) {
+      return res.status(400).json({
+        error: "Phone number is required"
+      });
+    }
+
+    if (!/^\d{10}$/.test(phoneNo)) {
+      return res.status(400).json({
+        error: "Enter a valid 10-digit phone number"
+      });
+    }
+
+    const updatedUser = await User.findOneAndUpdate(
+      { email: req.user.email },
+      {
+        phoneNo,
+        userPhoneNoVerification: true // Optional: require verification again
+      },
+      {
+        returnDocument: "after"
+      }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({
+        error: "User not found"
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "Phone number updated successfully",
+      user: updatedUser
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      error: err.message
+    });
+  }
+});
+
 app.post("/readyforDelivary", authMiddleware, async (req, res) => {
   try {
     const { orderid, clat, clong } = req.body;
@@ -851,8 +947,6 @@ app.post("/readyforDelivary", authMiddleware, async (req, res) => {
     await User.findByIdAndUpdate(nearestPartner._id, {
       managingOrder: orderid,
     });
-
-
 
     return res.json({
       message: "Order assigned to delivery partner",
@@ -1157,7 +1251,7 @@ app.post("/addui", authMiddleware, async (req, res) => {
           [`ui.componentid.${type}`]: uiid
         }
       },
-      { new: true }
+      { returnDocument: "after" }
     );
 
     const finduser = await User.findOne({ email: req.user.email });

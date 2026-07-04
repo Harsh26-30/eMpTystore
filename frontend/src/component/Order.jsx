@@ -5,6 +5,7 @@ import { useState } from 'react';
 import axios from 'axios'
 import QrScanner from "./QrScanner"
 import { useNavigate } from "react-router-dom";
+import RejectpOrderform from './rejectpOrderform';
 
 
 const Order = () => {
@@ -16,6 +17,9 @@ const Order = () => {
   const navigate = useNavigate();
   const [clat, setclat] = useState('')
   const [clong, setclong] = useState('')
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [rejectpOrderform, setrejectpOrderform] = useState(false);
+  
 
   const fetchOrders = async () => {
     try {
@@ -194,7 +198,8 @@ const Order = () => {
   };
 
   return (
-    <div id='mainboxOrder'>
+    <div id='mainboxOrder'> 
+      {rejectpOrderform && <RejectpOrderform orderid={selectedOrderId} fetchOrders={fetchOrders} setrejectpOrderform={setrejectpOrderform}/>}
       {userRole === "Seller" &&
         <div id='box2OrderConfirm'>
 
@@ -211,30 +216,66 @@ const Order = () => {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
+                justifyContent: "space-evenly",
                 textTransform: "capitalize",
                 fontFamily: "sans-serif"
               } : { display: "none" }} className='box3Order' >
                 {order.items.map((item, i) => (
-                  <p key={i} style={{ marginBottom: "8px" }}>
-                    {item.productname} {item.quantity}x <br />
+                  <p key={i} style={{ marginBottom: "2px" }}>
+                    {item.productname} {item.quantity}x ,
                   </p>
                 ))} <br />
+                <p>Order ID: {order._id}</p>
                 Order Value:- {
                   order.items.reduce((sum, item) => {
                     return sum + (item.quantity * item.price);
                   }, 0)
                 }
                 <br />
-                phoneNo:-{order.phoneNo}
-                {order.orderstatus === 'Pending' ?
-                  <button style={{
-                    backgroundColor: "#000",
-                    color: "#fff",
-                    width: "30%",
-                    height: "30%",
-                    borderRadius: "10px"
-                  }} onClick={() => handleconfirm(order._id)}>Confirm</button> :
-                  <></>}
+                <div style={{
+                  height: "30%",
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "space-evenly",
+                  alignItems: "center"
+                }}>
+                   {order.orderstatus === 'Pending' ?
+                    <button style={{
+                      backgroundColor: "#000",
+                      color: "#fff",
+                      width: "30%",
+                      height: "100%",
+                      borderRadius: "10px"
+                    }} onClick={() =>{setrejectpOrderform(true),setSelectedOrderId(order._id);}}>Reject</button> :
+                    <></>}
+                  {order.orderstatus === 'Pending' ?
+                    <button style={{
+                      backgroundColor: "#000",
+                      color: "#fff",
+                      width: "30%",
+                      height: "100%",
+                      borderRadius: "10px"
+                    }} onClick={() => handleconfirm(order._id)}>Confirm</button> :
+                    <></>}
+
+                  {order.orderstatus === 'Pending' ?
+                    <button
+                      style={{
+                        backgroundColor: "#000",
+                        color: "#fff",
+                        width: "30%",
+                        height: "100%",
+                        borderRadius: "10px"
+                      }}
+                      onClick={() => {
+                        window.location.href = `tel:${order.phoneNo}`;
+                      }}
+                    >
+                      Call
+                    </button> :
+                    <></>}
+                </div>
+
 
               </div>
             ))
@@ -262,12 +303,12 @@ const Order = () => {
                 textTransform: "capitalize",
                 fontFamily: "sans-serif"
               } : { display: "none" }} className='box3Order' >
-                {order.items.map((item, i) => (
-                  <p key={i} style={{ marginBottom: "8px" }}>
-                    {item.productname} {item.quantity}x <br />
+                                {order.items.map((item, i) => (
+                  <p key={i} style={{ marginBottom: "2px" }}>
+                    {item.productname} {item.quantity}x ,
                   </p>
-
                 ))} <br />
+                <p>Order ID: {order._id}</p>
                 Order Value:- {
                   order.items.reduce((sum, item) => {
                     return sum + (item.quantity * item.price);
@@ -311,12 +352,12 @@ const Order = () => {
                 fontFamily: "sans-serif"
               } : { display: "none" }} className='box3Order' >
                 OrderItems:-
-                {order.items.map((item, i) => (
-                  <p key={i} style={{ marginBottom: "8px" }}>
-                    {item.productname} {item.quantity}x <br />
+                                {order.items.map((item, i) => (
+                  <p key={i} style={{ marginBottom: "2px" }}>
+                    {item.productname} {item.quantity}x ,
                   </p>
-
-                ))}
+                ))} <br />
+                <p>Order ID: {order._id}</p>
                 Order Value:- {
                   order.items.reduce((sum, item) => {
                     return sum + (item.quantity * item.price);

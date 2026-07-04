@@ -33,7 +33,7 @@
 }
 
 #mainboxheader2 #box2header2 #box23header2 button {
-    width: 80%;
+    width: 90%;
     height: 100%;
     background-color: #000;
     border: none;
@@ -47,7 +47,7 @@
 }
 
 #mainboxheader2 #box2header2 #box23header2 button img{
-    width: 40px;
+    max-width: 40px;
 }
 
 #box3header2{

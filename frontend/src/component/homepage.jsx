@@ -12,6 +12,7 @@ import DeliveryPartnerdashboard from "./DeliveryPartnerdashboard"
 import { useNavigate } from "react-router-dom";
 import ShopTotalBussiness from "./shopTotalBussiness";
 import EmailVerification from './EmailVerification'
+import UpdatePhoneNo from "./updatePhoneNo"
 
 function Homepage() {
   const [managehomepagevisible, setmanagehomepagevisible] = useState('Order');
@@ -19,11 +20,9 @@ function Homepage() {
   const navigate = useNavigate('')
   const [userRole, setuserRole] = useState('')
   const [userEmailVerification, setemailverificationvisibility] = useState()
+  const [userPhoneNoVerification ,setuserPhoneNoVerification] = useState()
 
-
-  useEffect(() => {
-
-    const fun1 = async () => {
+      const fun1 = async () => {
       try {
         const res = await axios.get(
           `${import.meta.env.VITE_API_URL}/checkuserinfo`,
@@ -35,13 +34,14 @@ function Homepage() {
         );
         setuserRole(res.data.role);
         setemailverificationvisibility(res.data.userEmailVerification)
-        console.log("Full response:", res.data);
-        console.log("Verification:", res.data.userEmailVerification);
+        setuserPhoneNoVerification(res.data.userPhoneNoVerification)
+
       } catch (err) {
         console.log(err);
       }
     };
 
+  useEffect(() => {
     fun1();
   }, [token]);
 
@@ -89,7 +89,8 @@ function Homepage() {
       {/* {userRole === "Customer" && <h3 className="hmh3">Your Connections</h3>}
       {userRole === "Customer" && <Connections />} */}
       {userRole === "Delivery_partner" && <DeliveryPartnerdashboard />}
-      {userEmailVerification === false && <EmailVerification setemailverificationvisibility={setemailverificationvisibility} />}
+      {userPhoneNoVerification === false && <UpdatePhoneNo fun1={fun1}/>}
+      {userEmailVerification === false && <EmailVerification  setemailverificationvisibility={setemailverificationvisibility} />}
       <button id="AboutUsbtn" onClick={() => navigate('/AboutUs')}>Know About Us</button>
       {/* <Footer/> */}
     </div>

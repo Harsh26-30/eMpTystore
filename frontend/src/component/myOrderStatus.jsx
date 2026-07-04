@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react';
 import axios from 'axios';
-import './myOrderStatus.css'
+import './MyOrderStatus.css'
 import Header2 from './header2'
 import OrderQr from "./OrderQr"
 
@@ -44,7 +44,7 @@ const MyOrderStatus = () => {
             <h3>Ordered Items:</h3>
             {order.items?.map((item, index) => (
               <div id='ordereditemdetailed' key={index}>
-                <p>
+                <p >
                   {item.productname}  {item.quantity}x
                 </p>
               </div>
@@ -60,7 +60,9 @@ const MyOrderStatus = () => {
             </h3>
           </div>
           <div style={{
-            backgroundColor: order.orderStatus === 'pending' ?
+            backgroundColor: 
+            order.orderStatus === 'Rejected' ? 'red':
+            order.orderStatus === 'pending' ?
               'grey' : order.orderStatus === 'Confirm' ?
                 'green' : order.orderStatus === 'preparing' ?
                   'blue' : order.orderStatus === 'OFD' ? 'Yellow'
@@ -68,20 +70,22 @@ const MyOrderStatus = () => {
           }}
             id='orderstatusmyorderstatus'>
             <h4 style={{
-              color: order.orderStatus === 'pending' ?
+              color: order.orderStatus === 'Rejected' ? 
+              'white' :order.orderStatus === 'pending' ?
                 'grey' : order.orderStatus === 'Confirm' ?
                   'darkgreen' : order.orderStatus === 'preparing' ?
                     'darkblue' : order.orderStatus === 'OFD' ? 'orange'
                       : order.orderStatus === 'Reached' ? 'darkgreen' : ''
-            }} >{order.orderStatus === 'Pending' ? "Pending" :
+            }} >{order.orderStatus === 'Rejected' ? 'Rejected' 
+              : order.orderStatus === 'Pending' ? "Pending" :
               order.orderStatus === 'Confirm' ? "Preparing" :
                 order.orderStatus === 'RFD' ? "Ready For Delivery" :
                   order.orderStatus === 'OFD' ? "Out for Delivery" :
                     order.orderStatus === 'Reached' ? "Reached" :
-                      "Analysing..."}</h4>
+                      "Analysing.."}</h4>
           </div>
 
-          {order.orderStatus !== 'Reached' && <button id='qrbutton' style={{ width: "50%" }} onClick={() => { setQrVusibility(true), setSelectedOrder(order) }}>
+          {(order.orderStatus !== 'Reached' && order.orderStatus !== 'Rejected') && <button id='qrbutton' style={{ width: "50%" }} onClick={() => { setQrVusibility(true), setSelectedOrder(order) }}>
             QR
           </button>}
 

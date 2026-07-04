@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { type } = require("node:os");
 
 const orderSchema = new mongoose.Schema({
     customerid: { type: String, required: true },
@@ -44,6 +45,7 @@ const orderSchema = new mongoose.Schema({
         type: String,
         default: "Pending"
     },
+    rejectReason:{type:String},
 
     // 🚚 SHIPPING FIELDS
     shipment_id: { type: String },

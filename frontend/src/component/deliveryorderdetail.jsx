@@ -150,7 +150,7 @@ const DeliveryOrderDetail = ({
                                 clong,
                                 order?.shopcorrdinates?.latitude,
                                 order?.shopcorrdinates?.longitude
-                            )?.toFixed(2)} km
+                            )?.toFixed(5)} km
                         </h4>
                     </div>
 

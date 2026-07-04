@@ -100,7 +100,7 @@ const NearByShop = () => {
                             clong,
                             shop.shoplatitude,
                             shop.shoplongitude
-                        ).toFixed(2)?? 'Not Defined'} km
+                        ).toFixed(5)?? 'Not Defined'} km
                     </h4>
                 </div>
             ))):<>      <video

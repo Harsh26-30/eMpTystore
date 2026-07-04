@@ -11,7 +11,7 @@ const aboutUs = () => {
                 <a href="#howWorks">How Works</a>
                 <a href="#Customer">Customer</a>
                 <a href="#Seller">Seller</a>
-                {/* <a href="">Delivery Partner</a> */}
+                <a href="#priceStruture">Price Struture</a>
             </div>
 
             <section style={{ "marginTop": '90px' }} id='emptyStore'>
@@ -84,7 +84,7 @@ const aboutUs = () => {
                     </object>
                 </div>
             </section>
-            
+
             <section id='Seller'>
                 <h3>Seller</h3>
                 <div id='content'>
@@ -97,6 +97,27 @@ const aboutUs = () => {
                             <a href="\1000017805.pdf">Download the PDF</a>.
                         </p>
                     </object>
+                </div>
+            </section>
+
+            <section style={{ "marginTop": '90px' }} id='priceStruture'>
+                <h3>Pricing Structure</h3>
+                <div id='content'>
+                    <p>
+
+
+                        The pricing structure of Empty Store is simple and transparent.
+                        The seller determines the price of each product, while Empty Store
+                        applies a fixed delivery charge of ₹30 for every order to cover the
+                        delivery service. In addition, a service charge of ₹2 is collected
+                        for each order as a platform fee for providing services such as order
+                        management, store management, and customer support. Therefore, the total
+                        amount paid by the customer is the sum of the product price,
+                        the ₹30 delivery charge, and the ₹2 service charge. The product amount
+                        is transferred to the seller, the ₹30 delivery charge is allocated to
+                        the delivery partner, and the ₹2 service charge is retained by Empty
+                        Store for maintaining and operating the platform.
+                    </p>
                 </div>
             </section>
         </div>
