@@ -7,11 +7,11 @@ const aboutUs = () => {
         <div id='mainboxaboutus'>
             <Header2 />
             <div id='aboutusnav'>
-                <a href="#emptyStore">Empty_Store</a>
+                <a href="#emptyStore">Empty Store</a>
                 <a href="#howWorks">How Works</a>
                 <a href="#Customer">Customer</a>
                 <a href="#Seller">Seller</a>
-                <a href="#priceStruture">Price Struture</a>
+                <a href="#priceStruture">Pricing</a>
             </div>
 
             <section style={{ "marginTop": '90px' }} id='emptyStore'>
