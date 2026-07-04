@@ -7,7 +7,7 @@ const aboutUs = () => {
         <div id='mainboxaboutus'>
             <Header2 />
             <div id='aboutusnav'>
-                <a href="#emptyStore">Empty Store</a>
+                <a href="#emptyStore">Empty_Store</a>
                 <a href="#howWorks">How Works</a>
                 <a href="#Customer">Customer</a>
                 <a href="#Seller">Seller</a>
