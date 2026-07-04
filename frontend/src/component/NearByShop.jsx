@@ -75,16 +75,16 @@ const NearByShop = () => {
 
             {shops.length > 0 ? (shops.map((shop, index) => (
                 <div id='Shopnoxs'
-                    style={{
-                        opacity: shop.shopOpenOrNot === 'Closed' ? 0.4 : 1,
-                        backgroundColor: shop.ui.generalinfo.BackgroundColor || "transparent",
-                        backgroundImage: shop.ui.generalinfo.Backgroundimage
-                            ? `url(${shop.ui.generalinfo.Backgroundimage})`
-                            : "none",
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                        backgroundRepeat: "no-repeat"
-                    }}
+         style={{
+    opacity: shop.shopOpenOrNot === "Closed" ? 0.4 : 1,
+    backgroundColor: shop.ui?.generalinfo?.BackgroundColor || "transparent",
+    backgroundImage: shop.ui?.generalinfo?.Backgroundimage
+        ? `url(${shop.ui.generalinfo.Backgroundimage})`
+        : "none",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat"
+}}
                     key={index} onClick={() => {
                         shop.shopOpenOrNot === 'Open' ?
                             navigate("/Shopnox", {
@@ -93,8 +93,9 @@ const NearByShop = () => {
                                 }
                             }) : alert(`${shop.ui.generalinfo.BusinessName} is closed Currently`)
                     }}>
-                    <h3 style={{ color: shop.ui.generalinfo.TextColor }}>{shop.ui.generalinfo.BusinessName}</h3>
-                    <h4>
+<h3 style={{ color: shop.ui?.generalinfo?.TextColor }}>
+    {shop.ui?.generalinfo?.BusinessName || "Unnamed Shop"}
+</h3>                    <h4>
                         {getDistance(
                             clat,
                             clong,
