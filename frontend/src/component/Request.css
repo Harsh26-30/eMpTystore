@@ -41,8 +41,8 @@
 
 .box3request{
     background-color: white;
-    width:380px;
-    height: 210px;
+    width:80%;
+    height: 290px;
     margin-top: 10px;
     border-radius: 10px;
     /* padding: 7px; */
@@ -54,6 +54,10 @@
     box-shadow: 2px 2px 12px 2px #000;
 }
 
+.box3request #info{
+    width: 65%;
+}
+
 .box3request div{
     display: flex;
     flex-direction: column;
@@ -62,8 +66,8 @@
 }
 
 .box3request div button{
-    height: 100%;
-    width: 100%;
+    height: 90%;
+    width: 90%;
     border-radius: 10px;
     color: #fff;
     background-color: #000;
@@ -77,4 +81,28 @@
     background-color: #000;
     margin: 20px;
     font-size: 20px;
+}
+
+#imgdiv{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: 500;
+    background-color: rgba(197, 193, 193, 0.514);
+    top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#imgdiv button{
+    background-color: #000;
+    margin-top: 15%;
+    width: 40%;
+    height: 10%;
+    color: white;
+    border-radius: 30px;
+    border: none;
+    font-size: 30px;
 }

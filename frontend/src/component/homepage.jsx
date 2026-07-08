@@ -20,29 +20,42 @@ function Homepage() {
   const navigate = useNavigate('')
   const [userRole, setuserRole] = useState('')
   const [userEmailVerification, setemailverificationvisibility] = useState()
-  const [userPhoneNoVerification ,setuserPhoneNoVerification] = useState()
+  const [userPhoneNoVerification, setuserPhoneNoVerification] = useState()
 
-      const fun1 = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/checkuserinfo`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setuserRole(res.data.role);
-        setemailverificationvisibility(res.data.userEmailVerification)
-        setuserPhoneNoVerification(res.data.userPhoneNoVerification)
+  const fun1 = async () => {
+    try {
 
-      } catch (err) {
-        console.log(err);
-      }
-    };
+
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/checkuserinfo`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setuserRole(res.data.role);
+      setemailverificationvisibility(res.data.userEmailVerification)
+      setuserPhoneNoVerification(res.data.userPhoneNoVerification)
+
+      
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/removeCartItem`, {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
     fun1();
+
   }, [token]);
 
   useEffect(() => {
@@ -62,6 +75,7 @@ function Homepage() {
                   Authorization: `Bearer ${token}`
                 }
               }
+            
             );
 
 
@@ -70,7 +84,7 @@ function Homepage() {
           }
         },
         (error) => {
-          console.log(error);
+          console.log(error.nessage);
         }
       );
     }
@@ -89,8 +103,8 @@ function Homepage() {
       {/* {userRole === "Customer" && <h3 className="hmh3">Your Connections</h3>}
       {userRole === "Customer" && <Connections />} */}
       {userRole === "Delivery_partner" && <DeliveryPartnerdashboard />}
-      {userPhoneNoVerification === false && <UpdatePhoneNo fun1={fun1}/>}
-      {userEmailVerification === false && <EmailVerification  setemailverificationvisibility={setemailverificationvisibility} />}
+      {userPhoneNoVerification === false && <UpdatePhoneNo fun1={fun1} />}
+      {userEmailVerification === false && <EmailVerification setemailverificationvisibility={setemailverificationvisibility} />}
       <button id="AboutUsbtn" onClick={() => navigate('/AboutUs')}>Know About Us</button>
       {/* <Footer/> */}
     </div>

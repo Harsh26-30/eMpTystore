@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import './Key.css'
 import axios from 'axios';
 import Header2 from './header2';
@@ -6,9 +7,11 @@ import Header2 from './header2';
 
 const Key = () => {
     const token = localStorage.getItem("token");
+    const navigate = useNavigate()
     const [msg, setmsg] = useState('')
     const [userRole, setuserRole] = useState('')
     const [msgVisible, setmsgVisible] = useState(false)
+    const [status,setstatus] = useState()
 
     const fun1 = async () => {
         try {
@@ -32,9 +35,10 @@ const Key = () => {
             );
             setmsg(res2.data.msg);
             setmsgVisible(res2.data.success);
+            setstatus(res2.data.requestStatus)
 
         } catch (err) {
-            console.log(err);
+            console.log(err.message);
         }
     };
 
@@ -44,47 +48,31 @@ const Key = () => {
         fun1();
     }, [token]);
 
-    const handlerequestkey = async (upgradeTo) => {
-        try {
-            const res = await axios.post(
-                `${import.meta.env.VITE_API_URL}/requestupdateuserrole`, {
-                upgradeTo: upgradeTo
-            },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-
-            alert("Your Request has been recorded within 24 hour your \n account will be updated");
-            setmsg(res.data.msg);
-            fun1();
-
-        } catch (err) {
-            console.log("ERROR:", err.response?.data || err.message);
-        }
-    };
-
 
     return (
         <div id='mainboxkey'>
             <Header2 />
-            {msgVisible === false && (
-                <div id='msgbox'>
+            {msgVisible === true && (
+                <div style={{backgroundColor:status === 'Confirm'? "#56e34f66":"#ed1b2278"}} id='msgbox'>
                     <p>{msg}</p>
                 </div>
             )}
 
-            <div id = 'userCurrentRole'>
+            <div id='userCurrentRole'>
                 <h3>Your Current Role: {userRole}</h3>
             </div>
 
             {userRole === 'Customer' && (
                 <div id='boxrequestkey'>
                     <h3>Request to be Seller</h3>
-                    <button onClick={() => handlerequestkey("Seller")}>
-                        Request
+                    <button onClick={() => {
+                        navigate("/requestform", {
+                            state: {
+                                requestof: "Seller"
+                            }
+                        })
+                    }}>
+                        Make Request
                     </button>
                 </div>
             )}
@@ -93,8 +81,14 @@ const Key = () => {
 
                 <div id='boxrequestkey'>
                     <h3>Request to be Delivery Partner</h3>
-                    <button onClick={() => handlerequestkey("Delivery_partner")}>
-                        Request
+                        <button onClick={() => {
+                        navigate("/requestform", {
+                               state: {
+                                requestof: "Delivery_partner"
+                            }
+                        })
+                    }}>
+                        Make Request
                     </button>
                 </div>
             )}

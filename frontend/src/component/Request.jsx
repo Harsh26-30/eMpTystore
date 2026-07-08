@@ -8,65 +8,129 @@ import axios from 'axios';
 const Request = () => {
     const token = localStorage.getItem("token");
     const [requests, setrequests] = useState([]);
-    useEffect(() => {
-        const fetchRequest = async () => {
-            try {
-                const res = await axios.get(
-                    `${import.meta.env.VITE_API_URL}/Request`,
-                    // empty body
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
-                setrequests(res.data.requests);
+    const [showImage, setShowImage] = useState(null);
+    const fetchRequest = async () => {
+        try {
+            const res = await axios.get(
+                `${import.meta.env.VITE_API_URL}/roleUpgradeRequest`,
+                // empty body
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            setrequests(res.data.requests);
 
-            } catch (err) {
-                console.error(err);
-            }
-        };
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    useEffect(() => {
 
         fetchRequest();
     }, [token]);
 
+    const handleconfirm = async (upgradeTo, emailid, requestid) => {
+
+        await axios.post(
+            `${import.meta.env.VITE_API_URL}/updateuserrole`, {
+            upgradeTo, emailid, requestid
+        },
+            // empty body
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        fetchRequest();
+    }
+
+    const handlereject = async (requestid) => {
+
+        await axios.post(
+            `${import.meta.env.VITE_API_URL}/rejectuserroleupgraderequest`, {
+            requestid
+        },
+            // empty body
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        fetchRequest();
+    }
+
+
     return (
-
-
-
-
         <div id='requestbox'>
             <Header2 />
             <div id='box2Request'>
+                {Array.isArray(requests) &&
+                    requests.filter((request) => request.requestStatus === "pending").length > 0 ? (
+                    requests
+                        .filter((request) => request.requestStatus === "pending")
+                        .map((request) => (
+                            <div key={request._id} className='box3request'>
+                                <div id='info'>
+                                    Email :- {request.email} <br />
+                                    PhoneNo :- {request.phoneNo} <br />
+                                    Country :- {request.country} <br />
+                                    State :- {request.state} <br />
+                                    District :- {request.district} <br />
+                                    Pincode :- {request.pincode} <br />
+                                    Request For :- {request.requestof} <br />
+                                    UPI Id :- {request.upiId} <br />
 
-                {Array.isArray(requests) && requests.length > 0 ? (
-                    requests.map((request) => (
-                        <div key={request._id} className='box3request' >
-                            { (<p>
-                                Current_Role :- {request.role} <br />
-                                Email :-  {request.email} <br />
-                                seller_key :- {request.seller_key}<br />
-                                PhoneNo :- {request.phoneNo} <br />
-                                Country :- {request.country} <br />
-                                State. :-  {request.state} <br />
-                                District :- {request.district} <br />
-                                Pincode :- {request.pincode} <br />
-                                Address :- {request.address} <br />
-                                requestof :-  {request.requestof}
-                            </p>)}
-                            {request.requeststatus === 'pending' ?
-                                <button onClick={() => handleconfirm(request._id)}>Confirm</button> :
-                                <></>}
-                            <div>
-                                {request.requeststatus === 'Confirm' && request.requeststatus === visible ?
-                                    <button onClick={() => handlereadyforshipment(request._id)}>Ready for Shipment</button> :
-                                    <></>}
+                                    <button onClick={() => setShowImage(request.aadhaarImage)}>
+                                        Aadhaar Card
+                                    </button>
+
+                                    <button onClick={() => setShowImage(request.panImage)}>
+                                        PAN Card
+                                    </button>
+                                </div>
+
+                                <div>
+                                    <a style={{ height: "90%" }} href={`tel:${request.phoneNo}`}>
+                                        <button>Call</button>
+                                    </a>
+
+                                    <button onClick={() => handleconfirm(request.requestof, request.email, request._id)}>
+                                        Confirm
+                                    </button>
+
+                                    <button onClick={() => handlereject(request._id)}>
+                                        Reject
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    ))
+                        ))
                 ) : (
-                    <p>No Request found</p>
-                )}        </div>
+                    <p>No Pending Requests</p>
+                )}
+            </div>
+
+            {showImage && (
+                <div id='imgdiv'>
+                    <img
+                        src={showImage}
+                        alt="Aadhar Card"
+                        style={{
+                            width: "400px",
+                            height: "auto",
+                            border: "1px solid black"
+                        }}
+                    />
+
+                    <button onClick={() => setShowImage(null)}>
+                        Close
+                    </button>
+                </div>
+            )}
         </div>
 
     )

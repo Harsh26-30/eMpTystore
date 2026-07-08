@@ -21,6 +21,7 @@ import UserProfile from './component/UserProfile'
 import MyOrderStatus from './component/MyOrderStatus'
 import Cart from './component/Cart'
 import AboutUs from './component/aboutUs'
+import Requestform from "./component/requestform"
 
 
 function App() {
@@ -217,6 +218,15 @@ function App() {
             element={
               <ProtectedRoute>
                 < AboutUs />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/requestform"
+            element={
+              <ProtectedRoute>
+                < Requestform />
               </ProtectedRoute>
             }
           />

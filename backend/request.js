@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { request } = require("node:http");
 
 const requestSchema = new mongoose.Schema({
     role: {
@@ -33,7 +32,38 @@ const requestSchema = new mongoose.Schema({
     },
     requestof: {
         type: String
+    },
+
+    requestStatus: {
+        type: String,
+        default: "pending"
+    },
+
+    // MongoDB will delete after this date
+    deleteAt: {
+        type: Date
+    },
+
+    aadhaarImage: {
+        type: String
+    },
+    panImage: {
+        type: String
+    },
+    upiId: {
+        type: String
     }
+
+}, {
+    timestamps: true
 });
+
+
+// TTL index
+requestSchema.index(
+    { deleteAt: 1 },
+    { expireAfterSeconds: 0 }
+);
+
 
 module.exports = mongoose.model("requestdata", requestSchema);

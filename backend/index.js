@@ -19,6 +19,9 @@ const multer = require("multer");
 const cloudinary = require("./cloudinary");
 const { log } = require('console');
 const sendMail = require("./sendMail.js");
+const razorpay = require("./razorpay");
+const crypto = require("crypto");
+
 
 const upload = multer({ dest: "uploads/" });
 
@@ -89,21 +92,33 @@ async function getRouteDistance(start, end) {
 }
 
 const authMiddleware = (req, res, next) => {
+
+
   const header = req.headers.authorization;
+
   if (!header) {
     return res.status(401).json({ message: "No token" });
   }
-  const token = header.split(" ")[1]; // Bearer token
+
+  const token = header.split(" ")[1];
+
   try {
+
     const decoded = jwt.verify(token, SECRET);
+
     req.user = decoded;
+
     next();
+
   } catch (err) {
-    res.status(401).json({ message: "Invalid token" });
+
+    console.log(err.message);
+    return res.status(401).json({
+      message: "Invalid token",
+      error: err.message
+    });
   }
 };
-
-
 
 app.get("/myprofile", authMiddleware, async (req, res) => {
   const finduser = await User.findOne({ email: req.user.email });
@@ -200,7 +215,7 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
   const finduser2 = await User.find({
     _id: { $in: finduser.shoporseller }
   });
-  
+
   const orderdata = await Order.findById(finduser.managingOrder)
 
   const findproduct = await Product.find({
@@ -239,7 +254,7 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
     ? await Product.findById(finduser.ui.productbox.productbox8id)
     : null;
 
-    if (!finduser.managingOrder) {
+  if (!finduser.managingOrder) {
     return res.json({
       id: finduser._id,
       role: finduser.role,
@@ -249,26 +264,26 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
       shops: finduser2 || [],
       myproductdata: [],
       useruidata: finduser.ui,
-          productbox: {
+      productbox: {
 
-      BusinessName: finduser.ui.generalinfo.BusinessName,
-      productbox1: findproductid1,
-      productbox2: findproductid2,
-      productbox3: findproductid3,
-      productbox4: findproductid4,
-      productbox5: findproductid5,
-      productbox6: findproductid6,
-      productbox7: findproductid7,
-      productbox8: findproductid8
+        BusinessName: finduser.ui.generalinfo.BusinessName,
+        productbox1: findproductid1,
+        productbox2: findproductid2,
+        productbox3: findproductid3,
+        productbox4: findproductid4,
+        productbox5: findproductid5,
+        productbox6: findproductid6,
+        productbox7: findproductid7,
+        productbox8: findproductid8
 
-    },
+      },
       shopOpenOrNot: finduser.shopOpenOrNot,
       onServiceOrNot: finduser.onServiceOrNot,
       shopTotalBussiness: finduser.shopTotalBussiness, // ✅ Add this  
       userEmailVerification: finduser.userEmailVerification,
-          userPhoneNoVerification:finduser.userPhoneNoVerification,
+      userPhoneNoVerification: finduser.userPhoneNoVerification,
       slat: null,
-      slong: null
+      slong: null,
     });
   }
 
@@ -307,7 +322,7 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
     CartItem: finduser.CartItem,
     shopTotalBussiness: finduser.shopTotalBussiness || 0,
     userEmailVerification: finduser.userEmailVerification,
-    userPhoneNoVerification:finduser.userPhoneNoVerification
+    userPhoneNoVerification: finduser.userPhoneNoVerification,
   });
 });
 
@@ -498,54 +513,191 @@ app.post("/buildconnection", authMiddleware, async (req, res) => {
   }
 });
 
-app.get("/Request", authMiddleware, async (req, res) => {
+app.get("/roleUpgradeRequest", authMiddleware, async (req, res) => {
   try {
+    const requests = await Request.find({})
+      .sort({ createdAt: -1 })   // newest first
+      .limit(100);               // prevent overload
 
-    const requests = await Request.find({});
-
-
-    res.json({ requests: requests });
-
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.post("/requestupdateuserrole", authMiddleware, async (req, res) => {
-  try {
-    const { upgradeTo } = req.body;
-
-    // Request
-    const finduser = await User.findOne({ email: req.user.email });
-
-    if (!finduser) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    const newRequest = new Request({
-      role: finduser.role,
-      email: finduser.email,
-      phoneNo: finduser.phoneNo,
-      address: finduser.address,
-      country: finduser.country,
-      state: finduser.state,
-      district: finduser.district,
-      pincode: finduser.pincode,
-      seller_key: finduser.seller_key,
-      requestof: upgradeTo
+    res.json({
+      success: true,
+      requests
     });
 
-    await newRequest.save();
-
-    res.json({ msg: "your request has been recorded" })
-
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message
+    });
   }
 });
 
+app.post("/requestupdateuserrole", authMiddleware,
+  upload.fields([
+    { name: "aadhaar", maxCount: 1 },
+    { name: "pan", maxCount: 1 }
+  ]),
+  async (req, res) => {
+    try {
+
+      const { upgradeTo, upiId } = req.body;
+
+      const finduser = await User.findOne({
+        email: req.user.email
+      });
+
+      if (!finduser) {
+        return res.status(404).json({
+          error: "User not found"
+        });
+      }
+
+
+      let aadhaarImage = "";
+      let panImage = "";
+
+
+      if (req.files?.aadhaar) {
+        const result = await cloudinary.uploader.upload(
+          req.files.aadhaar[0].path,
+          {
+            folder: "aadhaar"
+          }
+        );
+
+        aadhaarImage = result.secure_url;
+      }
+
+
+      if (req.files?.pan) {
+        const result = await cloudinary.uploader.upload(
+          req.files.pan[0].path,
+          {
+            folder: "pan"
+          }
+        );
+
+        panImage = result.secure_url;
+      }
+
+
+      const newRequest = new Request({
+
+        role: finduser.role,
+        email: finduser.email,
+        phoneNo: finduser.phoneNo,
+        address: finduser.address,
+        country: finduser.country,
+        state: finduser.state,
+        district: finduser.district,
+        pincode: finduser.pincode,
+        seller_key: finduser.seller_key,
+
+        requestof: upgradeTo,
+
+        // New verification data
+        aadhaarImage,
+        panImage,
+        upiId
+      });
+
+
+      await newRequest.save();
+
+
+      res.json({
+        msg: "Your request has been recorded"
+      });
+
+
+    } catch (err) {
+
+      console.log(err);
+
+      res.status(500).json({
+        error: err.message
+      });
+
+    }
+  }
+);
+
+app.post("/updateuserrole", authMiddleware,
+  async (req, res) => {
+    try {
+      const { upgradeTo, emailid, requestid } = req.body;
+
+      const finduser = await User.findOne({
+        email: emailid
+      });
+
+      if (!finduser) {
+        console.log("User not found");
+
+        return res.status(404).json({
+          error: "User not found"
+        });
+      }
+
+      await User.findByIdAndUpdate(
+        finduser._id,
+        {
+          role: upgradeTo,
+        }
+      )
+
+      await Request.findByIdAndUpdate(
+        requestid,
+        {
+          requestStatus: "Confirm",
+          deleteAt: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000)
+        }
+      )
+
+
+      res.json({
+        msg: "Account Updated"
+      });
+
+
+    } catch (err) {
+
+      console.log(err);
+
+      res.status(500).json({
+        error: err.message
+      });
+
+    }
+  }
+);
+
+app.post("/rejectuserroleupgraderequest", authMiddleware,
+  async (req, res) => {
+    try {
+      const { requestid } = req.body;
+
+      await Request.findByIdAndUpdate(
+        requestid,
+        {
+          requestStatus: "Rejected",
+          deleteAt: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000)
+        }
+      );
+
+      res.json({
+        msg: "Request rejected. It will be deleted after 2 days."
+      });
+
+    } catch (err) {
+      console.log(err);
+
+      res.status(500).json({
+        error: err.message
+      });
+    }
+  });
 app.get("/checkrequeststatus", authMiddleware, async (req, res) => {
   try {
     const finduser = await User.findOne({ email: req.user.email });
@@ -562,18 +714,28 @@ app.get("/checkrequeststatus", authMiddleware, async (req, res) => {
     // No pending request
     if (!request) {
       return res.json({
-        success: true,
+        success: false,
         msg: ""
       });
     }
 
     // Request is still pending
     if (finduser.role !== request.requestof) {
-      return res.json({
-        success: true,
-        msg: `Your request to become a ${request.requestof} is pending.
-Within 24 hours we will update your account.`
-      });
+      if (request.requestStatus === 'pending') {
+        return res.json({
+          success: true,
+          msg: `Your request to become
+         a ${request.requestof} is pending.
+       It will take 24-48 hours.`
+        });
+      } else {
+        return res.json({
+          success: true,
+          requestStatus: request.requestStatus,
+          msg: `Your request to become
+         a ${request.requestof} has been ${request.requestStatus}`
+        });
+      }
     }
 
     // Role updated, remove request
@@ -830,18 +992,18 @@ app.post("/handlerejectorder", authMiddleware, async (req, res) => {
       }
     );
 
-if (selectedReason === "Wrong Contact") {
-  const findcustomer = await User.findById(updatedOrder.customerid);
+    if (selectedReason === "Wrong Contact") {
+      const findcustomer = await User.findById(updatedOrder.customerid);
 
-  if (findcustomer) {
-    await User.findByIdAndUpdate(
-      findcustomer._id,
-      {
-        userPhoneNoVerification: false
+      if (findcustomer) {
+        await User.findByIdAndUpdate(
+          findcustomer._id,
+          {
+            userPhoneNoVerification: false
+          }
+        );
       }
-    );
-  }
-}
+    }
 
     if (!updatedOrder) {
       return res.status(404).json({
@@ -1063,6 +1225,7 @@ app.post("/Orders", authMiddleware, async (req, res) => {
   }
 });
 
+
 app.get("/deliveryorder", authMiddleware, async (req, res) => {
   try {
     const orders = await Order.find({
@@ -1077,21 +1240,182 @@ app.get("/deliveryorder", authMiddleware, async (req, res) => {
   }
 });
 
-app.post("/placeOrder", authMiddleware, async (req, res) => {
+// app.post("/placeOrder", authMiddleware, async (req, res) => {
+//   try {
+//     const finduser = await User.findOne({ email: req.user.email });
+
+//     if (!finduser) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+
+//     const { items, customerlatitude, customerlongitude } = req.body;
+
+
+
+//     const sellerid = items[0].sellerid;
+//     const seller = await User.findById(sellerid);
+
+
+//     const findsellerMap = {};
+
+//     const formattedItems = [];
+
+//     for (let item of items) {
+//       let findseller = findsellerMap[item.sellerid];
+
+//       if (!findseller) {
+//         findseller = await User.findById(item.sellerid);
+//         findsellerMap[item.sellerid] = findseller;
+//       }
+
+//       const product = await Product.findById(item.productid);
+
+//       if (!findseller || !product) continue;
+
+//       formattedItems.push({
+//         productid: item.productid,
+//         productname: item.productname,
+//         quantity: item.quantity,
+//         sellerid: item.sellerid,
+//         price: product.productprice
+//       });
+//     }
+//     const newOrder = new Order({
+//       customerid: finduser._id,
+//       customername: finduser.name,
+//       customeremail: finduser.email,
+//       phoneNo: finduser.phoneNo,
+
+//       items: formattedItems,
+
+//       customercorrdinates: {
+//         latitude: customerlatitude,
+//         longitude: customerlongitude
+//       },
+
+//       shopcorrdinates: {
+//         latitude: seller.shoplatitude,
+//         longitude: seller.shoplongitude
+//       }
+//     });
+//     await newOrder.save();
+
+//     finduser.CartItem = [];
+//     await finduser.save();
+
+//     return res.json({
+//       success: true,
+//       message: "Order placed successfully",
+//       order: newOrder
+//     });
+
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json({ error: err.message });
+//   }
+// });
+
+app.post("/create-order", authMiddleware, async (req, res) => {
   try {
+    const { items } = req.body;
+
+    let productTotal = 0;
+
+    for (const item of items) {
+      const product = await Product.findById(item.productid);
+      if (!product) continue;
+
+      productTotal += product.productprice * item.quantity;
+    }
+
+    // ✅ EXTRA CHARGES (SERVER SIDE)
+    const deliveryCharge = 30;
+    const serviceCharge = 2;
+
+    const totalAmount = productTotal + deliveryCharge + serviceCharge;
+
+    const razorpayOrder = await razorpay.orders.create({
+      amount: totalAmount * 100, // Razorpay takes paise
+      currency: "INR",
+      receipt: "receipt_" + Date.now()
+    });
+
+    res.json({
+      success: true,
+      razorpayOrder,
+      breakdown: {
+        productTotal,
+        deliveryCharge,
+        serviceCharge,
+        totalAmount
+      }
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      error: err.message
+    });
+  }
+});
+
+
+app.post("/verify-payment", authMiddleware, async (req, res) => {
+  try {
+
+
+    const {
+      razorpay_payment_id,
+      razorpay_order_id,
+      razorpay_signature,
+      items,
+      customerlatitude,
+      customerlongitude
+    } = req.body;
+
+    // STEP 1: VERIFY SIGNATURE
+    const body = razorpay_order_id + "|" + razorpay_payment_id;
+
+    const expected = crypto
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+      .update(body)
+      .digest("hex");
+
+
+    if (expected !== razorpay_signature) {
+      console.log(expected, razorpay_signature);
+
+      return res.status(400).json({
+        success: false,
+        message: "Payment verification failed"
+      });
+    }
+
+    // STEP 2: GET USER
     const finduser = await User.findOne({ email: req.user.email });
 
     if (!finduser) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const { items, customerlatitude, customerlongitude } = req.body;
+    if (!items || items.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Cart items missing"
+      });
+    }
 
+    const payment = await razorpay.payments.fetch(razorpay_payment_id);
 
 
     const sellerid = items[0].sellerid;
     const seller = await User.findById(sellerid);
 
+    if (!seller) {
+      return res.status(400).json({
+        success: false,
+        message: "Seller not found"
+      });
+    }
 
     const findsellerMap = {};
 
@@ -1133,7 +1457,9 @@ app.post("/placeOrder", authMiddleware, async (req, res) => {
       shopcorrdinates: {
         latitude: seller.shoplatitude,
         longitude: seller.shoplongitude
-      }
+      },
+      payment_method: payment.method,
+      payment_Status: "Done",
     });
     await newOrder.save();
 
@@ -1147,8 +1473,102 @@ app.post("/placeOrder", authMiddleware, async (req, res) => {
     });
 
   } catch (err) {
-    console.log(err);
+    console.log(err.message);
     res.status(500).json({ error: err.message });
+  }
+});
+
+app.post("/removeCartItem", authMiddleware, async (req, res) => {
+  const finduser = await User.findOne({ email: req.user.email });
+  finduser.CartItem = [];
+  await finduser.save();
+});
+
+
+app.post("/updatePayOut", authMiddleware, async (req, res) => {
+  try {
+    const { upiId } = req.body;
+
+    if (!upiId) {
+      return res.status(400).json({
+        success: false,
+        message: "UPI ID is required",
+      });
+    }
+
+    const user = await User.findOne({ email: req.user.email });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const auth = {
+      username: process.env.RAZORPAY_KEY_ID,
+      password: process.env.RAZORPAY_KEY_SECRET,
+    };
+
+    //VERIFICATION
+
+
+    // 1️⃣ Create Contact
+    const contactRes = await axios.post(
+      "https://api.razorpay.com/v1/contacts",
+      {
+        name: user.name,
+        email: user.email,
+        type: "vendor",
+      },
+      { auth }
+    );
+
+    const contact = contactRes.data;
+
+    // 2️⃣ Create Fund Account (UPI)
+    const fundAccountRes = await axios.post(
+      "https://api.razorpay.com/v1/fund_accounts",
+      {
+        contact_id: contact.id,
+        account_type: "vpa",
+        vpa: {
+          address: upiId,
+        },
+      },
+      { auth }
+    );
+
+    const fundAccount = fundAccountRes.data;
+
+    // 3️⃣ Save to DB
+    await PayoutAccount.findOneAndUpdate(
+      { userId: user._id },
+      {
+        userId: user._id,
+        upiId,
+        razorpayContactId: contact.id,
+        razorpayFundAccountId: fundAccount.id,
+        verified: true,
+      },
+      {
+        upsert: true,
+        new: true,
+      }
+    );
+
+    res.json({
+      success: true,
+      message: "UPI verified successfully",
+    });
+  } catch (err) {
+    console.log(err?.response?.data || err);
+
+    res.status(400).json({
+      success: false,
+      message: "Failed to verify UPI",
+      error: err?.response?.data?.error?.description || err.message,
+    });
   }
 });
 

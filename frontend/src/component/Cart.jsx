@@ -110,15 +110,15 @@ const Cart = () => {
                 productid: item.productid,
                 productname: item.productname,
                 quantity: item.quantity,
-                sellerid: item.Seller_id
+                sellerid: item.Seller_id,   // ✅ correct property
+                price: item.productprice
             }));
 
-            await axios.post(
-                `${import.meta.env.VITE_API_URL}/placeOrder`,
+            // STEP 1: create Razorpay order
+            const res = await axios.post(
+                `${import.meta.env.VITE_API_URL}/create-order`,
                 {
-                    items: orderItems,
-                    customerlatitude: clat,
-                    customerlongitude: clong
+                    items: orderItems
                 },
                 {
                     headers: {
@@ -127,10 +127,56 @@ const Cart = () => {
                 }
             );
 
-            console.log(orderItems);
+            const razorpayOrder = res.data.razorpayOrder;
 
+            // STEP 2: open Razorpay popup
+            const options = {
+                key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+                order_id: razorpayOrder.id,
+                amount: razorpayOrder.amount,
+                currency: razorpayOrder.currency,
+                name: "Empty Store",
 
-            alert("Order placed successfully");
+                handler: async function (response) {
+                    try {
+                        // STEP 3: verify payment
+                        await axios.post(
+                            `${import.meta.env.VITE_API_URL}/verify-payment`,
+                            {
+                                ...response,
+                                items: orderItems,
+                                customerlatitude: clat,
+                                customerlongitude: clong
+                            },
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${token}`,
+                                },
+                            }
+                        );
+
+                        alert("Payment Successful & Order Placed");
+                        navigate("/home"); // optional
+
+                    } catch (err) {
+                        console.log(err);
+                        alert("Payment verification failed");
+                    }
+                },
+
+                theme: {
+                    color: "#3399cc"
+                }
+            };
+
+            if (!window.Razorpay) {
+                alert("Razorpay SDK not loaded");
+                return;
+            }
+
+            const rzp = new window.Razorpay(options);
+            rzp.open();
+
         } catch (err) {
             console.log(err);
             alert("Order failed");
