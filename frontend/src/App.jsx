@@ -22,6 +22,8 @@ import MyOrderStatus from './component/MyOrderStatus'
 import Cart from './component/Cart'
 import AboutUs from './component/aboutUs'
 import Requestform from "./component/requestform"
+import Wallet from './component/wallet'
+import MakePayment from './component/MakePayment'
 
 
 function App() {
@@ -231,6 +233,23 @@ function App() {
             }
           />
 
+          <Route
+            path="/Wallet"
+            element={
+              <ProtectedRoute>
+                <Wallet />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/MakePayment"
+            element={
+              <ProtectedRoute>
+                < MakePayment />
+              </ProtectedRoute>
+            }
+          />
 
         </Routes>
       </RouteLoader>

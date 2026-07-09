@@ -1,6 +1,6 @@
 import React from 'react'
 import './header2.css'
-import { useNavigate,useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import axios from 'axios'
@@ -73,7 +73,7 @@ const Header2 = ({ setmanagehomepagevisible, managehomepagevisible }) => {
   return (
     <div id='mainboxheader2'>
       <div id='box2header2'>
-        <img onClick={()=>navigate('/home')} src="\E.png" alt="logo" />
+        <img onClick={() => navigate('/home')} src="\E.png" alt="logo" />
         <div id='box23header2' style={{ width: userRole === 'Seller' ? '50%' : '40%' }}>
           {userRole === 'Seller' && (
             <button onClick={handleShopOpenOrNotToggle} className='ShopOpenornotbox1'>
@@ -86,7 +86,7 @@ const Header2 = ({ setmanagehomepagevisible, managehomepagevisible }) => {
           {userRole === 'Delivery_partner' && (
             <button onClick={handledponServiceorNotToggle} className='ShopOpenornotbox1'>
               <div style={{ backgroundColor: onServiceOrNot === 'Yes' ? 'white' : 'grey', display: 'flex', alignItems: 'center', justifyContent: onServiceOrNot === 'Yes' ? 'flex-start' : 'flex-end' }} id='ShopOpenornotbox2'>
-                <div style={{ backgroundColor: onServiceOrNot === 'Yes' ? 'purple' : 'black',border:'2px solid white' }} id='ShopOpenornotcircle'></div><br />
+                <div style={{ backgroundColor: onServiceOrNot === 'Yes' ? 'purple' : 'black', border: '2px solid white' }} id='ShopOpenornotcircle'></div><br />
               </div>
               <h5 style={{ color: onServiceOrNot === 'Yes' ? 'purple' : 'white' }} id='ShopOpenornottext'>{onServiceOrNot === 'Yes' ? 'On Service' : 'Not In Service'}</h5>
             </button>
@@ -94,6 +94,11 @@ const Header2 = ({ setmanagehomepagevisible, managehomepagevisible }) => {
           {userRole === 'Customer' && (
             <button onClick={() => { navigate("/myOrderStatus"); }}>
               <img src="\format_list_bulleted_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="Search" />
+            </button>
+          )}
+          {(userRole !== 'Customer' && userRole !== 'Admin') && (
+            <button onClick={() => { navigate("/Wallet"); }}>
+              <img src="\account_balance_wallet_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="Search" />
             </button>
           )}
           {/* <button onClick={() => { navigate("/searchbox"); }}>

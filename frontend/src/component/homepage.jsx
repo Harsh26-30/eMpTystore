@@ -10,14 +10,15 @@ import axios from 'axios'
 import NearByShop from "./NearByShop"
 import DeliveryPartnerdashboard from "./DeliveryPartnerdashboard"
 import { useNavigate } from "react-router-dom";
-import ShopTotalBussiness from "./shopTotalBussiness";
 import EmailVerification from './EmailVerification'
 import UpdatePhoneNo from "./updatePhoneNo"
+import { useLocation } from "react-router-dom";
 
 function Homepage() {
   const [managehomepagevisible, setmanagehomepagevisible] = useState('Order');
   const token = localStorage.getItem("token");
   const navigate = useNavigate('')
+  const location = useLocation();
   const [userRole, setuserRole] = useState('')
   const [userEmailVerification, setemailverificationvisibility] = useState()
   const [userPhoneNoVerification, setuserPhoneNoVerification] = useState()
@@ -53,10 +54,11 @@ function Homepage() {
     }
   };
 
-  useEffect(() => {
-    fun1();
-
-  }, [token]);
+useEffect(() => {
+    if (token) {
+        fun1();
+    }
+}, [token, location.pathname]);
 
   useEffect(() => {
     if (userRole === 'Seller') {
@@ -94,7 +96,6 @@ function Homepage() {
   return (
     <div id="mainboxhomepage">
       <Header2 managehomepagevisible={managehomepagevisible} setmanagehomepagevisible={setmanagehomepagevisible} />
-      {userRole === "Seller" && <ShopTotalBussiness />}
       {userRole === "Seller" && managehomepagevisible === 'Order' && <Order />}
       {userRole === "Seller" && managehomepagevisible === 'Product' && <Product />}
       {userRole === "Seller" && managehomepagevisible === 'UI' && <UI />}

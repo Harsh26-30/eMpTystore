@@ -21,6 +21,8 @@ const { log } = require('console');
 const sendMail = require("./sendMail.js");
 const razorpay = require("./razorpay");
 const crypto = require("crypto");
+const Withdrawal = require("./withdrawaldata");
+
 
 
 const upload = multer({ dest: "uploads/" });
@@ -89,6 +91,47 @@ async function getRouteDistance(start, end) {
   }
 
   return data.routes[0].distance / 1000;
+}
+
+async function createRazorpayPayoutAccount(user, upiId) {
+
+  const auth = {
+    username: process.env.RAZORPAY_KEY_ID,
+    password: process.env.RAZORPAY_KEY_SECRET
+  };
+
+
+  // Create Contact
+  const contact = await axios.post(
+    "https://api.razorpay.com/v1/contacts",
+    {
+      name: user.name,
+      email: user.email,
+      type: "vendor"
+    },
+    { auth }
+  );
+
+
+  // Create Fund Account
+  const fundAccount = await axios.post(
+    "https://api.razorpay.com/v1/fund_accounts",
+    {
+      contact_id: contact.data.id,
+      account_type: "vpa",
+      vpa: {
+        address: upiId
+      }
+    },
+    { auth }
+  );
+
+
+  return {
+    contactId: contact.data.id,
+    fundAccountId: fundAccount.data.id
+  }
+
 }
 
 const authMiddleware = (req, res, next) => {
@@ -279,7 +322,6 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
       },
       shopOpenOrNot: finduser.shopOpenOrNot,
       onServiceOrNot: finduser.onServiceOrNot,
-      shopTotalBussiness: finduser.shopTotalBussiness, // ✅ Add this  
       userEmailVerification: finduser.userEmailVerification,
       userPhoneNoVerification: finduser.userPhoneNoVerification,
       slat: null,
@@ -320,7 +362,6 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
     slong: orderdata?.shopcorrdinates?.longitude || null,
     dporders: await Order.findById(finduser.managingOrder) || null,
     CartItem: finduser.CartItem,
-    shopTotalBussiness: finduser.shopTotalBussiness || 0,
     userEmailVerification: finduser.userEmailVerification,
     userPhoneNoVerification: finduser.userPhoneNoVerification,
   });
@@ -640,12 +681,31 @@ app.post("/updateuserrole", authMiddleware,
         });
       }
 
+      const request = await Request.findById(requestid);
+
+      // createRazorpayPayoutAccount
+
+      const payout = await createRazorpayPayoutAccount(
+        finduser,
+        request.upiId
+      );
+
       await User.findByIdAndUpdate(
         finduser._id,
         {
           role: upgradeTo,
+
+          "kyc.aadhaarImage": request.aadhaarImage,
+          "kyc.panImage": request.panImage,
+          "kyc.upiId": request.upiId,
+
+          "kyc.razorpayContactId": payout.contactId,
+          "kyc.razorpayFundAccountId": payout.fundAccountId,
+
+          "kyc.verified": true,
+          "kyc.verifiedAt": new Date()
         }
-      )
+      );
 
       await Request.findByIdAndUpdate(
         requestid,
@@ -1150,6 +1210,22 @@ app.post("/Outfordelivary", authMiddleware, async (req, res) => {
       { new: true } // ✅ return updated data
     );
 
+    const sellerId = updatedOrder.items[0].sellerid;
+
+
+    const totalAmount = updatedOrder.items.reduce((sum, item) => {
+      return sum + (item.price * item.quantity);
+    }, 0);
+
+
+    await User.findByIdAndUpdate(
+      sellerId,
+      {
+        $inc: {
+          Wallet: totalAmount
+        }
+      }
+    );
 
 
     res.json({ orders: updatedOrder });
@@ -1178,6 +1254,18 @@ app.post("/OrderReached", authMiddleware, async (req, res) => {
       { new: true }
     );
 
+    const deliveryCharge = 30;
+
+
+    await User.findByIdAndUpdate(
+      dpid,
+      {
+        $inc: {
+          Wallet: deliveryCharge
+        }
+      }
+    );
+
     await User.findByIdAndUpdate(
       dpid,
       {
@@ -1185,18 +1273,9 @@ app.post("/OrderReached", authMiddleware, async (req, res) => {
       }
     );
 
-    const totalAmount = order.items.reduce((sum, item) => {
-      return sum + item.price * item.quantity;
-    }, 0);
 
-    await User.findByIdAndUpdate(
-      order.items[0].sellerid,
-      {
-        $inc: {
-          shopTotalBussiness: totalAmount
-        }
-      }
-    );
+
+
     res.json({ orders: updatedOrder });
 
   } catch (err) {
@@ -1225,6 +1304,142 @@ app.post("/Orders", authMiddleware, async (req, res) => {
   }
 });
 
+app.get("/walletTotalAmount", authMiddleware, async (req,res)=>{
+  try{
+    const user = await User.findOne({
+      email:req.user.email
+    });
+
+    res.json({
+      Wallet:user.Wallet
+    });
+
+  }catch(err){
+    res.status(500).json({
+      error:err.message
+    });
+  }
+});
+
+
+app.post("/withdrawWallet", authMiddleware, async (req, res) => {
+
+    try {
+
+        const user = await User.findOne({
+            email: req.user.email
+        });
+
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
+
+
+        if (user.Wallet <= 0) {
+            return res.status(400).json({
+                message: "Wallet empty"
+            });
+        }
+        console.log("User role:", user.role);
+
+        const withdrawal = await Withdrawal.create({
+            userId: user._id,
+            username: user.name,
+            useremail:user.email,
+            role: user.role,
+            amount: user.Wallet,
+            paymentDetails: {
+                upiId:user.kyc?.upiId
+            }
+        });
+
+        res.json({
+            success: true,
+            message: "Withdrawal request submitted",
+            withdrawal
+
+        });
+
+
+    } catch (err) {
+
+        console.log(err.message);
+
+        res.status(500).json({
+            message: err.message
+        });
+
+    }
+
+});
+
+
+app.get("/withdrawalrequest", authMiddleware, async (req, res) => {
+    try {
+        const withdrawals = await Withdrawal.find({});
+
+        res.status(200).json({
+            success: true,
+            withdrawals
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        });
+    }
+});
+
+app.post("/paytouser", authMiddleware, async(req,res)=>{
+    try {
+        const { withdrawalId } = req.body;
+
+        const withdrawal = await Withdrawal.findById(withdrawalId)
+            .populate("userId");
+
+        if(!withdrawal){
+            return res.status(404).json({
+                message:"Withdrawal not found"
+            });
+        }
+
+        if(withdrawal.status === "Paid"){
+            return res.status(400).json({
+                message:"Already paid"
+            });
+        }
+
+        const user = withdrawal.userId;
+
+        if(user.wallet < withdrawal.amount){
+            return res.status(400).json({
+                message:"Insufficient wallet balance"
+            });
+        }
+
+        // deduct wallet after you manually confirm payment
+        user.wallet -= withdrawal.amount;
+
+        withdrawal.status = "Paid";
+        withdrawal.paidAt = new Date();
+
+        await user.save();
+        await withdrawal.save();
+
+        res.json({
+            message:"Payment completed and wallet deducted"
+        });
+
+    } catch(error){
+        res.status(500).json({
+            message:error.message
+        });
+    }
+});
 
 app.get("/deliveryorder", authMiddleware, async (req, res) => {
   try {

@@ -95,7 +95,7 @@ const userSchema = new mongoose.Schema({
   myproductid: {
     type: [String]
   },
-  shopTotalBussiness: {
+  Wallet: {
     type: Number,
     default: 0
   },
@@ -113,6 +113,37 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "No"
   },
+  kyc: {
+    aadhaarImage: {
+        type: String,
+        default: ""
+    },
+
+    panImage: {
+        type: String,
+        default: ""
+    },
+
+    upiId: {
+        type: String,
+        default: ""
+    },
+
+    razorpayContactId: {
+        type: String,
+        default: ""
+    },
+
+    razorpayFundAccountId: {
+        type: String,
+        default: ""
+    },
+
+    verified: {
+        type: Boolean,
+        default: false
+    }
+},
   ui: {
     generalinfo: {
       logo: { type: String },

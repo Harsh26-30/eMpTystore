@@ -26,7 +26,6 @@ const UserProfile = () => {
         // Fetch user profile data from the backend API
         const fetchUserProfile = async () => {
             try {
-
                 const res = await axios.get(`${import.meta.env.VITE_API_URL}/myprofile`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
