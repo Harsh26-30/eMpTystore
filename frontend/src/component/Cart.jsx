@@ -14,31 +14,23 @@ const Cart = () => {
     const [clat, setclat] = useState(null);
     const [clong, setclong] = useState(null);
 
-    const getServiceCharge = (productAmount) => {
+const getServiceCharge = (productAmount) => {
   const deliveryCharge = 30;
-  const fixedServiceCharge = 2;
+  const minimumProfit = 2;
 
-  let gatewayCharge = 0;
-  let totalAmount = productAmount + deliveryCharge + fixedServiceCharge;
+  let serviceCharge = minimumProfit;
 
   while (true) {
-    gatewayCharge = totalAmount * 0.02 * 1.18;
+    const totalAmount = productAmount + deliveryCharge + serviceCharge;
 
-    const newTotal = Math.ceil(
-      productAmount +
-      deliveryCharge +
-      fixedServiceCharge +
-      gatewayCharge
-    );
+    const razorpayCharge = totalAmount * 0.02 * 1.18;
 
-    if (newTotal === totalAmount) {
-      break;
+    if (serviceCharge - razorpayCharge >= minimumProfit) {
+      return Math.ceil(serviceCharge);
     }
 
-    totalAmount = newTotal;
+    serviceCharge++;
   }
-
-  return fixedServiceCharge + (totalAmount - productAmount - deliveryCharge - fixedServiceCharge);
 };
 
     const fun = async (e) => {
