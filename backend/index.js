@@ -24,7 +24,6 @@ const crypto = require("crypto");
 const Withdrawal = require("./Withdrawaldata");
 
 
-
 const upload = multer({ dest: "uploads/" });
 
 mongoose.connect(process.env.MONGO_URI)
@@ -133,6 +132,22 @@ async function createRazorpayPayoutAccount(user, upiId) {
   }
 
 }
+
+const getServiceCharge = (productAmount) => {
+    const deliveryCharge = 30;
+    const fixedServiceCharge = 2;
+
+    const amountBeforeGateway =
+        productAmount + deliveryCharge + fixedServiceCharge;
+
+    // Razorpay: 2% + 18% GST on fee
+    const razorpayCharge = (amountBeforeGateway * 0.02) * 1.18;
+
+    const serviceCharge =
+        fixedServiceCharge + Math.ceil(razorpayCharge);
+
+    return serviceCharge;
+};
 
 const authMiddleware = (req, res, next) => {
 
@@ -1304,19 +1319,19 @@ app.post("/Orders", authMiddleware, async (req, res) => {
   }
 });
 
-app.get("/walletTotalAmount", authMiddleware, async (req,res)=>{
-  try{
+app.get("/walletTotalAmount", authMiddleware, async (req, res) => {
+  try {
     const user = await User.findOne({
-      email:req.user.email
+      email: req.user.email
     });
 
     res.json({
-      Wallet:user.Wallet
+      Wallet: user.Wallet
     });
 
-  }catch(err){
+  } catch (err) {
     res.status(500).json({
-      error:err.message
+      error: err.message
     });
   }
 });
@@ -1324,121 +1339,121 @@ app.get("/walletTotalAmount", authMiddleware, async (req,res)=>{
 
 app.post("/withdrawWallet", authMiddleware, async (req, res) => {
 
-    try {
+  try {
 
-        const user = await User.findOne({
-            email: req.user.email
-        });
-
-
-        if (!user) {
-            return res.status(404).json({
-                message: "User not found"
-            });
-        }
+    const user = await User.findOne({
+      email: req.user.email
+    });
 
 
-        if (user.Wallet <= 0) {
-            return res.status(400).json({
-                message: "Wallet empty"
-            });
-        }
-        console.log("User role:", user.role);
-
-        const withdrawal = await Withdrawal.create({
-            userId: user._id,
-            username: user.name,
-            useremail:user.email,
-            role: user.role,
-            amount: user.Wallet,
-            paymentDetails: {
-                upiId:user.kyc?.upiId
-            }
-        });
-
-        res.json({
-            success: true,
-            message: "Withdrawal request submitted",
-            withdrawal
-
-        });
-
-
-    } catch (err) {
-
-        console.log(err.message);
-
-        res.status(500).json({
-            message: err.message
-        });
-
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found"
+      });
     }
+
+
+    if (user.Wallet <= 0) {
+      return res.status(400).json({
+        message: "Wallet empty"
+      });
+    }
+    console.log("User role:", user.role);
+
+    const withdrawal = await Withdrawal.create({
+      userId: user._id,
+      username: user.name,
+      useremail: user.email,
+      role: user.role,
+      amount: user.Wallet,
+      paymentDetails: {
+        upiId: user.kyc?.upiId
+      }
+    });
+
+    res.json({
+      success: true,
+      message: "Withdrawal request submitted",
+      withdrawal
+
+    });
+
+
+  } catch (err) {
+
+    console.log(err.message);
+
+    res.status(500).json({
+      message: err.message
+    });
+
+  }
 
 });
 
 
 app.get("/withdrawalrequest", authMiddleware, async (req, res) => {
-    try {
-        const withdrawals = await Withdrawal.find({});
+  try {
+    const withdrawals = await Withdrawal.find({});
 
-        res.status(200).json({
-            success: true,
-            withdrawals
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({
-            success: false,
-            message: "Internal Server Error"
-        });
-    }
+    res.status(200).json({
+      success: true,
+      withdrawals
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error"
+    });
+  }
 });
 
-app.post("/paytouser", authMiddleware, async(req,res)=>{
-    try {
-        const { withdrawalId } = req.body;
+app.post("/paytouser", authMiddleware, async (req, res) => {
+  try {
+    const { withdrawalId } = req.body;
 
-        const withdrawal = await Withdrawal.findById(withdrawalId)
-            .populate("userId");
+    const withdrawal = await Withdrawal.findById(withdrawalId)
+      .populate("userId");
 
-        if(!withdrawal){
-            return res.status(404).json({
-                message:"Withdrawal not found"
-            });
-        }
-
-        if(withdrawal.status === "Paid"){
-            return res.status(400).json({
-                message:"Already paid"
-            });
-        }
-
-        const user = withdrawal.userId;
-
-        if(user.wallet < withdrawal.amount){
-            return res.status(400).json({
-                message:"Insufficient wallet balance"
-            });
-        }
-
-        // deduct wallet after you manually confirm payment
-        user.wallet -= withdrawal.amount;
-
-        withdrawal.status = "Paid";
-        withdrawal.paidAt = new Date();
-
-        await user.save();
-        await withdrawal.save();
-
-        res.json({
-            message:"Payment completed and wallet deducted"
-        });
-
-    } catch(error){
-        res.status(500).json({
-            message:error.message
-        });
+    if (!withdrawal) {
+      return res.status(404).json({
+        message: "Withdrawal not found"
+      });
     }
+
+    if (withdrawal.status === "Paid") {
+      return res.status(400).json({
+        message: "Already paid"
+      });
+    }
+
+    const user = withdrawal.userId;
+
+    if (user.wallet < withdrawal.amount) {
+      return res.status(400).json({
+        message: "Insufficient wallet balance"
+      });
+    }
+
+    // deduct wallet after you manually confirm payment
+    user.wallet -= withdrawal.amount;
+
+    withdrawal.status = "Paid";
+    withdrawal.paidAt = new Date();
+
+    await user.save();
+    await withdrawal.save();
+
+    res.json({
+      message: "Payment completed and wallet deducted"
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    });
+  }
 });
 
 app.get("/deliveryorder", authMiddleware, async (req, res) => {
@@ -1545,7 +1560,7 @@ app.post("/create-order", authMiddleware, async (req, res) => {
 
     // ✅ EXTRA CHARGES (SERVER SIDE)
     const deliveryCharge = 30;
-    const serviceCharge = 2;
+    const serviceCharge = getServiceCharge(productTotal);
 
     const totalAmount = productTotal + deliveryCharge + serviceCharge;
 
@@ -1620,7 +1635,6 @@ app.post("/verify-payment", authMiddleware, async (req, res) => {
     }
 
     const payment = await razorpay.payments.fetch(razorpay_payment_id);
-
 
     const sellerid = items[0].sellerid;
     const seller = await User.findById(sellerid);
@@ -1837,7 +1851,9 @@ app.post("/add-product", upload.single("image"), authMiddleware, async (req, res
           myproductid: savedProduct._id
         }
       },
-      { new: true }
+      {
+        returnDocument: "after"
+      }
     );
 
     res.json({

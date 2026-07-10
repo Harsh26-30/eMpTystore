@@ -9,9 +9,26 @@ const Cart = () => {
     const [CartItem, setCartItem] = useState([]);
     const token = localStorage.getItem("token");
     const [totalAmount, settotalAmount] = useState()
+    const [serviceandtax, setserviceandtax] = useState()
     const navigate = useNavigate()
     const [clat, setclat] = useState(null);
     const [clong, setclong] = useState(null);
+
+    const getServiceCharge = (productAmount) => {
+        const deliveryCharge = 30;
+        const fixedServiceCharge = 2;
+
+        const amountBeforeGateway =
+            productAmount + deliveryCharge + fixedServiceCharge;
+
+        // Razorpay: 2% + 18% GST on fee
+        const razorpayCharge = (amountBeforeGateway * 0.02) * 1.18;
+
+        const serviceCharge =
+            fixedServiceCharge + Math.ceil(razorpayCharge);
+
+        return serviceCharge;
+    };
 
 
     const fun = async (e) => {
@@ -36,13 +53,18 @@ const Cart = () => {
             console.error("THIS IS UNDEFINED!");
         }
 
-        const totalAmount =
+        const subtotal =
             cartItems.reduce(
                 (sum, item) => sum + item.quantity * Number(item.productprice),
                 0
-            ) + 30 + 2;
+            );
+        const deliveryCharge = 30;
+        const serviceCharge = getServiceCharge(subtotal);
+
+        const totalAmount = subtotal + deliveryCharge + serviceCharge;
 
         settotalAmount(totalAmount);
+        setserviceandtax(serviceCharge)
 
     }
 
@@ -216,8 +238,8 @@ const Cart = () => {
                             <p>30</p>
                         </div>
                         <div className='externalcharge'>
-                            <h5>Service</h5>
-                            <p>2</p>
+                            <h5>Service & tax</h5>
+                            <p>{serviceandtax}</p>
                         </div>
                     </div>
                 </div>
