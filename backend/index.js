@@ -134,19 +134,30 @@ async function createRazorpayPayoutAccount(user, upiId) {
 }
 
 const getServiceCharge = (productAmount) => {
-    const deliveryCharge = 30;
-    const fixedServiceCharge = 2;
+  const deliveryCharge = 30;
+  const fixedServiceCharge = 2;
 
-    const amountBeforeGateway =
-        productAmount + deliveryCharge + fixedServiceCharge;
+  let gatewayCharge = 0;
+  let totalAmount = productAmount + deliveryCharge + fixedServiceCharge;
 
-    // Razorpay: 2% + 18% GST on fee
-    const razorpayCharge = (amountBeforeGateway * 0.02) * 1.18;
+  while (true) {
+    gatewayCharge = totalAmount * 0.02 * 1.18;
 
-    const serviceCharge =
-        fixedServiceCharge + Math.ceil(razorpayCharge);
+    const newTotal = Math.ceil(
+      productAmount +
+      deliveryCharge +
+      fixedServiceCharge +
+      gatewayCharge
+    );
 
-    return serviceCharge;
+    if (newTotal === totalAmount) {
+      break;
+    }
+
+    totalAmount = newTotal;
+  }
+
+  return fixedServiceCharge + (totalAmount - productAmount - deliveryCharge - fixedServiceCharge);
 };
 
 const authMiddleware = (req, res, next) => {
