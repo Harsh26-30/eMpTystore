@@ -1,17 +1,16 @@
 const mongoose = require("mongoose");
 
-const withdrawalSchema = new mongoose.Schema({
+const withdrawalSchema = new mongoose.Schema(
+{
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true
     },
-    username: {
-        type: String
-    },
-    useremail: {
-        type: String
-    },
+
+    username: String,
+    useremail: String,
+
     role: {
         type: String,
         enum: ["Seller", "Delivery_partner"],
@@ -25,7 +24,7 @@ const withdrawalSchema = new mongoose.Schema({
 
     status: {
         type: String,
-        enum: ["Pending", "Approved", "Rejected", "Completed"],
+        enum: ["Pending", "Approved", "Rejected", "Completed", "Expired"],
         default: "Pending"
     },
 
@@ -35,11 +34,14 @@ const withdrawalSchema = new mongoose.Schema({
         ifsc: String
     },
 
-    createdAt: {
+    expiryDate: {
         type: Date,
-        default: Date.now
+        expires: 0
     }
-});
 
+},
+{
+    timestamps: true
+});
 
 module.exports = mongoose.model("Withdrawal", withdrawalSchema);

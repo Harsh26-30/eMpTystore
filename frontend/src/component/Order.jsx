@@ -19,7 +19,7 @@ const Order = () => {
   const [clong, setclong] = useState('')
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [rejectpOrderform, setrejectpOrderform] = useState(false);
-  
+
 
   const fetchOrders = async () => {
     try {
@@ -178,28 +178,28 @@ const Order = () => {
     setShowScanner(true);
   };
 
-  const handleOutfordelivary = async (e) => {
+const handleOutfordelivary = async (e) => {
+  try {
+    await axios.post(
+      `${import.meta.env.VITE_API_URL}/Outfordelivary`,
+      { orderid: e },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
-    try {
-      await axios.post(
-        `${import.meta.env.VITE_API_URL}/Outfordelivary`,
-        { orderid: e },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-    } catch (err) {
-      console.log("REAL ERROR:", err.response?.data); // 👈 IMPORTANT
-    }
-    fetchOrders();
+    await fetchOrders();
 
-  };
+  } catch (err) {
+    console.log("REAL ERROR:", err.response?.data);
+  }
+};
 
   return (
-    <div id='mainboxOrder'> 
-      {rejectpOrderform && <RejectpOrderform orderid={selectedOrderId} fetchOrders={fetchOrders} setrejectpOrderform={setrejectpOrderform}/>}
+    <div id='mainboxOrder'>
+      {rejectpOrderform && <RejectpOrderform orderid={selectedOrderId} fetchOrders={fetchOrders} setrejectpOrderform={setrejectpOrderform} />}
       {userRole === "Seller" &&
         <div id='box2OrderConfirm'>
 
@@ -239,14 +239,14 @@ const Order = () => {
                   justifyContent: "space-evenly",
                   alignItems: "center"
                 }}>
-                   {order.orderstatus === 'Pending' ?
+                  {order.orderstatus === 'Pending' ?
                     <button style={{
                       backgroundColor: "#000",
                       color: "#fff",
                       width: "30%",
                       height: "100%",
                       borderRadius: "10px"
-                    }} onClick={() =>{setrejectpOrderform(true),setSelectedOrderId(order._id);}}>Reject</button> :
+                    }} onClick={() => { setrejectpOrderform(true), setSelectedOrderId(order._id); }}>Reject</button> :
                     <></>}
                   {order.orderstatus === 'Pending' ?
                     <button style={{
@@ -303,7 +303,7 @@ const Order = () => {
                 textTransform: "capitalize",
                 fontFamily: "sans-serif"
               } : { display: "none" }} className='box3Order' >
-                                {order.items.map((item, i) => (
+                {order.items.map((item, i) => (
                   <p key={i} style={{ marginBottom: "2px" }}>
                     {item.productname} {item.quantity}x ,
                   </p>
@@ -352,7 +352,7 @@ const Order = () => {
                 fontFamily: "sans-serif"
               } : { display: "none" }} className='box3Order' >
                 OrderItems:-
-                                {order.items.map((item, i) => (
+                {order.items.map((item, i) => (
                   <p key={i} style={{ marginBottom: "2px" }}>
                     {item.productname} {item.quantity}x ,
                   </p>
@@ -398,38 +398,42 @@ const Order = () => {
           }}
         >
           <QrScanner
-            onScan={(result) => {
+            onScan={async (result) => {
               const scannedValue =
                 typeof result === "string"
                   ? result
-                  : result?.text;   // 👈 IMPORTANT FIX
-
-              console.log("SCANNED VALUE:", scannedValue);
+                  : result?.text;
 
               if (!scannedValue) {
-                alert("No QR data detected");
                 return;
               }
 
-              const expected = String(selectedOrder._id);
+              const orderId = selectedOrder?._id;
+
+              if (!orderId) {
+                return;
+              }
+
+              const expected = String(orderId);
 
               if (scannedValue.trim().includes(expected)) {
-                alert("Correct Order Scanned ✔")
+                alert("Correct Order Scanned ✔");
 
-                handleOutfordelivary(selectedOrder._id);
                 setShowScanner(false);
+                setSelectedOrder(null);
+
+                await handleOutfordelivary(orderId);
 
                 navigate("/home");
+
               } else {
                 alert("Wrong Order QR");
 
                 setShowScanner(false);
+                setSelectedOrder(null);
 
                 navigate("/home");
               }
-
-              setShowScanner(false);
-              setSelectedOrder(null);
             }}
           />
         </div>

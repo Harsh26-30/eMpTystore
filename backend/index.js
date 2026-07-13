@@ -277,8 +277,11 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
     _id: { $in: finduser.shoporseller }
   });
 
-  const orderdata = await Order.findById(finduser.managingOrder)
+let orderdata = null;
 
+if (finduser.managingOrder) {
+  orderdata = await Order.findById(finduser.managingOrder);
+}
   const findproduct = await Product.find({
     _id: { $in: finduser.myproductid }
   });
@@ -1339,7 +1342,6 @@ app.get("/walletTotalAmount", authMiddleware, async (req, res) => {
   }
 });
 
-
 app.post("/withdrawWallet", authMiddleware, async (req, res) => {
 
   try {
@@ -1361,7 +1363,6 @@ app.post("/withdrawWallet", authMiddleware, async (req, res) => {
         message: "Wallet empty"
       });
     }
-    console.log("User role:", user.role);
 
     const withdrawal = await Withdrawal.create({
       userId: user._id,
@@ -1376,7 +1377,7 @@ app.post("/withdrawWallet", authMiddleware, async (req, res) => {
 
     res.json({
       success: true,
-      message: "Withdrawal request submitted",
+      message: "Withdrawal request submitted.It may take maximum 5 day for settelment",
       withdrawal
 
     });
@@ -1394,7 +1395,6 @@ app.post("/withdrawWallet", authMiddleware, async (req, res) => {
 
 });
 
-
 app.get("/withdrawalrequest", authMiddleware, async (req, res) => {
   try {
     const withdrawals = await Withdrawal.find({});
@@ -1409,6 +1409,68 @@ app.get("/withdrawalrequest", authMiddleware, async (req, res) => {
       success: false,
       message: "Internal Server Error"
     });
+  }
+});
+
+app.get("/userWallet/:id", authMiddleware, async (req, res) => {
+  try {
+
+    const user = await User.findById(req.params.id)
+      .select("Wallet name email");
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found"
+      });
+    }
+
+    res.json({
+      wallet: user.Wallet
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    });
+  }
+});
+
+app.post("/rejectpayment", authMiddleware, async (req, res) => {
+  try {
+
+    const { requestId } = req.body;
+
+    const withdrawal = await Withdrawal.findById(requestId);
+
+    if (!withdrawal) {
+      return res.status(404).json({
+        message: "Withdrawal request not found"
+      });
+    }
+
+    const updatedRequest = await Withdrawal.findByIdAndUpdate(
+      requestId,
+      {
+        status: "Rejected",
+        expiryDate: new Date(Date.now() + 24 * 60 * 60 * 1000)
+      },
+      { new: true }
+    );
+
+    res.json({
+      success: true,
+      message: "Withdrawal rejected and amount returned to wallet"
+    });
+
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+      message: error.message
+    });
+
   }
 });
 
@@ -1714,6 +1776,49 @@ app.post("/removeCartItem", authMiddleware, async (req, res) => {
   const finduser = await User.findOne({ email: req.user.email });
   finduser.CartItem = [];
   await finduser.save();
+});
+
+app.post("/updateuserwallet", authMiddleware, async (req, res) => {
+  try {
+    const { userId, amount, requestId } = req.body;
+
+    // Deduct wallet amount
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        $inc: { Wallet: -Number(amount) }
+      },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Update request status
+    const updatedRequest = await Withdrawal.findByIdAndUpdate(
+      requestId,
+      {
+        status: "Completed",
+        expiryDate: new Date(Date.now() + 24 * 60 * 60 * 1000)
+      },
+      { new: true }
+    );
+
+    if (!updatedRequest) {
+      return res.status(404).json({ error: "Request not found" });
+    }
+
+    res.json({
+      message: "Wallet deducted and request updated successfully",
+      wallet: updatedUser.Wallet,
+      request: updatedRequest
+    });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Server error" });
+  }
 });
 
 
