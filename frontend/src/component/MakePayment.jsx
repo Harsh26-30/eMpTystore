@@ -35,25 +35,25 @@ const MakePayment = () => {
         fun1();
     }, []);
 
-    const handlePay = async (id) => {
-        try {
-            const res = await axios.post(
-                `${import.meta.env.VITE_API_URL}/paytouser`,
-                {
-                    withdrawalId: id
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+    // const handlePay = async (id) => {
+    //     try {
+    //         const res = await axios.post(
+    //             `${import.meta.env.VITE_API_URL}/paytouser`,
+    //             {
+    //                 withdrawalId: id
+    //             },
+    //             {
+    //                 headers: {
+    //                     Authorization: `Bearer ${token}`,
+    //                 },
+    //             }
+    //         );
 
 
-        } catch (error) {
-            console.log(error.response?.data || error.message);
-        }
-    };
+    //     } catch (error) {
+    //         console.log(error.response?.data || error.message);
+    //     }
+    // };
 
     const openUPI = (upiId, name, amount) => {
 

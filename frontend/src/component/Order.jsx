@@ -178,24 +178,24 @@ const Order = () => {
     setShowScanner(true);
   };
 
-const handleOutfordelivary = async (e) => {
-  try {
-    await axios.post(
-      `${import.meta.env.VITE_API_URL}/Outfordelivary`,
-      { orderid: e },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+  const handleOutfordelivary = async (e) => {
+    try {
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/Outfordelivary`,
+        { orderid: e },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-    await fetchOrders();
+      await fetchOrders();
 
-  } catch (err) {
-    console.log("REAL ERROR:", err.response?.data);
-  }
-};
+    } catch (err) {
+      console.log("REAL ERROR:", err.response?.data);
+    }
+  };
 
   return (
     <div id='mainboxOrder'>
@@ -422,9 +422,13 @@ const handleOutfordelivary = async (e) => {
                 setShowScanner(false);
                 setSelectedOrder(null);
 
-                await handleOutfordelivary(orderId);
-
-                navigate("/home");
+                try {
+                  await handleOutfordelivary(orderId);
+                  navigate("/home");
+                } catch (err) {
+                  console.error(err);
+                  alert("Failed to update order");
+                }
 
               } else {
                 alert("Wrong Order QR");

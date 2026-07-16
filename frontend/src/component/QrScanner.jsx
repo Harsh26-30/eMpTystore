@@ -5,64 +5,84 @@ const QrScanner = ({ onScan }) => {
   const scannerRef = useRef(null);
 
   useEffect(() => {
-    const qr = new Html5Qrcode("reader");
-    scannerRef.current = qr;
+    let isMounted = true;
 
     const startCamera = async () => {
       try {
-        const devices = await Html5Qrcode.getCameras();
+        // wait until DOM renders
+        await new Promise(resolve => setTimeout(resolve, 500));
 
-        if (!devices || devices.length === 0) {
-          console.log("No cameras found");
+        if (!document.getElementById("reader")) {
+          console.log("reader div missing");
           return;
         }
 
-        // 🔥 Try to find BACK camera
-        let backCamera = devices.find((d) =>
-          d.label.toLowerCase().includes("back") ||
-          d.label.toLowerCase().includes("rear") ||
-          d.label.toLowerCase().includes("environment")
-        );
+        const qr = new Html5Qrcode("reader");
+        scannerRef.current = qr;
 
-        // fallback if not found
-        if (!backCamera) {
-          backCamera = devices[devices.length - 1];
+        const devices = await Html5Qrcode.getCameras();
+
+        if (!devices.length) {
+          console.log("No camera found");
+          return;
         }
 
-        await qr.start(
-          backCamera.id,
-          {
-            fps: 10,
-            qrbox: { width: 250, height: 250 },
-          },
-          (text) => {
-            console.log("SCAN:", text);
-            onScan(text);
-            qr.stop();
-          },
-          () => {}
-        );
-      } catch (err) {
+        const cameraId = devices[0].id;
+
+        if (isMounted) {
+          await qr.start(
+            cameraId,
+            {
+              fps: 10,
+              qrbox: {
+                width: 250,
+                height: 250
+              }
+            },
+            (text) => {
+              console.log("SCAN:", text);
+              onScan(text);
+
+              if (qr.isScanning) {
+                qr.stop().catch(()=>{});
+              }
+            },
+            () => {}
+          );
+        }
+
+      } catch(err) {
         console.log("Camera error:", err);
       }
     };
 
+
     startCamera();
 
+
     return () => {
-      qr.stop().catch(() => {});
+      isMounted = false;
+
+      const qr = scannerRef.current;
+
+      if (qr && qr.isScanning) {
+        qr.stop()
+          .then(() => qr.clear())
+          .catch(()=>{});
+      }
     };
-  }, []);
+
+  }, [onScan]);
+
 
   return (
     <div
       id="reader"
       style={{
-        width: "100%",
-        maxWidth: "400px",
-        height: "400px",
-        margin: "auto",
-        background: "black",
+        width:"100%",
+        maxWidth:"400px",
+        height:"400px",
+        margin:"auto"
       }}
     />
   );

@@ -25,8 +25,6 @@ function Homepage() {
 
   const fun1 = async () => {
     try {
-
-
       const res = await axios.get(
         `${import.meta.env.VITE_API_URL}/checkuserinfo`,
         {
@@ -35,11 +33,12 @@ function Homepage() {
           },
         }
       );
+
       setuserRole(res.data.role);
       setemailverificationvisibility(res.data.userEmailVerification)
       setuserPhoneNoVerification(res.data.userPhoneNoVerification)
 
-      
+
       await axios.post(
         `${import.meta.env.VITE_API_URL}/removeCartItem`, {},
         {
@@ -54,11 +53,12 @@ function Homepage() {
     }
   };
 
-useEffect(() => {
+  useEffect(() => {
+
     if (token) {
-        fun1();
+      fun1();
     }
-}, [token, location.pathname]);
+  }, [token, location.pathname]);
 
   useEffect(() => {
     if (userRole === 'Seller') {
@@ -77,7 +77,7 @@ useEffect(() => {
                   Authorization: `Bearer ${token}`
                 }
               }
-            
+
             );
 
 
