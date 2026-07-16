@@ -1200,6 +1200,9 @@ app.post("/readyforDelivary", authMiddleware, async (req, res) => {
         { orderstatus: "RFD" },
         { new: true }
       );
+      res.json({
+              orders: updatedOrder,
+      })
     }
 
     await User.findByIdAndUpdate(nearestPartner._id, {
@@ -1208,7 +1211,6 @@ app.post("/readyforDelivary", authMiddleware, async (req, res) => {
 
     return res.json({
       message: "Order assigned to delivery partner",
-      orders: updatedOrder,
       partner: nearestPartner._id,
     });
 
