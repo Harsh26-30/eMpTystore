@@ -323,7 +323,7 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
       id: finduser._id,
       username: finduser.name,
       role: finduser.role,
-        kyc: finduser.kyc,
+      kyc: finduser.kyc,
 
       managingOrder: null,
       dporders: null,
@@ -357,7 +357,7 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
     id: finduser._id,
     username: finduser.name,
     role: finduser.role,
-      kyc: finduser.kyc,
+    kyc: finduser.kyc,
 
     address: finduser.address,
     country: finduser.country,
@@ -1388,7 +1388,7 @@ app.post("/withdrawWallet", authMiddleware, async (req, res) => {
       userId: user._id,
       username: user.name,
       useremail: user.email,
-      userphoneno:user.phoneNo,
+      userphoneno: user.phoneNo,
       role: user.role,
       amount: user.Wallet,
       paymentDetails: {
@@ -1557,42 +1557,42 @@ app.get("/deliveryorder", authMiddleware, async (req, res) => {
 });
 
 app.post("/updateupiid", authMiddleware, async (req, res) => {
-    try {
-        const { upiId } = req.body;
+  try {
+    const { upiId } = req.body;
 
-        if (!upiId) {
-            return res.status(400).json({
-                message: "UPI ID required"
-            });
-        }
-
-        const user = await User.findOneAndUpdate(
-            { email: req.user.email },
-            {
-                $set: {
-                    "kyc.upiId": upiId
-                }
-            },
-            { new: true }
-        );
-
-        if (!user) {
-            return res.status(404).json({
-                message: "User not found"
-            });
-        }
-
-        res.json({
-            message: "UPI ID updated successfully",
-            upiId: user.kyc.upiId
-        });
-
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({
-            message: err.message
-        });
+    if (!upiId) {
+      return res.status(400).json({
+        message: "UPI ID required"
+      });
     }
+
+    const user = await User.findOneAndUpdate(
+      { email: req.user.email },
+      {
+        $set: {
+          "kyc.upiId": upiId
+        }
+      },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found"
+      });
+    }
+
+    res.json({
+      message: "UPI ID updated successfully",
+      upiId: user.kyc.upiId
+    });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: err.message
+    });
+  }
 });
 
 // app.post("/placeOrder", authMiddleware, async (req, res) => {
@@ -2329,13 +2329,19 @@ app.post("/signup", async (req, res) => {
 
     let referredBy = null;
 
+    console.log("Received referralId:", referralId);
+
     if (referralId) {
       const refUser = await User.findById(referralId);
+
+      console.log("Referral user found:", refUser);
 
       if (refUser) {
         referredBy = refUser._id;
       }
     }
+
+    console.log("Final referredBy:", referredBy);
 
     const newUser = new User({
       role: 'Customer',

@@ -14,8 +14,8 @@ const Signupcard = ({ setvalid }) => {
     const [userContact, setuserContact] = useState('')
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-    const referralId = searchParams.get("ref");
-    const referralName = searchParams.get("username");
+    const referralId = searchParams.get("id");
+    const referralName = searchParams.get("name");
 
     useEffect(() => {
         if (referralId) {
