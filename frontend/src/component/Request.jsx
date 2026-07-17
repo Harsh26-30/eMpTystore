@@ -9,44 +9,66 @@ const Request = () => {
     const token = localStorage.getItem("token");
     const [requests, setrequests] = useState([]);
     const [showImage, setShowImage] = useState(null);
+
+    const [loading, setLoading] = useState(true);
+
     const fetchRequest = async () => {
         try {
+            setLoading(true);
+
             const res = await axios.get(
                 `${import.meta.env.VITE_API_URL}/roleUpgradeRequest`,
-                // empty body
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 }
             );
-            setrequests(res.data.requests);
 
+            setrequests(res.data.requests || []);
         } catch (err) {
             console.error(err);
+        } finally {
+            setLoading(false);
         }
     };
-
     useEffect(() => {
 
+
         fetchRequest();
+
+        if (loading) {
+  return (
+    <>
+      <Header2 />
+      <h2>Loading...</h2>
+    </>
+  );
+}
     }, [token]);
 
     const handleconfirm = async (upgradeTo, emailid, requestid) => {
-
-        await axios.post(
-            `${import.meta.env.VITE_API_URL}/updateuserrole`, {
-            upgradeTo, emailid, requestid
-        },
-            // empty body
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
+        try {
+            await axios.post(
+                `${import.meta.env.VITE_API_URL}/updateuserrole`,
+                {
+                    upgradeTo,
+                    emailid,
+                    requestid,
                 },
-            }
-        );
-        fetchRequest();
-    }
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            fetchRequest();
+        } catch (err) {
+            console.error(err);
+            alert("Failed to confirm request.");
+        }
+    };
 
     const handlereject = async (requestid) => {
 
