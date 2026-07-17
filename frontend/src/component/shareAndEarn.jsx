@@ -6,10 +6,14 @@ import Walletwithdrawbtn from './walletwithdrawbtn'
 import { useEffect } from 'react'
 import { useState } from 'react'
 import axios from "axios"
+import UpiIdForm from './upiIdForm'
+
 const shareAndEarn = () => {
     const token = localStorage.getItem("token");
     const [sharebyname, setsharebyname] = useState()
     const [sharebyid, setsharebyid] = useState()
+    const [upiId, setUpiId] = useState("");
+    const [loading, setLoading] = useState(true);
 
     const fun = async () => {
         try {
@@ -24,8 +28,13 @@ const shareAndEarn = () => {
 
             setsharebyname(res.data.username);
             setsharebyid(res.data.id);
+
+            setUpiId(res.data.kyc?.upiId?.trim() || "");
+
         } catch (err) {
             console.error(err);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -53,19 +62,27 @@ const shareAndEarn = () => {
             alert("Share link copied to clipboard!");
         }
     };
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
     return (
         <div id='shareAndEarnmainbox'>
             <Header2 />
             <Wallettotalamount />
             <Walletwithdrawbtn />
-            <div id='linkbuttonbox'>
-                <button
-                    onClick={handlegls}
-                    disabled={!sharebyname || !sharebyid}
-                >
-                    Generate Link & Share
-                </button>
-            </div>
+            {
+                !upiId ? (
+                    <UpiIdForm setUpiId={setUpiId} />
+                ) : (
+                    <div id='linkbuttonbox'>
+                        <button onClick={handlegls}>
+                            Generate Link & Share
+                        </button>
+                    </div>
+                )
+            }
+
         </div>
     )
 }

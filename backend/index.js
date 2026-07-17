@@ -323,6 +323,8 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
       id: finduser._id,
       username: finduser.name,
       role: finduser.role,
+        kyc: finduser.kyc,
+
       managingOrder: null,
       dporders: null,
       CartItem: finduser.CartItem || [],
@@ -355,6 +357,8 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
     id: finduser._id,
     username: finduser.name,
     role: finduser.role,
+      kyc: finduser.kyc,
+
     address: finduser.address,
     country: finduser.country,
     state: finduser.state,
@@ -1549,6 +1553,45 @@ app.get("/deliveryorder", authMiddleware, async (req, res) => {
     console.log(err);
     res.status(500).json({ error: err.message });
   }
+});
+
+app.post("/updateupiid", authMiddleware, async (req, res) => {
+    try {
+        const { upiId } = req.body;
+
+        if (!upiId) {
+            return res.status(400).json({
+                message: "UPI ID required"
+            });
+        }
+
+        const user = await User.findOneAndUpdate(
+            { email: req.user.email },
+            {
+                $set: {
+                    "kyc.upiId": upiId
+                }
+            },
+            { new: true }
+        );
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
+
+        res.json({
+            message: "UPI ID updated successfully",
+            upiId: user.kyc.upiId
+        });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: err.message
+        });
+    }
 });
 
 // app.post("/placeOrder", authMiddleware, async (req, res) => {
