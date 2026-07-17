@@ -1,15 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import './wallet.css'
-import Header2 from './header2'
-import axios from "axios"
-import { useLocation } from 'react-router-dom'
-import Wallettotalamount from './wallettotalamount'
-import Walletwithdrawbtn from './walletwithdrawbtn'
+import React,{useState,useEffect} from 'react'
+import "./walletwithdrawbtn.css"
+import axios from 'axios';
 
-const Wallet = () => {
+const walletwithdrawbtn = () => {
     const token = localStorage.getItem("token");
     const [amount, setAmount] = useState(0);
-    const location = useLocation()
 
     const fun = async () => {
         try {
@@ -31,7 +26,6 @@ const Wallet = () => {
     useEffect(() => {
         fun();
     }, []);
-
     const handleWithdraw = async () => {
         try {
             const res = await axios.post(
@@ -51,27 +45,16 @@ const Wallet = () => {
             console.log(err);
         }
     };
-
     return (
-        <div id='walletmainbox'>
-            {location.pathname === "/Wallet" && <Header2 />}
+        <div id='walletwithdrawbtnmainbox'>
 
-            {/* <div id='boxtotalbalance'>
-                <div id='currentamount'>
-                    <h2>₹{amount}</h2>
-                </div>
-                <h3>Total Amount</h3>
-            </div> */}
-            <Wallettotalamount/>
-            <Walletwithdrawbtn/>
-{/* 
             <div id='boxwithdrawbtn'>
-                {amount > -1 && <button onClick={handleWithdraw}>
+                {amount > 49 ? <button onClick={handleWithdraw}>
                     Withdraw
-                </button>}
-            </div> */}
+                </button> : <p id='walletwithdrawbtnparagraph'> Minimum ₹50 can be withdraw</p>}
+            </div>
         </div>
-    );
-};
+    )
+}
 
-export default Wallet;
+export default walletwithdrawbtn

@@ -23,7 +23,7 @@ const MakePayment = () => {
             setRequests(res.data.withdrawals);
 
             res.data.withdrawals.forEach(item => {
-                getUserWallet(item.userId);
+                getUser(item.userId);
             });
 
         } catch (error) {

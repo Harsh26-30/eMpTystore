@@ -36,11 +36,15 @@ const userSchema = new mongoose.Schema({
   phoneNo: {
     type: String,
   },
-    userPhoneNoVerification: {
+  userPhoneNoVerification: {
     type: Boolean,
     default: true
-  }
-  ,
+  },
+  referredBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    default: null,
+  },
   country: {
     type: String,
   },
@@ -109,41 +113,41 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "Closed"
   },
-   onServiceOrNot: {
+  onServiceOrNot: {
     type: String,
     default: "No"
   },
   kyc: {
     aadhaarImage: {
-        type: String,
-        default: ""
+      type: String,
+      default: ""
     },
 
     panImage: {
-        type: String,
-        default: ""
+      type: String,
+      default: ""
     },
 
     upiId: {
-        type: String,
-        default: ""
+      type: String,
+      default: ""
     },
 
     razorpayContactId: {
-        type: String,
-        default: ""
+      type: String,
+      default: ""
     },
 
     razorpayFundAccountId: {
-        type: String,
-        default: ""
+      type: String,
+      default: ""
     },
 
     verified: {
-        type: Boolean,
-        default: false
+      type: Boolean,
+      default: false
     }
-},
+  },
   ui: {
     generalinfo: {
       logo: { type: String },

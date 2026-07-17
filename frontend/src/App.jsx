@@ -24,6 +24,7 @@ import AboutUs from './component/aboutUs'
 import Requestform from "./component/requestform"
 import Wallet from './component/wallet'
 import MakePayment from './component/MakePayment'
+import ShareAndEarn from './component/shareAndEarn'
 
 
 function App() {
@@ -250,6 +251,18 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          
+          <Route
+            path="/shareAndEarn"
+            element={
+              <ProtectedRoute>
+                < ShareAndEarn />
+              </ProtectedRoute>
+            }
+          />
+
+          
 
         </Routes>
       </RouteLoader>

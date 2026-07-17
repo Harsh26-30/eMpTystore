@@ -277,11 +277,11 @@ app.get("/checkuserinfo", authMiddleware, async (req, res) => {
     _id: { $in: finduser.shoporseller }
   });
 
-let orderdata = null;
+  let orderdata = null;
 
-if (finduser.managingOrder) {
-  orderdata = await Order.findById(finduser.managingOrder);
-}
+  if (finduser.managingOrder) {
+    orderdata = await Order.findById(finduser.managingOrder);
+  }
   const findproduct = await Product.find({
     _id: { $in: finduser.myproductid }
   });
@@ -321,6 +321,7 @@ if (finduser.managingOrder) {
   if (!finduser.managingOrder) {
     return res.json({
       id: finduser._id,
+      username: finduser.name,
       role: finduser.role,
       managingOrder: null,
       dporders: null,
@@ -352,6 +353,7 @@ if (finduser.managingOrder) {
 
   res.json({
     id: finduser._id,
+    username: finduser.name,
     role: finduser.role,
     address: finduser.address,
     country: finduser.country,
@@ -1201,7 +1203,7 @@ app.post("/readyforDelivary", authMiddleware, async (req, res) => {
         { new: true }
       );
       res.json({
-              orders: updatedOrder,
+        orders: updatedOrder,
       })
     }
 
@@ -1269,6 +1271,27 @@ app.post("/OrderReached", authMiddleware, async (req, res) => {
       return res.status(404).json({ message: "Order not found" });
     }
 
+    const customer = await User.findById(order.customerid);
+
+    if (!customer) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+
+    const referbyId = customer.referredBy;
+
+    // Give referral reward
+    if (referbyId) {
+      await User.findByIdAndUpdate(
+        referbyId,
+        {
+          $inc: {
+            Wallet: 1
+          }
+        }
+      );
+    }
+
+    // Update order status
     const updatedOrder = await Order.findByIdAndUpdate(
       orderid,
       {
@@ -1277,27 +1300,18 @@ app.post("/OrderReached", authMiddleware, async (req, res) => {
       { new: true }
     );
 
+    // Delivery partner reward
     const deliveryCharge = 30;
-
 
     await User.findByIdAndUpdate(
       dpid,
       {
         $inc: {
           Wallet: deliveryCharge
-        }
-      }
-    );
-
-    await User.findByIdAndUpdate(
-      dpid,
-      {
+        },
         managingOrder: "",
       }
     );
-
-
-
 
     res.json({ orders: updatedOrder });
 
@@ -2248,7 +2262,7 @@ app.post("/uploadui", authMiddleware, async (req, res) => {
 
 app.post("/signup", async (req, res) => {
   try {
-    const { name, dob, gender, phoneNo, email, pass } = req.body;
+    const { name, dob, gender, phoneNo, email, pass, referralId } = req.body;
 
     const regexname = /^[A-Za-z\s]{3,20}$/;
     const regexemail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -2269,6 +2283,16 @@ app.post("/signup", async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(pass, 10);
 
+    let referredBy = null;
+
+    if (referralId) {
+      const refUser = await User.findById(referralId);
+
+      if (refUser) {
+        referredBy = refUser._id;
+      }
+    }
+
     const newUser = new User({
       role: 'Customer',
       name,
@@ -2276,7 +2300,8 @@ app.post("/signup", async (req, res) => {
       gender,
       phoneNo,
       email,
-      pass: hashedPassword
+      pass: hashedPassword,
+      referredBy
     });
 
     await newUser.save();

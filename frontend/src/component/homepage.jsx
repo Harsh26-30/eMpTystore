@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import EmailVerification from './EmailVerification'
 import UpdatePhoneNo from "./updatePhoneNo"
 import { useLocation } from "react-router-dom";
+import Generatelinkbtnbox from "./generatelinkbtnbox"
 
 function Homepage() {
   const [managehomepagevisible, setmanagehomepagevisible] = useState('Order');
@@ -99,6 +100,7 @@ function Homepage() {
       {userRole === "Seller" && managehomepagevisible === 'Order' && <Order />}
       {userRole === "Seller" && managehomepagevisible === 'Product' && <Product />}
       {userRole === "Seller" && managehomepagevisible === 'UI' && <UI />}
+      {userRole === "Customer" && <Generatelinkbtnbox/>}
       {userRole === "Customer" && <h3 className="hmh3">Near By Shops</h3>}
       {userRole === "Customer" && <NearByShop />}
       {/* {userRole === "Customer" && <h3 className="hmh3">Your Connections</h3>}

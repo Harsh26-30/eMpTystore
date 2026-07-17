@@ -1,0 +1,43 @@
+#walletwithdrawbtnmainbox{
+    height: 90px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#boxwithdrawbtn{
+    width: 100%;
+    height: 95%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#boxwithdrawbtn button{
+    width: 40%;
+    height: 70%;
+    border: none;
+    border-radius: 30px;
+    color: #fff;
+    background-color: #000;
+    font-size: 20px;
+}
+
+#boxwithdrawbtn button:hover{
+
+    background-color: #444242;
+
+}
+
+#walletwithdrawbtnparagraph{
+    font-size: 25px;
+    font-family: sans-serif;
+    font-weight: 700;
+    color: rgb(101, 99, 99);
+    background-color: #c5bbbba1;
+    padding: 10px;
+    border-left: 8px solid grey;
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+}

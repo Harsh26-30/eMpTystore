@@ -96,7 +96,7 @@ const Header2 = ({ setmanagehomepagevisible, managehomepagevisible }) => {
               <img src="\format_list_bulleted_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="Search" />
             </button>
           )}
-          {(userRole !== 'Customer' && userRole !== 'Admin') && (
+          {(userRole === 'Seller' ||  userRole === 'Delivery_partner') && (
             <button onClick={() => { navigate("/Wallet"); }}>
               <img src="\account_balance_wallet_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="Search" />
             </button>
