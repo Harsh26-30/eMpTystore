@@ -1388,6 +1388,7 @@ app.post("/withdrawWallet", authMiddleware, async (req, res) => {
       userId: user._id,
       username: user.name,
       useremail: user.email,
+      userphoneno:user.phoneNo,
       role: user.role,
       amount: user.Wallet,
       paymentDetails: {

@@ -170,8 +170,10 @@ const MakePayment = () => {
                                     Current Wallet: ₹{wallets[item.userId] ?? "Loading..."}<br />
                                     UPI ID: {item.paymentDetails.upiId || "Not Provided"}<br />
                                     Email: <span style={{ textTransform: "none" }}>{item.useremail}</span>
+                                    <a href={`tel:${item.userphoneno}`}>
+                                        {item.userphoneno}
+                                    </a>
                                 </p>
-
                                 <div id="paybtnbox">
                                     <button onClick={() =>
                                         handlereject(

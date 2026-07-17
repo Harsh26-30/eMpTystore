@@ -10,6 +10,7 @@ const withdrawalSchema = new mongoose.Schema(
 
     username: String,
     useremail: String,
+    userphoneno :Number,
 
     role: {
         type: String,
