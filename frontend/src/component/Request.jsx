@@ -32,19 +32,9 @@ const Request = () => {
             setLoading(false);
         }
     };
+
     useEffect(() => {
-
-
         fetchRequest();
-
-        if (loading) {
-  return (
-    <>
-      <Header2 />
-      <h2>Loading...</h2>
-    </>
-  );
-}
     }, [token]);
 
     const handleconfirm = async (upgradeTo, emailid, requestid) => {
@@ -84,6 +74,15 @@ const Request = () => {
             }
         );
         fetchRequest();
+    }
+
+    if (loading) {
+        return (
+            <>
+                <Header2 />
+                <h2>Loading...</h2>
+            </>
+        );
     }
 
 
