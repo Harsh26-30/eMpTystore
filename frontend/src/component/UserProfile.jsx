@@ -169,7 +169,7 @@ const UserProfile = () => {
                         </div>
                     </div>
                     <div id='namebox'>
-                        <h3>Name</h3>
+                        <h3>{bussinessname}</h3>
                     </div>
                 </div>
                 <div id='totn'>
@@ -178,13 +178,14 @@ const UserProfile = () => {
                 </div>
 
                 <div className="profilebuttonsection">
-{!SellerId &&    <button onClick={handleclickShare} className="ShareProfileButton">Share Profile</button>
-}             {SellerId &&  <button
+                    {!SellerId && <button onClick={handleclickShare} className="ShareProfileButton">Share Profile</button>
+                    }     
+                   <button
                         onClick={() => navigate(`/Shopnox/${SellerId}`)}
                         className="ShareProfileButton"
                     >
                         Shop here
-                    </button>}
+                    </button>
                 </div>
             </div>
             {/* {userRole === "Customer" && (
