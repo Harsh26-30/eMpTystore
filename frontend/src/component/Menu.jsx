@@ -69,12 +69,12 @@ const Menu = () => {
                 {(userRole === 'Admin') && (<button id='menubutton' onClick={() => navigate("/MakePayment")}>
                     MakePayment
                 </button>)}
-
+{/* 
                 {(userRole === 'Seller' || userRole === 'Admin') && (
                     <button id='menubutton' onClick={() => navigate("/UserProfile")}>
                         Profile
                     </button>
-                )}
+                )} */}
 
                 <button id='logoutbutton' onClick={logout}>
                     Logout

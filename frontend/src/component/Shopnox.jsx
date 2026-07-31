@@ -21,14 +21,31 @@ const Shopnox = () => {
 
 
 
-  const loadUI = async () => {
-    try {
+const loadUI = async () => {
+  try {
 
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/uidata`,
-        {
-          id: id
-        },
+    if (!id) {
+      console.log("Seller id missing");
+      return;
+    }
+
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_URL}/uidata`,
+      {
+        id: id
+      }
+    );
+
+    setheader(res.data.uiheader);
+    setbody(res.data.uibody);
+    setfooter(res.data.uifooter);
+    setUserUI(res.data.productbox);
+
+
+    if (token) {
+
+      const res2 = await axios.get(
+        `${import.meta.env.VITE_API_URL}/checkuserinfo`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -36,31 +53,20 @@ const Shopnox = () => {
         }
       );
 
-      setheader(res.data.uiheader);
-      setbody(res.data.uibody);
-      setfooter(res.data.uifooter);
-      setUserUI(res.data.productbox);
+      setCartItem(res2.data.CartItem);
 
-      if (token) {
-        const res2 = await axios.get(
-          `${import.meta.env.VITE_API_URL}/checkuserinfo`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+    } else {
 
-        setCartItem(res2.data.CartItem)
+      // user not logged in
+      navigate("/Auth");
 
-      }
-
-
-    } catch (err) {
-      console.log(err);
     }
-  };
 
+
+  } catch (err) {
+    console.log(err);
+  }
+};
 useEffect(() => {
   loadUI();
 }, [token, id]);
