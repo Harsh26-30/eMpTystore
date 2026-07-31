@@ -165,7 +165,12 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="/Shopnox/:id" element={<Shopnox />} />
+          <Route path="/Shopnox/:id"
+            element={
+              <ProtectedRoute>
+                <Shopnox />
+              </ProtectedRoute>
+            } />
 
           <Route
             path="/ForgotPassword"
@@ -186,7 +191,11 @@ function App() {
 
           <Route
             path="/profile/:id"
-            element={<UserProfile />}
+            element={
+              <ProtectedRoute>
+                < UserProfile />
+              </ProtectedRoute>
+            }
           />
 
           <Route
