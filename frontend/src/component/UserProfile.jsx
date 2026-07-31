@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './UserProfile.css'; // Import CSS for styling
 import axios from 'axios';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import Shopnox from './Shopnox';
 
 
 const UserProfile = () => {
@@ -18,36 +19,40 @@ const UserProfile = () => {
     const [SellerId, setSellerId] = useState('');
     const [currentUserId, setcurrentUserId] = useState('');
     const [sellerEmailId, setsellerEmailId] = useState('');
+    const [BackgroundImg, setBackgroundImg] = useState('');
+    const [totalordertillnow, settotalordertillnow] = useState("0");
+
+    const fetchUserProfile = async () => {
+        try {
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/myprofile`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setBussinessName(res.data.BusinessName);
+            setAboutUs(res.data.Aboutus);
+            setProfilePicture(res.data.profilePicture);
+            setBackgroundImg(res.data.backgroundimg);
+            settotalordertillnow(res.data.totalordertillnow)
+
+            const res2 = await axios.get(`${import.meta.env.VITE_API_URL}/checkuserinfo`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setuserRole(res2.data.role);
+            setcurrentUserId(res2.data.id);
 
 
+        } catch (err) {
+            console.error("Error fetching user profile:", err);
+        }
+    };
 
 
     useEffect(() => {
         // Fetch user profile data from the backend API
-        const fetchUserProfile = async () => {
-            try {
-                const res = await axios.get(`${import.meta.env.VITE_API_URL}/myprofile`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                setBussinessName(res.data.BusinessName);
-                setAboutUs(res.data.Aboutus);
-                setProfilePicture(res.data.profilePicture);
 
-                const res2 = await axios.get(`${import.meta.env.VITE_API_URL}/checkuserinfo`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                setuserRole(res2.data.role);
-                setcurrentUserId(res2.data.id);
-
-
-            } catch (err) {
-                console.error("Error fetching user profile:", err);
-            }
-        };
 
         fetchUserProfile();
     }, [token]);
@@ -65,7 +70,6 @@ const UserProfile = () => {
                 setAboutUs(resParam.data.Aboutus);
                 setProfilePicture(resParam.data.profilePicture);
                 setsellerEmailId(resParam.data.email)
-
             }
         }
         fetchProfileData();
@@ -105,6 +109,7 @@ const UserProfile = () => {
             console.error("Error updating profile picture:", err);
         }
         setchangeProfilePicformvissible(false);
+        fetchUserProfile()
     };
 
     const handleclickShare = async () => {
@@ -150,33 +155,43 @@ const UserProfile = () => {
 
     return (
         <div className="userprofilemainbox">
-            <div className="box2userprofilebox">
-                <div className="profiledetails">
-                    <div onClick={handleprofileimgclick} className="profilepicture">
-                        <img src={profilePicture || "/E.png"} alt="Profile" />
+            <div id='userprofile'>
+                <div id='bkimgpimgnamebox1'>
+                    <div id='bkimgbox'>
+                        <img src={BackgroundImg} alt="background Image" />
                     </div>
-                    <div className="username">
-                        <h2>{bussinessname}</h2>
+                    <div id='profileimg' onClick={handleprofileimgclick}>
+                        <div id='insidepimg'>
+                            <img
+                                src={profilePicture || "/shop-with-sign-open-design_23-2148544029.jpg"}
+                                alt="Profile Image"
+                            />
+                        </div>
+                    </div>
+                    <div id='namebox'>
+                        <h3>Name</h3>
                     </div>
                 </div>
-                <div className="contactsandaboutmesection">
-                    {userRole === "Seller" && (
-                        <textarea type="text" value={AboutUs} onChange={(e) => { setAboutUs(e.target.value) }} onBlur={handleblurAboutus} />
-                    )}
-                    {userRole === "Customer" && <p className="contactdetails">{AboutUs}</p>}
+                <div id='totn'>
+                    <p>total order till now</p>
+                    <h3>{totalordertillnow || 0}</h3>
+                </div>
+
+                <div className="profilebuttonsection">
+{!SellerId &&    <button onClick={handleclickShare} className="ShareProfileButton">Share Profile</button>
+}             {SellerId &&  <button
+                        onClick={() => navigate(`/Shopnox/${SellerId}`)}
+                        className="ShareProfileButton"
+                    >
+                        Shop here
+                    </button>}
                 </div>
             </div>
-
-            <div className="profilebuttonsection">
-                <button onClick={handleclickShare} className="ShareProfileButton">Share Profile</button>
-            </div>
-
-
-            {userRole === "Customer" && (
+            {/* {userRole === "Customer" && (
                 <div className="profilebuttonsection">
                     <button onClick={handleclickConnectToShop} className="ConnectToShopButton">Connect To Shop</button>
                 </div>
-            )}
+            )} */}
             {changeProfilePicformvisible === true && userRole && (
                 <div className="changeprofilepicturesection">
                     <form onSubmit={handleChangeProfilePicSubmit}>

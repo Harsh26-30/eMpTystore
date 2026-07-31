@@ -37,7 +37,7 @@ const Menu = () => {
 
     const logout = () => {
         localStorage.removeItem("token");
-        navigate("/");
+        navigate("/Auth");
     };
 
     return (

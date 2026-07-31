@@ -156,7 +156,8 @@ const userSchema = new mongoose.Schema({
       TextColor: { type: String },
       Backgroundimage: {
         type: String,
-      }
+      },
+      totalordertillnow:{type:String},
     },
     componentid: {
       header: { type: String },

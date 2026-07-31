@@ -186,8 +186,10 @@ app.get("/myprofile", authMiddleware, async (req, res) => {
   res.json({
     message: "Profile data",
     BusinessName: finduser.ui.generalinfo.BusinessName,
+    backgroundimg:finduser.ui.generalinfo.Backgroundimage,
     Aboutus: finduser.profile.Aboutus,
     profilePicture: finduser.profile.profilepic,
+    totalordertillnow:finduser.ui.generalinfo.totalordertillnow,
     valid: "true"
   });
 });
@@ -1251,8 +1253,10 @@ app.post("/Outfordelivary", authMiddleware, async (req, res) => {
       sellerId,
       {
         $inc: {
-          Wallet: totalAmount
+          Wallet: totalAmount,
+          "ui.generalinfo.totalordertillnow":1
         }
+
       }
     );
 
@@ -2110,7 +2114,7 @@ app.post("/uidatas", authMiddleware, async (req, res) => {
   }
 });
 
-app.post("/uidata", async (req, res) => {
+app.post("/uidata", authMiddleware, async (req, res) => {
   const { id } = req.body;
   try {
 
