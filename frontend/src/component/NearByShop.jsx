@@ -10,48 +10,38 @@ const NearByShop = () => {
     const [clat, setclat] = useState('')
     const [clong, setclong] = useState('')
 
+    const fun1 = async () => {
+        try {
+            const res = await axios.get(
+                `${import.meta.env.VITE_API_URL}/allshops`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            setShops(res.data.shops);
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    setclat(position.coords.latitude);
+                    setclong(position.coords.longitude);
+                },
+                (error) => {
+                    console.log(error.message);
+                }
+            );
+
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
 
     useEffect(() => {
-        const fun1 = async () => {
-            console.log('work f');
-
-            try {
-                const res = await axios.get(
-                    `${import.meta.env.VITE_API_URL}/allshops`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
-                setShops(res.data.shops);
-
-
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const clatitude = position.coords.latitude;
-                        const clongitude = position.coords.longitude;
-                        setclat(clatitude)
-                        setclong(clongitude)
-                    },
-                    (error) => {
-                        console.log(error.message);
-                    }
-                );
-
-            } catch (err) {
-                console.log(err);
-            }
-        };
-
         fun1();
-
-        if (!shops) {
-    console.error("THIS IS UNDEFINED! shops");
-}
-
     }, [token]);
-
 
     function getDistance(lat1, lon1, lat2, lon2) {
         const R = 6371;
@@ -75,47 +65,44 @@ const NearByShop = () => {
 
             {shops.length > 0 ? (shops.map((shop, index) => (
                 <div id='Shopnoxs'
-         style={{
-    opacity: shop.shopOpenOrNot === "Closed" ? 0.4 : 1,
-    backgroundColor: shop.ui?.generalinfo?.BackgroundColor || "transparent",
-    backgroundImage: shop.ui?.generalinfo?.Backgroundimage
-        ? `url(${shop.ui.generalinfo.Backgroundimage})`
-        : "none",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat"
-}}
+                    style={{
+                        opacity: shop.shopOpenOrNot === "Closed" ? 0.4 : 1,
+                        backgroundColor: shop.ui?.generalinfo?.BackgroundColor || "transparent",
+                        backgroundImage: shop.ui?.generalinfo?.Backgroundimage
+                            ? `url(${shop.ui.generalinfo.Backgroundimage})`
+                            : "none",
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                        backgroundRepeat: "no-repeat"
+                    }}
                     key={index} onClick={() => {
                         shop.shopOpenOrNot === 'Open' ?
-                            navigate("/Shopnox", {
-                                state: {
-                                    id: shop._id
-                                }
-                            }) : alert(`${shop.ui.generalinfo.BusinessName} is closed Currently`)
+                            navigate(`/Shopnox/${shop._id}`)
+                            : alert(`${shop.ui.generalinfo.BusinessName} is closed Currently`)
                     }}>
-<h3 style={{ color: shop.ui?.generalinfo?.TextColor }}>
-    {shop.ui?.generalinfo?.BusinessName || "Unnamed Shop"}
-</h3>                    <h4>
+                    <h3 style={{ color: shop.ui?.generalinfo?.TextColor }}>
+                        {shop.ui?.generalinfo?.BusinessName || "Unnamed Shop"}
+                    </h3>                    <h4>
                         {getDistance(
                             clat,
                             clong,
                             shop.shoplatitude,
                             shop.shoplongitude
-                        ).toFixed(5)?? 'Not Defined'} km
+                        ).toFixed(5) ?? 'Not Defined'} km
                     </h4>
                 </div>
-            ))):<>      <video
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    width="100%"
-                    style={{
-                        mixBlendMode: "soft-light"
-                    }}
-                >
-                    <source src="\InShot_20260703_074047463.mp4" type="video/mp4" />
-                </video></>}
+            ))) : <>      <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                width="100%"
+                style={{
+                    mixBlendMode: "soft-light"
+                }}
+            >
+                <source src="\InShot_20260703_074047463.mp4" type="video/mp4" />
+            </video></>}
 
         </div>
     )

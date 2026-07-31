@@ -12,7 +12,9 @@ const Menu = () => {
     const [userRole, setuserRole] = useState('')
 
     useEffect(() => {
-        if (!token) return;
+        if (!token) {
+            navigate("/Auth")
+        };
 
         const fun1 = async () => {
             try {

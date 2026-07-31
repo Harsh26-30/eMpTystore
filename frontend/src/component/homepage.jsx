@@ -20,7 +20,7 @@ function Homepage() {
   const token = localStorage.getItem("token");
   const navigate = useNavigate('')
   const location = useLocation();
-  const [userRole, setuserRole] = useState('')
+  const [userRole, setuserRole] = useState('Customer')
   const [userEmailVerification, setemailverificationvisibility] = useState()
   const [userPhoneNoVerification, setuserPhoneNoVerification] = useState()
 
@@ -36,8 +36,10 @@ function Homepage() {
       );
 
       setuserRole(res.data.role);
-      setemailverificationvisibility(res.data.userEmailVerification)
-      setuserPhoneNoVerification(res.data.userPhoneNoVerification)
+      if (res.data.role) {
+        setemailverificationvisibility(res.data.userEmailVerification)
+        setuserPhoneNoVerification(res.data.userPhoneNoVerification)
+      }
 
 
       await axios.post(
@@ -60,6 +62,7 @@ function Homepage() {
       fun1();
     }
   }, [token, location.pathname]);
+
 
   useEffect(() => {
     if (userRole === 'Seller') {
@@ -100,7 +103,7 @@ function Homepage() {
       {userRole === "Seller" && managehomepagevisible === 'Order' && <Order />}
       {userRole === "Seller" && managehomepagevisible === 'Product' && <Product />}
       {userRole === "Seller" && managehomepagevisible === 'UI' && <UI />}
-      {userRole === "Customer" && <Generatelinkbtnbox/>}
+      {userRole === "Customer" && <Generatelinkbtnbox />}
       {userRole === "Customer" && <h3 className="hmh3">Near By Shops</h3>}
       {userRole === "Customer" && <NearByShop />}
       {/* {userRole === "Customer" && <h3 className="hmh3">Your Connections</h3>}

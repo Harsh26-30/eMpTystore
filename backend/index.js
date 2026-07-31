@@ -2110,7 +2110,7 @@ app.post("/uidatas", authMiddleware, async (req, res) => {
   }
 });
 
-app.post("/uidata", authMiddleware, async (req, res) => {
+app.post("/uidata", async (req, res) => {
   const { id } = req.body;
   try {
 
@@ -2216,7 +2216,7 @@ app.post("/uidata", authMiddleware, async (req, res) => {
   }
 });
 
-app.get('/allshops', authMiddleware, async (req, res) => {
+app.get('/allshops', async (req, res) => {
   try {
 
     const sellers = await User.find({

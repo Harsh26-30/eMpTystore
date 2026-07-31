@@ -51,7 +51,9 @@ function App() {
     <BrowserRouter>
       <RouteLoader>
         <Routes>
-          <Route path="/" element={<Auth />} />
+          <Route path="/" element={<Homepage />} />
+          <Route path="/Auth" element={<Auth />} />
+
 
           <Route path="/sharebydetail" element={<Auth />} />
 
@@ -163,15 +165,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-
-          <Route
-            path="/Shopnox"
-            element={
-              <ProtectedRoute>
-                < Shopnox />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/Shopnox/:id" element={<Shopnox />} />
 
           <Route
             path="/ForgotPassword"
@@ -254,7 +248,7 @@ function App() {
             }
           />
 
-          
+
           <Route
             path="/shareAndEarn"
             element={
@@ -264,7 +258,7 @@ function App() {
             }
           />
 
-          
+
 
         </Routes>
       </RouteLoader>

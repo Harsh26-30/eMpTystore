@@ -7,7 +7,7 @@ const ProtectedRoute = ({ children }) => {
   if (!token) {
     return (
       <Navigate
-        to="/"
+        to="/Auth"
         state={{ from: location }}
         replace
       />

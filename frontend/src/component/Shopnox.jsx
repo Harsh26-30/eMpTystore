@@ -3,6 +3,8 @@ import './Shopnox.css'
 import { useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import DOMPurify from "dompurify";
+import { useParams } from "react-router-dom";
+
 
 
 const Shopnox = () => {
@@ -15,6 +17,8 @@ const Shopnox = () => {
   const [body, setbody] = useState('');
   const [footer, setfooter] = useState('');
   const [CartItem, setCartItem] = useState([]);
+  const { id } = useParams();
+
 
 
   const loadUI = async () => {
@@ -23,7 +27,7 @@ const Shopnox = () => {
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/uidata`,
         {
-          id: location.state.id
+          id: id
         },
         {
           headers: {
@@ -37,27 +41,29 @@ const Shopnox = () => {
       setfooter(res.data.uifooter);
       setUserUI(res.data.productbox);
 
-      const res2 = await axios.get(
-        `${import.meta.env.VITE_API_URL}/checkuserinfo`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      if (token) {
+        const res2 = await axios.get(
+          `${import.meta.env.VITE_API_URL}/checkuserinfo`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-      setCartItem(res2.data.CartItem)
+        setCartItem(res2.data.CartItem)
+
+      }
+
 
     } catch (err) {
       console.log(err);
     }
   };
 
-  useEffect(() => {
-    loadUI();
-
-
-  }, [token, location.state.id]);
+useEffect(() => {
+  loadUI();
+}, [token, id]);
 
   useEffect(() => {
 
@@ -70,6 +76,11 @@ const Shopnox = () => {
       // Buy Product
       if (action === "Add") {
 
+        if (!token) {
+          navigate("/Auth");
+          return;
+        }
+
         const productData =
           UserUI[`productbox${product}`];
 
@@ -81,8 +92,9 @@ const Shopnox = () => {
 
         const handleadd = async () => {
 
+
           await axios.post(`${import.meta.env.VITE_API_URL}/addItemToCart`, {
-            quantity:1,
+            quantity: 1,
             productid: productData._id,
             productname: productData.productname,
             sellerid: productData.productsellerid,
@@ -94,13 +106,9 @@ const Shopnox = () => {
             })
 
           loadUI();
-
-
         }
-
         handleadd();
       }
-
       loadUI();
     };
 
