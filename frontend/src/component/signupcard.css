@@ -1,7 +1,7 @@
 #mainboxsignup{
     background: #000;
     width: 80%;
-    height: 65%;
+    height: 85%;
     border-radius: 20px;
     padding: 5px;
     color: #fff;
@@ -11,6 +11,7 @@
     text-transform: capitalize;
     font-family: cursive;
     font-size: larger;
+    color: #fff;
 }
 
 #mainboxsignup div{
@@ -56,4 +57,20 @@
 
 form #submitbtn:focus{
     background: #605d5d;
+}
+
+@media (min-width:630px) {
+    #mainboxsignup {
+        width: 70%;
+        height: 90%;
+
+    }
+}
+
+@media (min-width:860px) {
+    #mainboxsignup {
+        width: 50%;
+        height: 90%;
+
+    }
 }

@@ -11,6 +11,8 @@
     text-transform: capitalize;
     font-family: cursive;
     font-size: xx-large;
+    color: #fff;
+
 }
 
 #mainboxlogin div {
@@ -58,4 +60,20 @@
 
 #mainboxlogin div form #submitbtn2:focus {
     background: #605d5d;
+}
+
+@media (min-width:630px) {
+    #mainboxlogin {
+        width: 70%;
+        height: 60%;
+
+    }
+}
+
+@media (min-width:860px) {
+    #mainboxlogin {
+        width: 50%;
+        height: 70%;
+
+    }
 }
