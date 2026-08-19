@@ -51,7 +51,9 @@ function App() {
     <BrowserRouter>
       <RouteLoader>
         <Routes>
-          <Route path="/" element={<Homepage />} />
+          {/* <Route path="/" element={<Homepage />} /> */}
+                    <Route path="/" element={<Auth />} />
+
           <Route path="/Auth" element={<Auth />} />
 
 
