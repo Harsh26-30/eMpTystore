@@ -29,12 +29,17 @@ const loadUI = async () => {
       return;
     }
 
-    const res = await axios.post(
-      `${import.meta.env.VITE_API_URL}/uidata`,
-      {
-        id: id
-      }
-    );
+const res = await axios.post(
+  `${import.meta.env.VITE_API_URL}/uidata`,
+  {
+    id: id
+  },
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+);
 
     setheader(res.data.uiheader);
     setbody(res.data.uibody);
