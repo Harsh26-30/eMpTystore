@@ -1,0 +1,129 @@
+#mainboxmyorderstatus{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#mainboxmyorderstatus #boxmyorderstatus {
+    width: 80%;
+    min-height: 70vh;
+    margin-top: 15px;
+    border-radius: 20px;
+    border: 2px solid #000;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    font-family: sans-serif;
+    box-shadow: 2px 2px 10px 10px rgba(0, 0, 0, 0.1);
+    overflow: visible; /* or remove this line */
+    position: relative;
+    
+}
+
+#mainboxmyorderstatus #boxmyorderstatus #box1myorderstatus{
+    width: 90%;
+    height: 45%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+    border-radius: 20px;
+}
+
+
+#mainboxmyorderstatus #boxmyorderstatus #orderdetailmyorderstatus{
+    width: 90%;
+    height: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+#mainboxmyorderstatus #boxmyorderstatus #orderstatusmyorderstatus {
+   width: 90%;
+   height: 12%;
+   border-radius: 10px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   background-color: grey;
+}
+
+#mainboxmyorderstatus #boxmyorderstatus #orderstatusmyorderstatus h4{
+    font-size: 30px;
+    color: darkblue;
+    font-family: sans-serif;
+    
+}
+#mainboxmyorderstatus #boxmyorderstatus #qrbutton{
+    width: 90%;
+   height: 12%;
+   border-radius: 10px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   background-color: #000;
+   color: #fff;
+   border-radius: 20px;
+   border: none;
+}
+
+#mainboxmyorderstatus #boxmyorderstatus  #qrbutton:hover{
+    background-color: grey;
+}
+#ordereditemdetailed{
+    width: 100%;
+}
+#ordereditemdetailed p{
+    font-size: 20px;
+    font-weight: 600;
+    color: grey;
+    margin-left: 5px;
+    display: flex;
+    gap: 10px;
+    overflow-x:Scroll;
+    min-width:60%;
+    height:50px;
+    background-color: rgb(215, 215, 215);
+}
+
+@media (min-width:839px) {
+    
+    #mainboxmyorderstatus #boxmyorderstatus{
+    width: 45%;
+    height: 40vh;
+    margin-top: 20px;
+    border-radius: 20px;
+    border: 2px solid #000;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    font-family: sans-serif;
+    box-shadow: 2px 2px 10px 10px rgba(0, 0, 0, 0.1);
+}
+}
+
+@media (min-width:1600px) {
+    
+    #mainboxmyorderstatus #boxmyorderstatus{
+    width: 40%;
+    height: 35vh;
+    margin-top: 20px;
+    border-radius: 20px;
+    border: 2px solid #000;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    font-family: sans-serif;
+    box-shadow: 2px 2px 10px 10px rgba(0, 0, 0, 0.1);
+}
+}

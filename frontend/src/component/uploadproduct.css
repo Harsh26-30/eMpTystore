@@ -1,0 +1,43 @@
+#mainboxuploadproduct{
+    width: 100%;
+    height: 100vh;
+    background-color: #000;
+}
+
+#mainboxuploadproduct #imgmainboxuploadproduct{
+    width: 100%;
+    height: 40%;
+    background-color: yellow;
+}
+
+#mainboxuploadproduct #formmainboxuploadproduct{
+    height: 60%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    align-items: center;
+}
+
+#mainboxuploadproduct #formmainboxuploadproduct #fileinput{
+    background-color: #fff;
+}
+
+#mainboxuploadproduct #formmainboxuploadproduct input{
+    height: 8%;
+    width: 90%;
+    border-radius: 20px;
+    border: none;
+    font-size: 20px;
+}
+
+#mainboxuploadproduct #formmainboxuploadproduct button{
+    width: 50%;
+    height: 10%;
+    border-radius: 20px;
+}
+
+#mainboxuploadproduct #formmainboxuploadproduct button:focus{
+    background-color: grey;
+}

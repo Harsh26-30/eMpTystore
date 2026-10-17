@@ -1,0 +1,43 @@
+#mainboxrejectpOrderform{
+    width: 100%;
+    height: 90%;
+    background-color: rgb(237, 231, 231);
+    z-index: 100;
+    position: fixed;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#box2rejectpOrderform{
+    width: 50%;
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    border-radius: 20px;
+    background-color: rgba(181, 178, 178, 0.5);
+}
+
+
+
+#box2rejectpOrderform  select{
+    width: 90%;
+    height: 10%;
+    border-radius: 10px;
+    border: none;
+    text-align: center;
+}
+
+#box2rejectpOrderform button{
+    width: 30%;
+    height: 10%;
+    border-radius: 10px;
+    border: none;
+    background-color: black;
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+}

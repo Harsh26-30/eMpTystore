@@ -1,0 +1,337 @@
+.userprofilemainbox {
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(217, 215, 215, 0.479);
+}
+
+#userprofile {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(212, 212, 212);
+    gap: 5px;
+}
+
+#userprofile #bkimgpimgnamebox1 {
+    height: 300px;
+    width: 100%;
+    position: relative;
+}
+
+#bkimgbox {
+    width: 100%;
+    height: 50%;
+    position: absolute;
+    border-bottom: 5px solid grey;
+}
+
+#bkimgbox img {
+    width: 100%;
+    height: 100%;
+}
+
+#profileimg {
+    width: 50%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
+}
+
+#insidepimg {
+    width: 60%;
+    height: 70%;
+    border-radius: 60%;
+    overflow: hidden;
+    border: 5px solid rgb(151, 148, 148);
+    background-color: #000;
+
+}
+
+#insidepimg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+#namebox {
+    width: 55%;
+    height: 50%;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#namebox h3 {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-style: oblique;
+    font-size: 50px;
+    width: 100%;
+    text-align: left;
+    margin-top: 5px;
+}
+
+#totn{
+    height: 70px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 100px;
+}
+
+#totn p{
+    text-transform: capitalize;
+    font-weight: 700;
+    font-family: sans-serif;
+}
+
+#totn h3{
+    font-size: 65px;
+    margin: auto 0px;
+}
+
+.userprofilemainbox .profilebuttonsection {
+    width: 98%;
+}
+
+.userprofilemainbox .profilebuttonsection .ShareProfileButton {
+    width: 98%;
+    height: 40px;
+    background-color: #000;
+    border: none;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #fff;
+    margin-bottom: 10px;
+
+}
+
+.userprofilemainbox .profilebuttonsection .ConnectToShopButton {
+    width: 90%;
+    height: 40px;
+    background-color: #000;
+    border: none;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #fff;
+}
+
+.userprofilemainbox .profilebuttonsection .ConnectToShopButton button:hover {
+    background-color: grey;
+    color: #fff;
+
+}
+
+.changeprofilepicturesection {
+    width: 70%;
+    height: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(242, 236, 236);
+    border-radius: 30px;
+    border: 3px solid black;
+    position: absolute;
+    z-index: 5;
+    top: 100px;
+    right: 60px;
+}
+
+.changeprofilepicturesection form {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.changeprofilepicturesection form input[type="file"] {
+    width: 80%;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    background-color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.changeprofilepicturesection form button {
+    width: 90%;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    background-color: #000;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.changeprofilepicturesection form button:hover {
+    background-color: grey;
+    color: white;
+}
+
+.end {
+    width: 100%;
+    height: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #000;
+    font-size: 15px;
+    font-family: Arial, sans-serif;
+}
+
+@media (max-width:630px) {
+    #insidepimg {
+        width: 75%;
+        height: 58%;
+        border-radius: 60%;
+        overflow: hidden;
+    }
+}
+
+@media (max-width:400px) {
+    #insidepimg {
+        width: 75%;
+        height: 50%;
+        border-radius: 60%;
+        overflow: hidden;
+    }
+
+}
+
+@media (max-width:500px) {
+    #userprofile #bkimgpimgnamebox1 {
+        height: 360px;
+        width: 100%;
+    }
+
+    #bkimgbox {
+        background-color: rgb(70, 70, 155);
+        width: 100%;
+        height: 40%;
+    }
+
+    #profileimg {
+        width: 90%;
+        height: 90%;
+        border-radius: 50%;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 40px;
+        margin: 5px auto;
+    }
+
+    #insidepimg {
+        width: 55%;
+        height: 70%;
+        border-radius: 60%;
+        overflow: hidden;
+    }
+
+    #insidepimg img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    #namebox {
+        width: 100%;
+        height: 18%;
+        bottom: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #namebox h3 {
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        font-style: oblique;
+        font-size: 50px;
+        text-align: center;
+    }
+
+}
+
+@media (max-width:400px) {
+    #insidepimg {
+        width: 62%;
+        height: 58%;
+        border-radius: 60%;
+        overflow: hidden;
+    }
+}
+
+@media (min-width:1000px) {
+    #insidepimg {
+        width: 50%;
+        height: 70%;
+        border-radius: 60%;
+        overflow: hidden;
+    }
+}
+
+@media (min-width:1087px) {
+
+    #profileimg {
+        width: 50%;
+        height: 100%;
+        border-radius: 50%;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 30px;
+    }
+
+    #insidepimg {
+        width: 50%;
+        height: 75%;
+        border-radius: 60%;
+        overflow: hidden;
+    }
+}
+
+@media (min-width:1087px) {
+    #profileimg {
+        width: 50%;
+        height: 100%;
+        border-radius: 50%;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 30px;
+    }
+
+    #insidepimg {
+        width: 42%;
+        height: 75%;
+        border-radius: 60%;
+        overflow: hidden;
+    }
+}

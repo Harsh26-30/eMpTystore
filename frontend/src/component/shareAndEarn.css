@@ -1,0 +1,30 @@
+#shareAndEarnmainbox {
+    height: 100vh;
+}
+
+#linkbuttonbox {
+    top: 0;
+    height: 80px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+#linkbuttonbox button{
+    width: 280px;
+    height: 80%;
+    font-size: 20px;
+    background-color: black;
+    color: #fff;
+    text-transform: capitalize;
+    border-radius: 30px;
+    border: none;
+    user-select: none;
+}
+
+
+#linkbuttonbox button:hover{
+    background-color: grey;
+}
