@@ -1,80 +1,53 @@
-#bossbox {
-    width: 90%;
-    height: 10vh;
-    background-color:#fff;
+.sr-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 20px;
+}
+
+.sr-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sr-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+}
+
+.sr-open {
+    flex: 1;
+    min-width: 0;
+    min-height: 44px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-    margin-top: 10px;
-    border-radius: 20px;
-}
-
-#mainboxsearchresult {
-    width: 98%;
-    height: 80%;
-    display: flex;
-    padding: 5px;
-}
-
-#mainboxsearchresult #box2searchresult {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-}
-
-#mainboxsearchresult #box2searchresult button{
-    width: 20%;
-    height: 70%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    background-color: #000;
-    color: #fff;
+    gap: 2px;
+    font: inherit;
+    text-align: left;
+    color: var(--ink);
+    background: none;
     border: none;
-    border-radius: 20px;
+    cursor: pointer;
 }
 
-#mainboxsearchresult #box2searchresult button:focus{
-
-    background-color: grey;
-
-}
-
-#mainboxsearchresult #box2searchresult #imgsearchresult {
-    width: 90%;
-    height: 70%;
-    border: 5px double #000;
-}
-
-#mainboxsearchresult #box2searchresult #h3searchresult {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    height: 100%;
-    width: 80%;
-}
-
-#mainboxsearchresult #box2searchresult #h3searchresult h3 {
-    font-size: 18px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
+.sr-name {
+    font-weight: 700;
     text-transform: capitalize;
-    font-family: sans-serif;
+    overflow-wrap: anywhere;
 }
 
-#mainboxsearchresult #box2searchresult #h3searchresult p {
-    font-size: 18px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    font-family: sans-serif;
+.sr-email {
+    font-size: 0.9rem;
+    color: var(--muted);
+    overflow-wrap: anywhere;
+}
+
+.sr-open:hover .sr-name {
+    text-decoration: underline;
 }

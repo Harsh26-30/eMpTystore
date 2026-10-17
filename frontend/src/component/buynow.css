@@ -1,186 +1,29 @@
-#mainboxbuynow {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.bn-card {
+    margin-top: 16px;
 }
 
-#box2buynow {
-    background-color: #000;
-    width: 95%;
-    height: 98%;
-}
-
-#box2buynow h2 {
-    color: white;
-    text-align: center;
-    margin-top: 10px;
-}
-
-#formbuynow {
-    height: 40%;
-    width: 100%;
+.bn-form {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
-    border-bottom: 2px solid white;
+    gap: 14px;
+    margin-top: 14px;
 }
 
-
-
-#formbuynow fieldset {
-    width: 70%;
-    height: 12%;
-    border: none;
+.bn-form .btn {
+    align-self: flex-start;
 }
 
-#formbuynow fieldset legend {
-    color: #fff;
-    text-transform: capitalize;
-    font-weight: bolder;
-}
-
-#formbuynow fieldset input {
-    width: 100%;
-    height: 100%;
-    border-radius: 20px;
-    border: none;
-    padding: 2px;
-}
-
-#formbuynow fieldset #inputbuynow {
-    width: 100%;
-    height: 100%;
-    border-radius: 20px;
-    border: none;
-    padding: 4px;
-}
-
-
-#formbuynow button {
-    width: 40%;
-    height: 10%;
-    font-size: larger;
-    font-weight: bolder;
-    border-radius: 10px;
-}
-
-#formbuynow button:focus {
-    background-color: grey;
-}
-
-#formbuynow2 {
-    height: 20%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
-    border-bottom: 2px solid white;
-}
-
-
-
-#formbuynow2 fieldset {
-    width: 70%;
-    height: 30%;
-    border: none;
-}
-
-#formbuynow2 fieldset legend {
-    color: #fff;
-    text-transform: capitalize;
-    font-weight: bolder;
-}
-
-#formbuynow2 fieldset input {
-    width: 100%;
-    height: 100%;
-    border-radius: 20px;
-    border: none;
-    padding: 2px;
-}
-
-#formbuynow2 fieldset #inputbuynow {
-    width: 100%;
-    height: 100%;
-    border-radius: 20px;
-    border: none;
-    padding: 4px;
-}
-
-
-#formbuynow2 button {
-    width: 40%;
-    height: 20%;
-    font-size: larger;
-    font-weight: bolder;
-    border-radius: 10px;
-}
-
-#formbuynow2 button:focus {
-    background-color: grey;
-}
-
-#quanititybox {
-    height: 15%;
+.bn-qty {
     display: flex;
     align-items: center;
-    justify-content: center;
-        border-bottom: 2px solid white;
-
+    justify-content: space-between;
+    gap: 12px;
 }
 
-#quanititybox2 {
-    width: 50%;
-    height: 40%;
-    background-color: #FFF;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-evenly;
-    border-radius: 50px;
-    
+.bn-gap {
+    margin-top: 16px;
 }
 
-#quanititybox2 button {
-    width: 40%;
-    height: 90%;
-    font-size: 30px;
-        border-radius: 50px;
-
-}
-
-
-#quanititybox2 span {
-    font-size: 40px;
-}
-
-#placeOrderbox {
-    height: 25%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
-    border-bottom: 2px solid white;
-}
-
-#placeOrderbox select {
-    width: 80%;
-    height: 10%;
-}
-
-#placeOrderbox #placeOrderbox2 button {
-    width: 200px;
-    height: 50px;
-    font-size: 20px;
-    font-weight: bolder;
-    border-radius: 20px;
-}
-
-#placeOrderbox #placeOrderbox2 button:focus{
-    background-color: grey;
+.bn-order {
+    min-height: 54px;
 }

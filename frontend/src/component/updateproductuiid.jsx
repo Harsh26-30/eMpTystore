@@ -2,28 +2,35 @@ import React, { useEffect, useState } from 'react'
 import './updateproductuiid.css'
 import axios from 'axios';
 
+const COLORS = [
+    { value: 'white', label: 'White' },
+    { value: 'black', label: 'Black' },
+    { value: 'red', label: 'Red' },
+    { value: 'blue', label: 'Blue' },
+    { value: 'yellow', label: 'Yellow' },
+    { value: 'green', label: 'Green' },
+    { value: 'purple', label: 'Purple' },
+    { value: 'orange', label: 'Orange' },
+];
+
+const SLOTS = Array.from({ length: 12 }, (_, i) => i + 1);
+
 const Updateproductuiid = ({ setvisibilityval, onclicksave }) => {
     const token = localStorage.getItem("token");
     const [businessname, setbusinessname] = useState('');
 
-    const [Product1, setProduct1] = useState('');
-    const [Product2, setProduct2] = useState('');
-    const [Product3, setProduct3] = useState('');
-    const [Product4, setProduct4] = useState('');
-    const [Product5, setProduct5] = useState('');
-    const [Product6, setProduct6] = useState('');
-    const [Product7, setProduct7] = useState('');
-    const [Product8, setProduct8] = useState('');
-    const [Product9, setProduct9] = useState('');
-    const [Product10, setProduct10] = useState('');
-    const [Product11, setProduct11] = useState('');
-    const [Product12, setProduct12] = useState('');
+    // Product1 ... Product12: the product chosen for each slot on the shop page
+    const [chosen, setChosen] = useState(() => SLOTS.map(() => ''));
     const [products, setProducts] = useState([]);
-    const [TextColor, setTextColor] = useState();
-    const [BackgroundColor, setBackgroundColor] = useState();
+    const [TextColor, setTextColor] = useState('');
+    const [BackgroundColor, setBackgroundColor] = useState('');
     const [backgroundimage, setbackgroundimage] = useState();
 
     const [inputvisibility, setinputvisibility] = useState('generalinfo');
+    const [productsLoading, setProductsLoading] = useState(true);
+    const [productsError, setProductsError] = useState('');
+    const [saving, setSaving] = useState(false);
+    const [error, setError] = useState('');
 
 
     useEffect(() => {
@@ -38,36 +45,40 @@ const Updateproductuiid = ({ setvisibilityval, onclicksave }) => {
                     }
                 );
 
-                setProducts(res.data); // ✅ store full array
+                setProducts(Array.isArray(res.data) ? res.data : []);
             } catch (err) {
                 console.log(err);
+                setProductsError('We could not load your products, so you cannot pick them yet. Close this and try again.');
             }
+            setProductsLoading(false);
         };
 
         fun1();
     }, [])
 
+    useEffect(() => {
+        const previous = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        const onKey = (e) => { if (e.key === 'Escape') setvisibilityval(false); };
+        document.addEventListener('keydown', onKey);
+        return () => {
+            document.body.style.overflow = previous;
+            document.removeEventListener('keydown', onKey);
+        };
+    }, [])
 
-
+    const setSlot = (index, value) => {
+        setChosen((prev) => prev.map((v, i) => (i === index ? value : v)));
+    };
 
   const handlesaveproduct = async (e) => {
   e.preventDefault();
+  setSaving(true);
+  setError('');
 
   try {
-    const payload = {
-      Product1,
-      Product2,
-      Product3,
-      Product4,
-      Product5,
-      Product6,
-      Product7,
-      Product8,
-      Product9,
-      Product10,
-      Product11,
-      Product12,
-    };
+    const payload = {};
+    SLOTS.forEach((n, i) => { payload[`Product${n}`] = chosen[i]; });
 
     // remove empty values
     const filteredPayload = Object.fromEntries(
@@ -104,202 +115,151 @@ const Updateproductuiid = ({ setvisibilityval, onclicksave }) => {
     );
 
     setvisibilityval(false);
-    onclicksave();
-    alert(res.data.message || "Updated successfully");
+    if (onclicksave) onclicksave(res.data.message || "Updated successfully");
   } catch (err) {
     console.log(err);
+    setError(err.response?.data?.message || "We could not save your changes. Check your connection and try again.");
+    setSaving(false);
   }
 };
 
+    const colorSelect = (id, label, value, setter) => (
+        <div className="field uu-color">
+            <label className="label" htmlFor={id}>{label}</label>
+            <div className="uu-color-row">
+                <span
+                    className="uu-swatch"
+                    aria-hidden="true"
+                    style={value ? { backgroundColor: value } : undefined}
+                />
+                <select id={id} className="input" value={value} onChange={(e) => setter(e.target.value)}>
+                    <option value="">Keep current</option>
+                    {COLORS.map((c) => (
+                        <option key={c.value} value={c.value}>{c.label}</option>
+                    ))}
+                </select>
+            </div>
+        </div>
+    );
+
     return (
+        <div className="uu-backdrop">
+            <form
+                className="uu-sheet"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="uu-title"
+                onSubmit={handlesaveproduct}
+            >
+                <div className="uu-head">
+                    <h2 id="uu-title">Edit shop details</h2>
+                    <button type="button" className="btn btn-secondary btn-small" onClick={() => setvisibilityval(false)} disabled={saving}>
+                        Close
+                    </button>
+                </div>
 
-        <div id='addproducttoui'>
-            <h2>Add Info</h2>
-            <div id='headeraddproducttoui'>
-                <button onClick={() => { setinputvisibility('generalinfo') }}>General Info</button>
-                <button onClick={() => { setinputvisibility('productinfo') }}>Product Info</button>
-            </div>
-            <div id='box2addproducttoui'>
-                <form>
-                    <fieldset style={{ display: inputvisibility === 'generalinfo' ? 'initial' : 'none' }}>
-                        <legend>Background Color</legend>
-                        <select onChange={(e) => { setBackgroundColor(e.target.value) }}>
-                            <option style={{ backgroundColor: 'lightgray' }} value="">Select Color</option>
-                            <option style={{ backgroundColor: 'white' }} value="white">White</option>
-                            <option style={{ backgroundColor: 'black' }} value="black">Black</option>
-                            <option style={{ backgroundColor: 'red' }} value="red">Red</option>
-                            <option style={{ backgroundColor: 'blue' }} value="blue">Blue</option>
-                            <option style={{ backgroundColor: 'yellow' }} value="yellow">Yellow</option>
-                            <option style={{ backgroundColor: 'green' }} value="green">Green</option>
-                            <option style={{ backgroundColor: 'purple' }} value="purple">Purple</option>
-                            <option style={{ backgroundColor: 'orange' }} value="orange">Orange</option>
+                <div className="tabs" role="tablist" aria-label="Shop details">
+                    <button
+                        type="button"
+                        role="tab"
+                        id="uu-tab-general"
+                        className="tab"
+                        aria-selected={inputvisibility === 'generalinfo'}
+                        aria-controls="uu-panel-general"
+                        onClick={() => { setinputvisibility('generalinfo') }}
+                    >
+                        Look and name
+                    </button>
+                    <button
+                        type="button"
+                        role="tab"
+                        id="uu-tab-products"
+                        className="tab"
+                        aria-selected={inputvisibility === 'productinfo'}
+                        aria-controls="uu-panel-products"
+                        onClick={() => { setinputvisibility('productinfo') }}
+                    >
+                        Products
+                    </button>
+                </div>
 
-                        </select>
-                    </fieldset>
-                    <fieldset style={{ display: inputvisibility === 'generalinfo' ? 'initial' : 'none' }}>
-                        <legend>Text Color</legend>
+                <div className="uu-body">
+                    <div
+                        id="uu-panel-general"
+                        role="tabpanel"
+                        aria-labelledby="uu-tab-general"
+                        className="uu-panel"
+                        hidden={inputvisibility !== 'generalinfo'}
+                    >
+                        <p className="hint">Leave a field as it is to keep what your shop page has now.</p>
 
-                        <select onChange={(e) => { setTextColor(e.target.value) }}>
-                            <option style={{ backgroundColor: 'lightgray' }} value="">Select Color</option>
-                            <option style={{ backgroundColor: 'white' }} value="white">White</option>
-                            <option style={{ backgroundColor: 'black' }} value="black">Black</option>
-                            <option style={{ backgroundColor: 'red' }} value="red">Red</option>
-                            <option style={{ backgroundColor: 'blue' }} value="blue">Blue</option>
-                            <option style={{ backgroundColor: 'yellow' }} value="yellow">Yellow</option>
-                            <option style={{ backgroundColor: 'green' }} value="green">Green</option>
-                            <option style={{ backgroundColor: 'purple' }} value="purple">Purple</option>
-                            <option style={{ backgroundColor: 'orange' }} value="orange">Orange</option>
+                        <div className="field">
+                            <label className="label" htmlFor="uu-business">Business name</label>
+                            <input id="uu-business" className="input" type="text" autoComplete="organization" value={businessname} onChange={(e) => { setbusinessname(e.target.value) }} />
+                        </div>
 
-                        </select>
-                    </fieldset>
-                    <fieldset style={{ display: inputvisibility === 'generalinfo' ? 'initial' : 'none' }}>
-                        <legend>Bussiness Name</legend>
-                        <input type="text" onChange={(e) => { setbusinessname(e.target.value) }} />
-                    </fieldset>
-                    <fieldset style={{ display: inputvisibility === 'generalinfo' ? 'initial' : 'none' }}>
-                        <legend>Background Image</legend>
-                        <input
-                            type="file"
-                            onChange={(e) => setbackgroundimage(e.target.files[0])}
-                        />                    </fieldset>
+                        <div className="uu-pair">
+                            {colorSelect('uu-bg', 'Background colour', BackgroundColor, setBackgroundColor)}
+                            {colorSelect('uu-text', 'Text colour', TextColor, setTextColor)}
+                        </div>
 
-                    <fieldset style={{ display: inputvisibility === 'productinfo' ? 'initial' : 'none' }}>
-                        <legend>Product 1</legend>
-                        <select value={Product1} onChange={(e) => setProduct1(e.target.value)}>
-                            <option value="">Select Product</option>
-                            {products.map((product) => (
-                                <option value={product._id} key={product._id}>
-                                    {product.productname}
-                                </option>
-                            ))}
-                        </select>
+                        <div className="field">
+                            <label className="label" htmlFor="uu-bgimage">Background image</label>
+                            <input
+                                id="uu-bgimage"
+                                className="input uu-file"
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => setbackgroundimage(e.target.files[0])}
+                            />
+                        </div>
+                    </div>
 
-                    </fieldset>
+                    <div
+                        id="uu-panel-products"
+                        role="tabpanel"
+                        aria-labelledby="uu-tab-products"
+                        className="uu-panel"
+                        hidden={inputvisibility !== 'productinfo'}
+                    >
+                        <p className="hint">Choose which products appear on your shop page. Slots you leave empty stay as they are.</p>
 
-                    <fieldset style={{ display: inputvisibility === 'productinfo' ? 'initial' : 'none' }}>
-                        <legend>Product 2</legend>
-                        <select value={Product2} onChange={(e) => setProduct2(e.target.value)}>
-                            <option value="">Select Product</option>
-                            {products.map((product) => (
-                                <option value={product._id} key={product._id}>
-                                    {product.productname}
-                                </option>
+                        {productsLoading && <div className="skeleton uu-skel" aria-busy="true" aria-label="Loading your products" />}
+                        {productsError && <p className="alert alert-error" role="alert">{productsError}</p>}
+                        {!productsLoading && !productsError && products.length === 0 && (
+                            <p className="alert alert-info">You have no products yet. Add a product first, then pick it here.</p>
+                        )}
+
+                        <div className="uu-slots">
+                            {SLOTS.map((n, i) => (
+                                <div className="field" key={n}>
+                                    <label className="label" htmlFor={`uu-product-${n}`}>Product {n}</label>
+                                    <select
+                                        id={`uu-product-${n}`}
+                                        className="input"
+                                        value={chosen[i]}
+                                        onChange={(e) => setSlot(i, e.target.value)}
+                                    >
+                                        <option value="">No change</option>
+                                        {products.map((product) => (
+                                            <option value={product._id} key={product._id}>
+                                                {product.productname}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
                             ))}
-                        </select>
-                    </fieldset>
-                    <fieldset style={{ display: inputvisibility === 'productinfo' ? 'initial' : 'none' }}>
-                        <legend>Product 3</legend>
-                        <select value={Product3} onChange={(e) => setProduct3(e.target.value)}>
-                            <option value="">Select Product</option>
-                            {products.map((product) => (
-                                <option value={product._id} key={product._id}>
-                                    {product.productname}
-                                </option>
-                            ))}
-                        </select>
-                    </fieldset>
-                    <fieldset style={{ display: inputvisibility === 'productinfo' ? 'initial' : 'none' }}>
-                        <legend>Product 4</legend>
-                        <select value={Product4} onChange={(e) => setProduct4(e.target.value)}>
-                            <option value="">Select Product</option>
-                            {products.map((product) => (
-                                <option value={product._id} key={product._id}>
-                                    {product.productname}
-                                </option>
-                            ))}
-                        </select>
-                    </fieldset>
-                    <fieldset style={{ display: inputvisibility === 'productinfo' ? 'initial' : 'none' }}>
-                        <legend>Product 5</legend>
-                        <select value={Product5} onChange={(e) => setProduct5(e.target.value)}>
-                            <option value="">Select Product</option>
-                            {products.map((product) => (
-                                <option value={product._id} key={product._id}>
-                                    {product.productname}
-                                </option>
-                            ))}
-                        </select>
-                    </fieldset>
-                    <fieldset style={{ display: inputvisibility === 'productinfo' ? 'initial' : 'none' }}>
-                        <legend>Product 6</legend>
-                        <select value={Product6} onChange={(e) => setProduct6(e.target.value)}>
-                            <option value="">Select Product</option>
-                            {products.map((product) => (
-                                <option value={product._id} key={product._id}>
-                                    {product.productname}
-                                </option>
-                            ))}
-                        </select>
-                    </fieldset>
-                    <fieldset style={{ display: inputvisibility === 'productinfo' ? 'initial' : 'none' }}>
-                        <legend>Product 7</legend>
-                        <select value={Product7} onChange={(e) => setProduct7(e.target.value)}>
-                            <option value="">Select Product</option>
-                            {products.map((product) => (
-                                <option value={product._id} key={product._id}>
-                                    {product.productname}
-                                </option>
-                            ))}
-                        </select>
-                    </fieldset>
-                    <fieldset style={{ display: inputvisibility === 'productinfo' ? 'initial' : 'none' }}>
-                        <legend>Product 8</legend>
-                        <select value={Product8} onChange={(e) => setProduct8(e.target.value)}>
-                            <option value="">Select Product</option>
-                            {products.map((product) => (
-                                <option value={product._id} key={product._id}>
-                                    {product.productname}
-                                </option>
-                            ))}
-                        </select>
-                    </fieldset>
-                    <fieldset style={{ display: inputvisibility === 'productinfo' ? 'initial' : 'none' }}>
-                        <legend>Product 9</legend>
-                        <select value={Product9} onChange={(e) => setProduct9(e.target.value)}>
-                            <option value="">Select Product</option>
-                            {products.map((product) => (
-                                <option value={product._id} key={product._id}>
-                                    {product.productname}
-                                </option>
-                            ))}
-                        </select>
-                    </fieldset>
-                    <fieldset style={{ display: inputvisibility === 'productinfo' ? 'initial' : 'none' }}>
-                        <legend>Product 10</legend>
-                        <select value={Product10} onChange={(e) => setProduct10(e.target.value)}>
-                            <option value="">Select Product</option>
-                            {products.map((product) => (
-                                <option value={product._id} key={product._id}>
-                                    {product.productname}
-                                </option>
-                            ))}
-                        </select>
-                    </fieldset>
-                    <fieldset style={{ display: inputvisibility === 'productinfo' ? 'initial' : 'none' }}>
-                        <legend>Product 11</legend>
-                        <select value={Product12} onChange={(e) => setProduct11(e.target.value)}>
-                            <option value="">Select Product</option>
-                            {products.map((product) => (
-                                <option value={product._id} key={product._id}>
-                                    {product.productname}
-                                </option>
-                            ))}
-                        </select>
-                    </fieldset>
-                    <fieldset style={{ display: inputvisibility === 'productinfo' ? 'initial' : 'none' }}>
-                        <legend>Product 12</legend>
-                        <select value={Product12} onChange={(e) => setProduct12(e.target.value)}>
-                            <option value="">Select Product</option>
-                            {products.map((product) => (
-                                <option value={product._id} key={product._id}>
-                                    {product.productname}
-                                </option>
-                            ))}
-                        </select>
-                    </fieldset>
-                </form>
-            </div>
-            <button onClick={handlesaveproduct}>Save</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="uu-foot">
+                    {error && <p className="alert alert-error" role="alert">{error}</p>}
+                    <button type="submit" className="btn btn-primary btn-block" disabled={saving}>
+                        {saving ? 'Saving…' : 'Save changes'}
+                    </button>
+                </div>
+            </form>
         </div>
 
     )

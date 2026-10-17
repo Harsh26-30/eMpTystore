@@ -1,11 +1,31 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import './UI.css'
 import axios from 'axios'
 import { useEffect } from 'react';
 import DOMPurify from "dompurify";
 import Updateproductuiid from './updateproductuiid';
 
+const TYPE_LABELS = { header: 'header', body: 'body' }
 
+// Replace the {{...}} placeholders in a stored layout with the seller's own details
+const renderHTML = (html, data = {}) => {
+  if (!html) return "";
+
+  let updatedHTML = html.replaceAll(
+    "{{Business Name}}",
+    data?.BusinessName || "Business Name"
+  );
+
+  for (let n = 1; n <= 8; n++) {
+    const box = data?.[`productbox${n}`];
+    updatedHTML = updatedHTML
+      .replaceAll(`{{Productname${n}id}}`, box?.productname || `Productname${n}id`)
+      .replaceAll(`{{Productname${n}idimg}}`, box?.productimage || `Productname${n}id`)
+      .replaceAll(`{{Productprice${n}id}}`, box?.productprice || (n === 1 ? "0" : `Productprice${n}id`));
+  }
+
+  return updatedHTML;
+};
 
 const UI = () => {
   const token = localStorage.getItem("token");
@@ -15,14 +35,94 @@ const UI = () => {
   const [uidatas, setUidatas] = useState([]);
   const [header, setheader] = useState('');
   const [body, setbody] = useState('');
-  // const [footer, setfooter] = useState('');
   const [visibilityval, setvisibilityval] = useState(false);
-  // const [productbox, setproductbox] = useState('')
-  // const [myuiproducts, setmyuiproducts] = useState('')
+  const [currentIds, setCurrentIds] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
+  const [busyId, setBusyId] = useState(null);
+  const [notice, setNotice] = useState(null);
+  const noticeTimer = useRef(null);
 
+  const showNotice = (text, tone = 'ok') => {
+    setNotice({ text, tone })
+    clearTimeout(noticeTimer.current)
+    noticeTimer.current = setTimeout(() => setNotice(null), 4500)
+  }
 
+  const loadUI = async () => {
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/uidata`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setheader(res.data.uiheader);
+      setbody(res.data.uibody);
+      return true
+    } catch (err) {
+      console.log(err);
+      return false
+    }
+  };
+
+  const fun1 = async () => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/checkuserinfo`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setUserUI(res.data.productbox);
+      setCurrentIds(res.data.useruidata?.componentid || {});
+      return true
+    } catch (err) {
+      console.log(err);
+      return false
+    }
+  };
+
+  const fetchUiData = async () => {
+    try {
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/uidatas`, {}, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+      );
+      setUidatas(res.data);
+      return true
+    } catch (err) {
+      console.log(err);
+      return false
+    }
+  };
+
+  const loadAll = async () => {
+    setLoadError('')
+    const results = await Promise.all([loadUI(), fun1(), fetchUiData()])
+    if (results.some((ok) => !ok)) {
+      setLoadError('We could not load your shop page. Check your connection and try again.')
+    }
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    setLoading(true)
+    loadAll()
+    return () => clearTimeout(noticeTimer.current)
+  }, [token]);
 
   const handleAdd = async (uiid) => {
+    setBusyId(uiid)
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/addui`,
@@ -34,312 +134,153 @@ const UI = () => {
         }
       );
 
-      alert(res.data.msg);
-      // Append new component instead of replacing
+      showNotice(res.data.msg || 'Your shop page has been updated.');
       setOptionvisibility(false);
-
-      const loadUI = async () => {
-        try {
-          const res = await axios.post(
-            `${import.meta.env.VITE_API_URL}/uidata`,
-            {},
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-
-          setheader(res.data.uiheader);
-          setbody(res.data.uibody);
-          // setfooter(res.data.uifooter);
-
-        } catch (err) {
-          console.log(err);
-        }
-      };
-
-      loadUI();
-
-
+      await loadUI();
+      await fun1();
     } catch (err) {
       console.log(err);
+      showNotice('We could not apply this layout. Please try again.', 'error')
     }
+    setBusyId(null)
   };
 
+  // Close the layout picker with Escape
   useEffect(() => {
-    const loadUI = async () => {
-      try {
-        const res = await axios.post(
-          `${import.meta.env.VITE_API_URL}/uidata`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+    if (!Optionvisibility) return undefined
+    const onKey = (e) => { if (e.key === 'Escape') setOptionvisibility(false) }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [Optionvisibility])
 
-        setheader(res.data.uiheader);
-        setbody(res.data.uibody);
-        //  setfooter(res.data.uifooter);
+  const openPicker = (type) => {
+    setcomponent(type)
+    setOptionvisibility(true)
+  }
 
-      } catch (err) {
-        console.log(err);
-      }
-    };
+  const choices = Array.isArray(uidatas)
+    ? uidatas.filter((ui) => String(ui.Componentid || '').split("_")[0] === component)
+    : []
 
-    loadUI();
+  const hasLook = Boolean(header || body)
 
-    const fun1 = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/checkuserinfo`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        setUserUI(res.data.productbox);
-        console.log("UserUi:", res.data.productbox);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    fun1();
-        
-
-     const fetchUiData = async () => {
-      try {
-        console.log(import.meta.env.VITE_API_URL);
-        const res = await axios.post(`${import.meta.env.VITE_API_URL}/uidatas`, {}, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-        );
-        setUidatas(res.data);        
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    fetchUiData();
-  }, [token]);
-
-        console.log("Check feonnt useEffect working or not");
-
-
-  const renderHTML = (html, data = {}) => {
-    if (!html) return "";
-
-    let updatedHTML = html;
-
-    updatedHTML = updatedHTML.replaceAll(
-      "{{Business Name}}",
-      data?.BusinessName || "Business Name"
-    );
-
-    updatedHTML = updatedHTML.replaceAll(
-      "{{Productname1id}}",
-      data?.productbox1?.productname || "Productname1id"
-    );
-
-    updatedHTML = updatedHTML.replaceAll(
-      "{{Productname1idimg}}",
-      data?.productbox1?.productimage || "Productname1id"
-    );
-
-    updatedHTML =  updatedHTML.replaceAll(
-      "{{Productprice1id}}",
-      data?.productbox1?.productprice || "0"
-    );
-
-
-    updatedHTML = updatedHTML.replaceAll(
-      "{{Productname2id}}",
-      data?.productbox2?.productname || "Productname1id"
-    );
-
-    updatedHTML = updatedHTML.replaceAll(
-      "{{Productname2idimg}}",
-      data?.productbox2?.productimage || "Productname1id"
-    );
-
-     updatedHTML = updatedHTML.replaceAll(
-      "{{Productprice2id}}",
-      data?.productbox2?.productprice || "Productprice2id"
-    );
-
-    updatedHTML = updatedHTML.replaceAll(
-      "{{Productname3id}}",
-      data?.productbox3?.productname || "Productname1id"
-    );
-
-    updatedHTML = updatedHTML.replaceAll(
-      "{{Productname3idimg}}",
-      data?.productbox3?.productimage || "Productname1id"
-    );
-
-     updatedHTML = updatedHTML.replaceAll(
-      "{{Productprice3id}}",
-      data?.productbox3?.productprice || "Productprice3id"
-    );
-
-    updatedHTML = updatedHTML.replaceAll(
-      "{{Productname4id}}",
-      data?.productbox4?.productname || "Productname4id"
-    );
-
-    updatedHTML = updatedHTML.replaceAll(
-      "{{Productname4idimg}}",
-      data?.productbox4?.productimage || "Productname4id"
-    );
-
-     updatedHTML = updatedHTML.replaceAll(
-      "{{Productprice4id}}",
-      data?.productbox4?.productprice || "Productprice4id"
-    );
-
-    updatedHTML = updatedHTML.replaceAll(
-      "{{Productname5id}}",
-      data?.productbox5?.productname || "Productname5id"
-    );
-
-    updatedHTML = updatedHTML.replaceAll(
-      "{{Productname5idimg}}",
-      data?.productbox5?.productimage || "Productname5id"
-    );
-
-     updatedHTML = updatedHTML.replaceAll(
-      "{{Productprice5id}}",
-      data?.productbox5?.productprice || "Productprice5id"
-    );
-
-    updatedHTML = updatedHTML.replaceAll(
-      "{{Productname6id}}",
-      data?.productbox6?.productname || "Productname6id"
-    );
-
-    updatedHTML = updatedHTML.replaceAll(
-      "{{Productname6idimg}}",
-      data?.productbox6?.productimage || "Productname6id"
-    );
-
-     updatedHTML = updatedHTML.replaceAll(
-      "{{Productprice6id}}",
-      data?.productbox6?.productprice || "Productprice6id"
-    );
-
-
-    updatedHTML = updatedHTML.replaceAll(
-      "{{Productname7id}}",
-      data?.productbox7?.productname || "Productname7id"
-    );
-
-    updatedHTML = updatedHTML.replaceAll(
-      "{{Productname7idimg}}",
-      data?.productbox7?.productimage || "Productname7id"
-    );
-
-     updatedHTML = updatedHTML.replaceAll(
-      "{{Productprice7id}}",
-      data?.productbox7?.productprice || "Productprice7id"
-    );
-
-    updatedHTML = updatedHTML.replaceAll(
-      "{{Productname8id}}",
-      data?.productbox8?.productname || "Productname8id"
-    );
-
-    updatedHTML = updatedHTML.replaceAll(
-      "{{Productname8idimg}}",
-      data?.productbox8?.productimage || "Productname8id"
-    );
-
-     updatedHTML = updatedHTML.replaceAll(
-      "{{Productprice8id}}",
-      data?.productbox8?.productprice || "Productprice8id"
-    );
-
-    return updatedHTML;
-  };
   return (
-    <div id='mainboxUI' >
+    <section className="ui" aria-labelledby="ui-heading">
+      <div className="ui-top">
+        <div>
+          <h2 id="ui-heading">Your shop page</h2>
+          <p className="ui-sub">This is what customers see when they open your shop.</p>
+        </div>
+      </div>
 
+      <div className="ui-tools" role="group" aria-label="Edit your shop page">
+        <button type="button" className="ui-btn ui-btn-secondary" onClick={() => openPicker('header')}>
+          Change header
+        </button>
+        <button type="button" className="ui-btn ui-btn-secondary" onClick={() => openPicker('body')}>
+          Change body
+        </button>
+        <button type="button" className="ui-btn ui-btn-primary" onClick={() => { setvisibilityval(true) }}>
+          Edit shop details
+        </button>
+      </div>
 
-      {Optionvisibility === true && (
-        <div id='options'>
-          {Array.isArray(uidatas) && uidatas.length > 0 ? (
-            uidatas.map((ui) => {
-              // Get first part of Componentid (e.g., 'body', 'header', 'footer')
-              const type = ui.Componentid.split("_")[0];
+      {loading && <div className="ui-skel" aria-busy="true" aria-label="Loading your shop page" />}
 
-              // Show only if type matches selected component
-              if (type !== component) return null;
-
-              return (
-                <div key={ui._id} className="ui-box">
-                  <h4 style={{ color: "gray" }}>{type.toUpperCase()}</h4>
-
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: ui.Componentcode
-                    }}
-                  />
-
-                  <button
-                    id='btn1'
-                    onClick={() => handleAdd(ui.Componentid)}
-                  >
-                    Add {type}
-                  </button>
-                </div>
-              );
-            })
-          ) : (
-            <p>No UI Data found</p>
-          )}
+      {!loading && loadError && (
+        <div className="ui-message is-error" role="alert">
+          <p>{loadError}</p>
+          <button type="button" className="ui-btn ui-btn-secondary" onClick={() => { setLoading(true); loadAll() }}>Try again</button>
         </div>
       )}
 
-      {visibilityval === true && <Updateproductuiid  setvisibilityval={setvisibilityval} />}
-      {/* onclicksave={()=>{fun1();}} */}
+      {!loading && !loadError && !hasLook && (
+        <div className="ui-message">
+          <p>Your shop page is empty. Choose a header and a body to get started.</p>
+        </div>
+      )}
 
+      {!loading && hasLook && (
+        <div className="ui-preview">
+          <p className="ui-preview-label">Preview</p>
+          <div className="ui-look">
+            <div
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(renderHTML(header, UserUI)) }}
+            />
+            <div
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(renderHTML(body, UserUI)) }}
+            />
+          </div>
+        </div>
+      )}
 
-      <div id='lookbox'>
+      {Optionvisibility === true && (
+        <div className="ui-backdrop" onClick={() => setOptionvisibility(false)}>
+          <div
+            className="ui-sheet"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="ui-picker-title"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="ui-sheet-head">
+              <h3 id="ui-picker-title">Choose a {TYPE_LABELS[component] || component}</h3>
+              <button type="button" className="ui-btn ui-btn-secondary ui-small" onClick={() => setOptionvisibility(false)} autoFocus>
+                Close
+              </button>
+            </div>
 
-        <div
-          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(renderHTML(header, UserUI)) }}
+            {choices.length > 0 ? (
+              <ul className="ui-options">
+                {choices.map((ui) => {
+                  const inUse = currentIds[component] === ui.Componentid
+                  const label = String(ui.Componentid).split("_").slice(1).join(' ')
+                  return (
+                    <li key={ui._id} className="ui-option">
+                      <div className="ui-option-head">
+                        <h4>{`${TYPE_LABELS[component] || component} ${label}`.trim()}</h4>
+                        {inUse && <span className="ui-pill">In use</span>}
+                      </div>
+
+                      <div
+                        className="ui-option-look"
+                        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(renderHTML(ui.Componentcode, UserUI)) }}
+                      />
+
+                      <button
+                        type="button"
+                        className="ui-btn ui-btn-primary"
+                        onClick={() => handleAdd(ui.Componentid)}
+                        disabled={busyId !== null || inUse}
+                      >
+                        {busyId === ui.Componentid ? 'Applying…' : inUse ? 'Already in use' : `Use this ${TYPE_LABELS[component] || component}`}
+                      </button>
+                    </li>
+                  )
+                })}
+              </ul>
+            ) : (
+              <p className="ui-message">No layouts are available for this part yet.</p>
+            )}
+          </div>
+        </div>
+      )}
+
+      {visibilityval === true && (
+        <Updateproductuiid
+          setvisibilityval={setvisibilityval}
+          onclicksave={(message) => {
+            showNotice(message || 'Your shop details have been saved.')
+            loadUI();
+            fun1();
+          }}
         />
-        <div
-          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(renderHTML(body, UserUI)) }}
-        />
+      )}
 
+      <div className="ui-toast-wrap" role="status" aria-live="polite">
+        {notice && <div className={`ui-toast is-${notice.tone}`}>{notice.text}</div>}
       </div>
-
-      <div id='box2Ui'>
-        <button onClick={() => { setcomponent('header'); setOptionvisibility(true); }}>
-          <img src="\top_panel_close_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="header1" />
-          <p>Header</p>
-        </button>
-        <button onClick={() => { setcomponent('body'); setOptionvisibility(true); }}>
-          <img src="\splitscreen_portrait_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="header" />
-          <p>Body</p>
-        </button>
-        {/* <button>
-          <img src="\top_panel_close_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="header" />
-          <p>Footer</p>
-        </button> */}
-        <button onClick={() => { setvisibilityval(true) }}>
-          <img src="\article_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="header" />
-          <p>Update Info</p>
-        </button>
-      </div>
-    </div>
+    </section>
   )
 }
 

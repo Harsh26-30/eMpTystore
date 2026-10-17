@@ -1,129 +1,133 @@
-#mainboxmyorderstatus{
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
+.mo-gap {
+    margin-top: 20px;
 }
 
-#mainboxmyorderstatus #boxmyorderstatus {
-    width: 80%;
-    min-height: 70vh;
-    margin-top: 15px;
-    border-radius: 20px;
-    border: 2px solid #000;
-    padding: 10px;
+.mo-list {
+    list-style: none;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    font-family: sans-serif;
-    box-shadow: 2px 2px 10px 10px rgba(0, 0, 0, 0.1);
-    overflow: visible; /* or remove this line */
-    position: relative;
-    
+    gap: 14px;
+    margin-top: 20px;
 }
 
-#mainboxmyorderstatus #boxmyorderstatus #box1myorderstatus{
-    width: 90%;
-    height: 45%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #000;
-    border-radius: 20px;
-}
-
-
-#mainboxmyorderstatus #boxmyorderstatus #orderdetailmyorderstatus{
-    width: 90%;
-    height: 40%;
+.mo-card {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    gap: 16px;
+}
+
+.mo-head {
+    display: flex;
     align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
 }
 
-#mainboxmyorderstatus #boxmyorderstatus #orderstatusmyorderstatus {
-   width: 90%;
-   height: 12%;
-   border-radius: 10px;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   background-color: grey;
+.mo-shop {
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
-#mainboxmyorderstatus #boxmyorderstatus #orderstatusmyorderstatus h4{
-    font-size: 30px;
-    color: darkblue;
-    font-family: sans-serif;
-    
-}
-#mainboxmyorderstatus #boxmyorderstatus #qrbutton{
-    width: 90%;
-   height: 12%;
-   border-radius: 10px;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   background-color: #000;
-   color: #fff;
-   border-radius: 20px;
-   border: none;
+.mo-head .pill {
+    flex: none;
 }
 
-#mainboxmyorderstatus #boxmyorderstatus  #qrbutton:hover{
-    background-color: grey;
+/* Progress: five steps, filled up to the current one */
+.mo-steps {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
 }
-#ordereditemdetailed{
+
+.mo-steps li {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--muted);
+}
+
+.mo-steps li::before {
+    content: "";
+    position: absolute;
+    top: 6px;
+    right: 50%;
     width: 100%;
+    height: 3px;
+    background: var(--line);
 }
-#ordereditemdetailed p{
-    font-size: 20px;
+
+.mo-steps li:first-child::before {
+    display: none;
+}
+
+.mo-dot {
+    position: relative;
+    z-index: 1;
+    width: 15px;
+    height: 15px;
+    background: var(--surface);
+    border: 3px solid var(--line);
+    border-radius: 50%;
+}
+
+.mo-steps li.is-done {
+    color: var(--green-900);
     font-weight: 600;
-    color: grey;
-    margin-left: 5px;
-    display: flex;
-    gap: 10px;
-    overflow-x:Scroll;
-    min-width:60%;
-    height:50px;
-    background-color: rgb(215, 215, 215);
 }
 
-@media (min-width:839px) {
-    
-    #mainboxmyorderstatus #boxmyorderstatus{
-    width: 45%;
-    height: 40vh;
-    margin-top: 20px;
-    border-radius: 20px;
-    border: 2px solid #000;
-    padding: 5px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
-    font-family: sans-serif;
-    box-shadow: 2px 2px 10px 10px rgba(0, 0, 0, 0.1);
-}
+.mo-steps li.is-done::before {
+    background: var(--green-700);
 }
 
-@media (min-width:1600px) {
-    
-    #mainboxmyorderstatus #boxmyorderstatus{
-    width: 40%;
-    height: 35vh;
-    margin-top: 20px;
-    border-radius: 20px;
-    border: 2px solid #000;
-    padding: 5px;
+.mo-steps li.is-done .mo-dot {
+    background: var(--green-700);
+    border-color: var(--green-700);
+}
+
+.mo-items {
+    list-style: none;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
-    font-family: sans-serif;
-    box-shadow: 2px 2px 10px 10px rgba(0, 0, 0, 0.1);
+    gap: 6px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
 }
+
+.mo-items li {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.mo-times {
+    flex: none;
+    color: var(--muted);
+}
+
+.mo-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.mo-qr {
+    align-items: center;
+    text-align: center;
+}
+
+.mo-qr-box {
+    padding: 14px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+}
+
+.mo-qr .modal-primary {
+    align-self: stretch;
 }

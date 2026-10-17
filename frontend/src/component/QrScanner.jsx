@@ -1,8 +1,16 @@
 import { Html5Qrcode } from "html5-qrcode";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import "./QrScanner.css";
 
 const QrScanner = ({ onScan }) => {
   const scannerRef = useRef(null);
+  const onScanRef = useRef(onScan);
+  const [cameraError, setCameraError] = useState("");
+
+  // Always call the latest handler without restarting the camera on every render.
+  useEffect(() => {
+    onScanRef.current = onScan;
+  }, [onScan]);
 
   useEffect(() => {
     let isMounted = true;
@@ -24,6 +32,7 @@ const QrScanner = ({ onScan }) => {
 
         if (!devices.length) {
           console.log("No camera found");
+          if (isMounted) setCameraError("No camera found on this device.");
           return;
         }
 
@@ -41,7 +50,7 @@ const QrScanner = ({ onScan }) => {
             },
             (text) => {
               console.log("SCAN:", text);
-              onScan(text);
+              onScanRef.current(text);
 
               if (qr.isScanning) {
                 qr.stop().catch(()=>{});
@@ -53,6 +62,7 @@ const QrScanner = ({ onScan }) => {
 
       } catch(err) {
         console.log("Camera error:", err);
+        if (isMounted) setCameraError("We could not open the camera. Allow camera access in your browser settings, then try again.");
       }
     };
 
@@ -72,19 +82,16 @@ const QrScanner = ({ onScan }) => {
       }
     };
 
-  }, [onScan]);
+  }, []);
 
 
   return (
-    <div
-      id="reader"
-      style={{
-        width:"100%",
-        maxWidth:"400px",
-        height:"400px",
-        margin:"auto"
-      }}
-    />
+    <div className="qs-wrap">
+      <div id="reader" className="qs-reader" />
+      {cameraError
+        ? <p className="alert alert-error" role="alert">{cameraError}</p>
+        : <p className="qs-hint">Point the camera at the QR code.</p>}
+    </div>
   );
 };
 

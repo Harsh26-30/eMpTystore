@@ -1,59 +1,16 @@
 import React from 'react'
 import './Loderpage.css'
 
-const Loaderpage = () => {
+// Full-page loader. Pass inline to size it for a section under the header,
+// and message to say what is loading.
+const Loaderpage = ({ message = 'Loading…', inline = false }) => {
     return (
-        <div
-            style={{
-                width: "100%",
-                height: "100vh",
-                position: "relative",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                overflow: "hidden",
-                flexDirection: "column",
-            }}
-        >
-            {/* Rotating layer */}
-            <div style={{
-                width: "280px",
-                height: "180px",
-                overflow: "hidden",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: "10%",
-            }}>
-                <div
-                    style={{
-                        width: "300px",
-                        height: "400px",
-                        borderRadius: "10%",
-                        background: "linear-gradient(0deg, black, white)",
-                        animation: "spin 1s linear infinite",
-                        position: "absolute",
-                        padding: "10px",
-                    }}
-                />
-
-                {/* Fixed center layer */}
-                <div
-                    style={{
-                        width: "270px",
-                        height: "170px",
-                        borderRadius: "10%",
-                        backgroundColor: "#fff",
-                        position: "absolute",
-                        zIndex: 1,
-
-                    }}
-                >
-                    <img src="\E.png" alt="Logo" style={{ width: "100%", height: "100%", borderRadius: "10%" }} />
-                </div>
+        <div className={inline ? 'ld-wrap ld-inline' : 'ld-wrap'} role="status" aria-live="polite">
+            <div className="ld-mark">
+                <span className="ld-ring" aria-hidden="true" />
+                <img className="ld-logo" src="/E.png" alt="" />
             </div>
-            <h3 style={{ marginTop: "10px", fontFamily: "Arial, sans-serif", color: "grey" }}>Loading...</h3>
-
+            <p className="ld-text">{message}</p>
         </div>
     )
 }

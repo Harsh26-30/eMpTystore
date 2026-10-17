@@ -26,7 +26,6 @@ const footer = () => {
                     }
                 );
                 setuserRole(res.data.role);
-                setkey(res.data.pickup_location);
             } catch (err) {
                 console.log(err);
             }
@@ -36,14 +35,12 @@ const footer = () => {
     }, [token]);
 
     return (
-
-        <div id='mainboxfooter'>
-
-            <button onClick={(e) => { navigate("/searchbox"); }}>
-                <img src="\search_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="Search" />
+        <nav className="ft-bar" aria-label="Quick links">
+            <button type="button" className="ft-btn" onClick={() => { navigate("/searchbox"); }}>
+                <img className="ft-icon" src="/search_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="" />
+                <span>Search shops</span>
             </button>
-        </div>
-
+        </nav>
     )
 }
 

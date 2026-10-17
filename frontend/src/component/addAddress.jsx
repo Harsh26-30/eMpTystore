@@ -1,136 +1,183 @@
 import React, { useState } from 'react'
-import './addAddress.css'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
+import AuthLayout from './AuthLayout'
+import AuthField from './AuthField'
 
 const addAddress = () => {
-    const navigate = useNavigate();
-    const token = localStorage.getItem("token");
+    const navigate = useNavigate()
+    const token = localStorage.getItem('token')
     const [address, setaddress] = useState('')
     const [country, setcountry] = useState('')
     const [state, setstate] = useState('')
     const [district, setdistrict] = useState('')
     const [pincode, setpincode] = useState('')
+    const [error, setError] = useState('')
+    const [saving, setSaving] = useState(false)
+    const [locating, setLocating] = useState(false)
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault()
+        setError('')
+        setSaving(true)
 
         try {
             const res = await axios.post(
                 `${import.meta.env.VITE_API_URL}/updateaddress`,
                 { address, country, state, district, pincode },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-
-            console.log(res.data); // debug
+                { headers: { Authorization: `Bearer ${token}` } }
+            )
 
             if (res.data.success) {
-                navigate("/home");
+                navigate('/home')
+            } else {
+                setError(res.data.message || 'We could not save your address. Please check it and try again.')
             }
-
         } catch (err) {
-            console.log(err.response?.data || err.message);
+            console.log(err.response?.data || err.message)
+            setError(err.response?.data?.message || 'We could not save your address. Check your connection and try again.')
+        } finally {
+            setSaving(false)
         }
-    };
-
-    const handleUseCurrentLocation = () => {
-    if (!navigator.geolocation) {
-        alert("Geolocation is not supported by your browser.");
-        return;
     }
 
-    navigator.geolocation.getCurrentPosition(
-        async (position) => {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
+    const handleUseCurrentLocation = () => {
+        setError('')
 
-            try {
-                const res = await axios.get(
-                    "https://nominatim.openstreetmap.org/reverse",
-                    {
-                        params: {
-                            lat,
-                            lon,
-                            format: "jsonv2",
-                            addressdetails: 1,
-                        },
-                        headers: {
-                            "Accept-Language": "en",
-                        },
-                    }
-                );
-
-                const a = res.data.address;
-
-                setcountry(a.country || "");
-                setstate(a.state || "");
-
-                setdistrict(
-                    a.state_district ||
-                    a.county ||
-                    a.city_district ||
-                    a.city ||
-                    ""
-                );
-
-                setpincode(a.postcode || "");
-
-            } catch (err) {
-                console.error(err);
-                alert("Unable to fetch address.");
-            }
-        },
-        (error) => {
-            console.error(error);
-            alert("Unable to get your current location.");
-        },
-        {
-            enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 0,
+        if (!navigator.geolocation) {
+            setError('Your browser cannot share your location. Type your address instead.')
+            return
         }
-    );
-};
+
+        setLocating(true)
+        navigator.geolocation.getCurrentPosition(
+            async (position) => {
+                const lat = position.coords.latitude
+                const lon = position.coords.longitude
+
+                try {
+                    const res = await axios.get(
+                        'https://nominatim.openstreetmap.org/reverse',
+                        {
+                            params: { lat, lon, format: 'jsonv2', addressdetails: 1 },
+                            headers: { 'Accept-Language': 'en' },
+                        }
+                    )
+
+                    const a = res.data.address
+
+                    setcountry(a.country || '')
+                    setstate(a.state || '')
+                    setdistrict(
+                        a.state_district ||
+                        a.county ||
+                        a.city_district ||
+                        a.city ||
+                        ''
+                    )
+                    setpincode(a.postcode || '')
+                } catch (err) {
+                    console.error(err)
+                    setError('We could not find your address from your location. Type it instead.')
+                } finally {
+                    setLocating(false)
+                }
+            },
+            (err) => {
+                console.error(err)
+                setLocating(false)
+                setError('We could not get your location. Allow location access, or type your address.')
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0,
+            }
+        )
+    }
 
     return (
-        <div id='mainboxaddAddress'>
-            <div id='addAddressbox2'>
-                <form id='formaddAddress' onSubmit={handleSubmit}>
-                    <fieldset>
-                        <legend>Address</legend>
-                        <input required type="text" value={address} onChange={(e) => setaddress(e.target.value)} />
-                    </fieldset>
-                    <fieldset>
-                        <legend>country</legend>
-                        <select required id='inputaddAddress' onChange={(e) => setcountry(e.target.value)}>
-                            <option deafault>{country ? country : 'Select'}</option>
-                            <option value="India">India</option>
-                        </select>
-                    </fieldset>                    <fieldset>
-                        <legend>state</legend>
-                        <input required type="text" value={state} onChange={(e) => setstate(e.target.value)} />
-                    </fieldset>                    <fieldset>
-                        <legend>district</legend>
-                        <input required type="text" value={district} onChange={(e) => setdistrict(e.target.value)} />
-                    </fieldset>                    <fieldset>
-                        <legend>pincode</legend>
-                        <input required type="text" value={pincode} onChange={(e) => setpincode(e.target.value)} />
-                    </fieldset>
+        <AuthLayout>
+            <h2 className="auth-title">Where should we deliver?</h2>
+            <p className="auth-lead">Add your address so we can show you shops nearby.</p>
 
-                    <button type='submit'>Submit</button>
-                    <div id='buttonboxaddAddress'>
-                        <button onClick={handleUseCurrentLocation}>Use Current Location</button>
+            <button
+                type="button"
+                className="auth-secondary"
+                onClick={handleUseCurrentLocation}
+                disabled={locating}
+                style={{ marginBottom: 20 }}
+            >
+                {locating ? 'Finding your location…' : 'Use my current location'}
+            </button>
+
+            <form className="auth-form" onSubmit={handleSubmit}>
+                <AuthField
+                    label="Address"
+                    name="address"
+                    autoComplete="street-address"
+                    placeholder="House number, street, area"
+                    required
+                    value={address}
+                    onChange={(e) => setaddress(e.target.value)}
+                />
+
+                <div className="auth-grid is-two">
+                    <div className="auth-field">
+                        <label className="auth-label" htmlFor="address-country">Country</label>
+                        <select
+                            id="address-country"
+                            className="auth-input"
+                            required
+                            value={country}
+                            onChange={(e) => setcountry(e.target.value)}
+                        >
+                            <option value="" disabled>Select country</option>
+                            <option value="India">India</option>
+                            {country && country !== 'India' && <option value={country}>{country}</option>}
+                        </select>
                     </div>
 
-                </form>
-            </div>
-        </div>
+                    <AuthField
+                        label="State"
+                        name="state"
+                        autoComplete="address-level1"
+                        placeholder="State"
+                        required
+                        value={state}
+                        onChange={(e) => setstate(e.target.value)}
+                    />
+
+                    <AuthField
+                        label="District"
+                        name="district"
+                        autoComplete="address-level2"
+                        placeholder="District"
+                        required
+                        value={district}
+                        onChange={(e) => setdistrict(e.target.value)}
+                    />
+
+                    <AuthField
+                        label="PIN code"
+                        name="pincode"
+                        autoComplete="postal-code"
+                        inputMode="numeric"
+                        placeholder="PIN code"
+                        required
+                        value={pincode}
+                        onChange={(e) => setpincode(e.target.value)}
+                    />
+                </div>
+
+                {error && <p className="auth-error" role="alert">{error}</p>}
+
+                <button className="auth-submit" type="submit" disabled={saving}>
+                    {saving ? 'Saving…' : 'Save address and continue'}
+                </button>
+            </form>
+        </AuthLayout>
     )
 }
-
 
 export default addAddress

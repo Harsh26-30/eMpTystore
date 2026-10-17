@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './Shopnox.css'
+import './modal.css'
 import { useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import DOMPurify from "dompurify";
@@ -18,6 +19,18 @@ const Shopnox = () => {
   const [footer, setfooter] = useState('');
   const [CartItem, setCartItem] = useState([]);
   const { id } = useParams();
+  const [pendingAdd, setPendingAdd] = useState(null);
+  const [adding, setAdding] = useState(false);
+  const [notice, setNotice] = useState('');
+  const noticeTimer = useRef(null);
+
+  const showNotice = (text) => {
+    setNotice(text);
+    clearTimeout(noticeTimer.current);
+    noticeTimer.current = setTimeout(() => setNotice(''), 3000);
+  };
+
+  useEffect(() => () => clearTimeout(noticeTimer.current), []);
 
 
 
@@ -95,32 +108,11 @@ useEffect(() => {
         const productData =
           UserUI[`productbox${product}`];
 
-        const permission = window.confirm(
-          `Add ${1} quantity of ${productData.productname}?`
-        );
+        if (!productData) return;
 
-        if (!permission) return;
-
-        const handleadd = async () => {
-
-
-          await axios.post(`${import.meta.env.VITE_API_URL}/addItemToCart`, {
-            quantity: 1,
-            productid: productData._id,
-            productname: productData.productname,
-            sellerid: productData.productsellerid,
-          },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            })
-
-          loadUI();
-        }
-        handleadd();
+        // ask inside the page instead of a browser pop-up
+        setPendingAdd(productData);
       }
-      loadUI();
     };
 
     const container =
@@ -139,6 +131,35 @@ useEffect(() => {
     };
 
   }, [UserUI]);
+
+  const confirmAdd = async () => {
+    const productData = pendingAdd;
+    if (!productData) return;
+
+    setAdding(true);
+    try {
+      await axios.post(`${import.meta.env.VITE_API_URL}/addItemToCart`, {
+        quantity: 1,
+        productid: productData._id,
+        productname: productData.productname,
+        sellerid: productData.productsellerid,
+      },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+
+      showNotice(`${productData.productname} added to your cart.`);
+      await loadUI();
+    } catch (err) {
+      console.log(err);
+      showNotice('We could not add this item. Check your connection and try again.');
+    } finally {
+      setAdding(false);
+      setPendingAdd(null);
+    }
+  };
 
   const renderHTML = (html, data = {}) => {
     if (!html) return "";
@@ -275,8 +296,15 @@ useEffect(() => {
     return updatedHTML;
   };
 
+  const cartTotal = CartItem?.reduce((total, item) => total + item.quantity * item.productprice, 0) || 0;
+  const cartCount = CartItem?.reduce((total, item) => total + item.quantity, 0) || 0;
+
   return (
-    <div id='shopnoxmainbox' ref={containerRef}>
+    <div id='shopnoxmainbox' ref={containerRef} className={CartItem.length > 0 ? 'has-cart' : undefined}>
+
+      <button type="button" className="sn-back" onClick={() => navigate('/home')}>
+        <span aria-hidden="true">&lsaquo;</span> All shops
+      </button>
 
       <div id='header'
         dangerouslySetInnerHTML={{
@@ -294,20 +322,45 @@ useEffect(() => {
         }}
       />
 
-      {CartItem.length > 0 && <div id='Gotocartbuttonbox'>
-        {CartItem?.map((item) => (
-          <div key={item.productid} id="totalorderdetailed">
-            <h4 id="quantity">{item.quantity}x</h4>
-            <h4>{item.productname}</h4>
+      {CartItem.length > 0 && (
+        <div id='Gotocartbuttonbox' className="sn-cartbar" role="region" aria-label="Your cart">
+          <ul className="sn-cart-items">
+            {CartItem?.map((item) => (
+              <li key={item.productid} className="sn-cart-chip">
+                <span className="sn-cart-qty">{item.quantity}x</span>
+                <span className="sn-cart-name">{item.productname}</span>
+              </li>
+            ))}
+          </ul>
+          <button type="button" className="sn-cart-go" onClick={() => navigate('/Cart')}>
+            <span className="sn-cart-total">₹{cartTotal.toLocaleString('en-IN')}</span>
+            <span className="sn-cart-label">View cart ({cartCount})</span>
+          </button>
+        </div>
+      )}
+
+      {pendingAdd && (
+        <div className="modal-backdrop" onClick={() => !adding && setPendingAdd(null)}>
+          <div
+            className="modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="sn-add-title"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 id="sn-add-title">Add to cart?</h2>
+            <p>1 x {pendingAdd.productname}{pendingAdd.productprice ? ` for ₹${pendingAdd.productprice}` : ''}</p>
+            <button type="button" className="modal-primary" onClick={confirmAdd} disabled={adding} autoFocus>
+              {adding ? 'Adding…' : 'Add to cart'}
+            </button>
+            <button type="button" className="modal-secondary" onClick={() => setPendingAdd(null)} disabled={adding}>
+              Cancel
+            </button>
           </div>
-        ))}
-        <button onClick={() => navigate('/Cart')}>
-          <h4>
-            ₹{CartItem?.reduce((total, item) => total + item.quantity * item.productprice, 0)}
-          </h4>
-          <p>To Cart</p>
-        </button>
-      </div>}
+        </div>
+      )}
+
+      {notice && <p className="toast" role="status">{notice}</p>}
 
     </div>
   )

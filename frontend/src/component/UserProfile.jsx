@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import './UserProfile.css'; // Import CSS for styling
+import './UserProfile.css';
+import './modal.css';
 import axios from 'axios';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import Shopnox from './Shopnox';
+import Header2 from './header2';
 
 
 const UserProfile = () => {
@@ -21,6 +22,9 @@ const UserProfile = () => {
     const [sellerEmailId, setsellerEmailId] = useState('');
     const [BackgroundImg, setBackgroundImg] = useState('');
     const [totalordertillnow, settotalordertillnow] = useState("0");
+    const [notice, setNotice] = useState('');
+    const [saving, setSaving] = useState(false);
+    const [chosenFile, setChosenFile] = useState(null);
 
     const fetchUserProfile = async () => {
         try {
@@ -95,10 +99,11 @@ const UserProfile = () => {
 
     const handleChangeProfilePicSubmit = async (e) => {
         e.preventDefault();
+        if (!chosenFile) return;
+        setSaving(true);
         try {
-            const fileInput = document.getElementById('profilePictureInput');
             const formData = new FormData();
-            formData.append('profilePicture', fileInput.files[0]);
+            formData.append('profilePicture', chosenFile);
             await axios.put(`${import.meta.env.VITE_API_URL}/updateprofilePicture`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -107,7 +112,11 @@ const UserProfile = () => {
             });
         } catch (err) {
             console.error("Error updating profile picture:", err);
+            setNotice('We could not change your picture. Please try again.');
+            setTimeout(() => setNotice(''), 3000);
         }
+        setSaving(false);
+        setChosenFile(null);
         setchangeProfilePicformvissible(false);
         fetchUserProfile()
     };
@@ -116,10 +125,16 @@ const UserProfile = () => {
         const shareLink = `${window.location.origin}/profile/${currentUserId}`;
 
         try {
-            await navigator.share({
-                title: "Check out my profile",
-                url: shareLink,
-            });
+            if (navigator.share) {
+                await navigator.share({
+                    title: "Check out my profile",
+                    url: shareLink,
+                });
+            } else {
+                await navigator.clipboard.writeText(shareLink);
+                setNotice('Profile link copied.');
+                setTimeout(() => setNotice(''), 3000);
+            }
         } catch (err) {
             console.log(err);
         }
@@ -145,7 +160,7 @@ const UserProfile = () => {
                     },
                 }
             );
-            alert(res.data.message);
+            setNotice(res.data.message);
             navigate("/home");
 
         } catch (err) {
@@ -153,55 +168,89 @@ const UserProfile = () => {
         }
     };
 
+    const isOwnProfile = !SellerId;
+
     return (
-        <div className="userprofilemainbox">
-            <div id='userprofile'>
-                <div id='bkimgpimgnamebox1'>
-                    <div id='bkimgbox'>
-                        <img src={BackgroundImg} alt="background Image" />
+        <div className="page">
+            <Header2 />
+            <main className="page-body is-narrow up-main">
+                <section className="up-card" aria-label="Profile">
+                    <div className="up-cover">
+                        {BackgroundImg && <img src={BackgroundImg} alt="" />}
                     </div>
-                    <div id='profileimg' onClick={handleprofileimgclick}>
-                        <div id='insidepimg'>
+
+                    <div className="up-identity">
+                        <button
+                            type="button"
+                            className="up-avatar"
+                            onClick={handleprofileimgclick}
+                            aria-label={userRole ? 'Change profile picture' : 'Profile picture'}
+                            disabled={!userRole || !isOwnProfile}
+                        >
                             <img
                                 src={profilePicture || "/shop-with-sign-open-design_23-2148544029.jpg"}
-                                alt="Profile Image"
+                                alt=""
                             />
-                        </div>
+                        </button>
+                        <h1 className="up-name">{bussinessname || 'Your shop'}</h1>
+                        {AboutUs && <p className="up-about">{AboutUs}</p>}
                     </div>
-                    <div id='namebox'>
-                        <h3>{bussinessname}</h3>
-                    </div>
-                </div>
-                <div id='totn'>
-                    <p>total order till now</p>
-                    <h3>{totalordertillnow || 0}</h3>
-                </div>
 
-                <div className="profilebuttonsection">
-                    {!SellerId && <button onClick={handleclickShare} className="ShareProfileButton">Share Profile</button>
-                    }     
-                   <button
-                        onClick={() => navigate(`/Shopnox/${SellerId}`)}
-                        className="ShareProfileButton"
-                    >
-                        Shop here
-                    </button>
-                </div>
-            </div>
-            {/* {userRole === "Customer" && (
-                <div className="profilebuttonsection">
-                    <button onClick={handleclickConnectToShop} className="ConnectToShopButton">Connect To Shop</button>
-                </div>
-            )} */}
+                    <div className="up-stat">
+                        <span className="up-stat-number money">{totalordertillnow || 0}</span>
+                        <span className="up-stat-label">orders so far</span>
+                    </div>
+
+                    <div className="up-actions">
+                        {isOwnProfile && (
+                            <button type="button" onClick={handleclickShare} className="btn btn-secondary">
+                                Share profile
+                            </button>
+                        )}
+                        <button
+                            type="button"
+                            onClick={() => navigate(`/Shopnox/${SellerId}`)}
+                            className="btn btn-primary"
+                        >
+                            Shop here
+                        </button>
+                    </div>
+                </section>
+            </main>
+
             {changeProfilePicformvisible === true && userRole && (
-                <div className="changeprofilepicturesection">
-                    <form onSubmit={handleChangeProfilePicSubmit}>
-                        <input type="file" id="profilePictureInput" name="profilePicture" accept="image/*" />
-                        <button type="submit">Change Profile Picture</button>
-                    </form>
+                <div className="modal-backdrop" onClick={() => !saving && setchangeProfilePicformvissible(false)}>
+                    <div
+                        className="modal"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="up-pic-title"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <h2 id="up-pic-title">Change profile picture</h2>
+                        <form className="modal-form" onSubmit={handleChangeProfilePicSubmit}>
+                            <div className="modal-field">
+                                <label htmlFor="profilePictureInput">Choose a photo</label>
+                                <input
+                                    type="file"
+                                    id="profilePictureInput"
+                                    name="profilePicture"
+                                    accept="image/*"
+                                    onChange={(e) => setChosenFile(e.target.files[0] || null)}
+                                />
+                            </div>
+                            <button className="modal-primary" type="submit" disabled={!chosenFile || saving}>
+                                {saving ? 'Uploading…' : 'Save picture'}
+                            </button>
+                        </form>
+                        <button type="button" className="modal-secondary" onClick={() => setchangeProfilePicformvissible(false)} disabled={saving}>
+                            Cancel
+                        </button>
+                    </div>
                 </div>
             )}
-            <p className="end">---End of these page---</p>
+
+            {notice && <p className="toast" role="status">{notice}</p>}
         </div>
     );
 };

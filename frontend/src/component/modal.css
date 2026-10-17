@@ -1,0 +1,138 @@
+/* Pop-up dialogs shown over the home page (email code, phone number) */
+
+.modal-backdrop,
+.modal-backdrop *,
+.modal-backdrop *::before,
+.modal-backdrop *::after {
+  box-sizing: border-box;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(15, 61, 49, 0.55);
+  font-family: var(--font-body);
+}
+
+.modal {
+  width: 100%;
+  max-width: 420px;
+  max-height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 26px 22px 24px;
+  color: var(--ink);
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 60px rgba(15, 61, 49, 0.35);
+}
+
+.modal h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.45rem;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+}
+
+.modal p {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.modal label {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.modal input {
+  width: 100%;
+  min-height: 50px;
+  padding: 10px 14px;
+  font: inherit;
+  font-size: 1.1rem;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.modal input:focus {
+  outline: none;
+  border-color: var(--green-700);
+  box-shadow: var(--focus-ring);
+}
+
+.modal-primary,
+.modal-secondary {
+  width: 100%;
+  min-height: 48px;
+  font: inherit;
+  font-size: 1.02rem;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.modal-primary {
+  color: #fff;
+  background: var(--green-700);
+  border: none;
+}
+
+.modal-primary:hover {
+  background: var(--green-800);
+}
+
+.modal-primary:disabled {
+  background: #8FB3A5;
+  cursor: not-allowed;
+}
+
+.modal-secondary {
+  color: var(--green-700);
+  background: var(--surface);
+  border: 1.5px solid var(--green-700);
+}
+
+.modal-secondary:hover {
+  background: var(--green-50);
+}
+
+.modal .modal-error,
+.modal .modal-ok {
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  border-radius: var(--radius-sm);
+}
+
+.modal .modal-error {
+  color: var(--danger);
+  background: var(--danger-bg);
+}
+
+.modal .modal-ok {
+  color: var(--green-900);
+  background: var(--green-50);
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}

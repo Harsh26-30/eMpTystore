@@ -1,38 +1,42 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import AuthLayout from './AuthLayout'
 import Logincard from './logincard'
 import Signupcard from './signupcard'
-import './auth.css'
 
+const Auth = ({ setvalid }) => {
+  const [searchParams] = useSearchParams()
+  // Someone arriving from a share link is new, so open on sign up.
+  // Everyone else is most likely coming back, so open on log in.
+  const [mode, setMode] = useState(searchParams.get('id') ? 'signup' : 'login')
 
-const auth = ({ setvalid }) => {
-  const [visibilty, setvisibilty] = useState('signup')
   return (
-    <div id='authpage'>
-      <div id='headerbox'>
-        <div id='box1'>
-          <img src="\E.png" alt="logo" />
-          <h1>Empty Store</h1>
-        </div>
-
-        <div id='buttonbox'>
-          <button style={visibilty === 'login' ?
-            { backgroundColor: "#ffffff46", borderBottom: "5px solid grey" } :
-            { backgroundColor: "#000" }
-          } onClick={(e) => setvisibilty('login')}>Login</button>
-
-          <button style={visibilty === 'signup' ? { backgroundColor: "#ffffff46", borderBottom: "5px solid grey" }
-            : { backgroundColor: "#000" }
-          } onClick={(e) => setvisibilty('signup')}>SignUp</button>
-
-        </div>
-      </div>
-      <div id='cardbox'>
-        {visibilty === 'login' && <Logincard setvalid={setvalid} />}
-        {visibilty === 'signup' && <Signupcard setvalid={setvalid} />}
+    <AuthLayout>
+      <div className="auth-tabs" role="tablist" aria-label="Log in or create an account">
+        <button
+          type="button"
+          role="tab"
+          className="auth-tab"
+          aria-selected={mode === 'login'}
+          onClick={() => setMode('login')}
+        >
+          Log in
+        </button>
+        <button
+          type="button"
+          role="tab"
+          className="auth-tab"
+          aria-selected={mode === 'signup'}
+          onClick={() => setMode('signup')}
+        >
+          Create account
+        </button>
       </div>
 
-    </div >
+      {mode === 'login' && <Logincard setvalid={setvalid} />}
+      {mode === 'signup' && <Signupcard setvalid={setvalid} />}
+    </AuthLayout>
   )
 }
 
-export default auth
+export default Auth

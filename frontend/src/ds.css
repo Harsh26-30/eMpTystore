@@ -1,0 +1,368 @@
+/* Shared building blocks for every page.
+   Colours, fonts and radii come from the tokens in index.css. */
+
+.page,
+.page *,
+.page *::before,
+.page *::after {
+  box-sizing: border-box;
+}
+
+.page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+}
+
+.page-body {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 20px 16px 48px;
+}
+
+.page-body.is-narrow {
+  max-width: 640px;
+}
+
+.page-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.6rem;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.page-lead {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.2rem;
+  line-height: 1.25;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.row.is-between {
+  justify-content: space-between;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font: inherit;
+  font-weight: 600;
+  color: var(--green-700);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Surfaces */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 18px;
+}
+
+.card.is-flat {
+  box-shadow: none;
+  border: 1px solid var(--line);
+}
+
+.card.is-tinted {
+  background: var(--green-50);
+  box-shadow: none;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--line);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 0 20px;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.btn-primary {
+  color: #fff;
+  background: var(--green-700);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--green-800);
+}
+
+.btn-secondary {
+  color: var(--green-700);
+  background: var(--surface);
+  border-color: var(--green-700);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--green-50);
+}
+
+.btn-danger {
+  color: var(--danger);
+  background: var(--surface);
+  border-color: var(--danger);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: var(--danger-bg);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn-small {
+  min-height: 38px;
+  padding: 0 14px;
+  font-size: 0.92rem;
+}
+
+/* Forms */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.label {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.input {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 14px;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+textarea.input {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--green-700);
+  box-shadow: var(--focus-ring);
+}
+
+.hint {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+/* Status */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.3;
+  border-radius: 999px;
+  color: var(--muted);
+  background: #E9EFEC;
+}
+
+.pill-ok {
+  color: var(--green-900);
+  background: var(--green-100);
+}
+
+.pill-warn {
+  color: #6B4A06;
+  background: #FBE9BD;
+}
+
+.pill-bad {
+  color: var(--danger);
+  background: var(--danger-bg);
+}
+
+.pill-info {
+  color: #1B3F73;
+  background: #DCE8F8;
+}
+
+/* Messages */
+.alert {
+  padding: 12px 14px;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+}
+
+.alert-error {
+  color: var(--danger);
+  background: var(--danger-bg);
+  border-color: #F0C4C1;
+}
+
+.alert-ok {
+  color: var(--green-900);
+  background: var(--green-50);
+  border-color: var(--green-100);
+}
+
+.alert-info {
+  color: #1B3F73;
+  background: #EAF1FB;
+  border-color: #CFE0F5;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 32px 20px;
+  text-align: center;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-md);
+}
+
+.empty-state p {
+  max-width: 38ch;
+  line-height: 1.5;
+}
+
+.skeleton {
+  min-height: 80px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(90deg, #E4ECE8 25%, #EEF3F0 50%, #E4ECE8 75%);
+  background-size: 200% 100%;
+  animation: ds-shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes ds-shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  z-index: 300;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100% - 32px);
+  padding: 12px 18px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #fff;
+  background: var(--green-900);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 6px 20px rgba(15, 61, 49, 0.3);
+}
+
+/* Tab switch used inside pages */
+.tabs {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--green-50);
+  border-radius: var(--radius-md);
+}
+
+.tab {
+  flex: 1;
+  min-height: 44px;
+  padding: 0 14px;
+  font: inherit;
+  font-weight: 600;
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  border-radius: 9px;
+  cursor: pointer;
+}
+
+.tab[aria-selected="true"] {
+  color: var(--green-900);
+  background: var(--surface);
+  box-shadow: 0 1px 3px rgba(15, 61, 49, 0.18);
+}
+
+/* Numbers that line up */
+.money {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+@media (min-width: 760px) {
+  .page-body {
+    padding: 28px 24px 64px;
+  }
+
+  .page-title {
+    font-size: 1.9rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}

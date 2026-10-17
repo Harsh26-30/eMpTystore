@@ -1,86 +1,50 @@
-#mainboxkey{
-height: 100vh;
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: flex-start;
+/* Your role page */
+
+.ky-gap {
+  margin-top: 20px;
 }
 
-#userCurrentRole{
-    height: 20%;
-    margin-top: 10%;
-    width: 90%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: #c9c4c4;
-    border-radius: 20px;
+.ky-skel {
+  margin-top: 20px;
+  min-height: 120px;
 }
 
-#msgbox{
-      height: 10%;
-    margin-top: 10%;
-    width: 90%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    background-color: #e6f779;
-    border-radius: 20px;
-    padding: 10px;
-
+.ky-status {
+  display: block;
+  margin-bottom: 2px;
 }
 
-#msgbox p{
-    font-size: 20px;
-    font-weight: bold;
-    color: #000;
+.ky-retry {
+  margin-top: 10px;
 }
 
-#boxrequestkey{
-    height: 20%;
-    margin-top: 10%;
-    width: 90%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: #c9c4c4;
-    border-radius: 20px;
+.ky-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  list-style: none;
 }
 
-#boxrequestkey h3{
-    font-size: 25px;
+.ky-option {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
 }
 
-#boxrequestkey button{
-    height: 30%;
-    width: 35%;
-    background-color: black;
-    color: #fff;
-    border-radius: 10px;
-    font-size: 20px;
-    font-weight: bold;
-    user-select: none;
+.ky-option h3 {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  line-height: 1.25;
 }
 
-#boxrequestkey button:focus{
-    background-color: grey;
+.ky-option p {
+  color: var(--muted);
+  line-height: 1.5;
 }
 
-#keybox{
-    height: 20%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#keybox p{
-    font-size: 25px;
-}
-
-#keybox p span{
-    color: grey;
-    border-bottom: 2px solid #000;
+@media (min-width: 640px) {
+  .ky-list {
+    grid-template-columns: 1fr 1fr;
+  }
 }

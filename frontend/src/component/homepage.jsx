@@ -98,20 +98,33 @@ function Homepage() {
 
 
   return (
-    <div id="mainboxhomepage">
+    <div id="mainboxhomepage" className={userRole === "Customer" ? "home-customer" : undefined}>
       <Header2 managehomepagevisible={managehomepagevisible} setmanagehomepagevisible={setmanagehomepagevisible} />
       {userRole === "Seller" && managehomepagevisible === 'Order' && <Order />}
       {userRole === "Seller" && managehomepagevisible === 'Product' && <Product />}
       {userRole === "Seller" && managehomepagevisible === 'UI' && <UI />}
-      {userRole === "Customer" && <Generatelinkbtnbox />}
-      {userRole === "Customer" && <h3 className="hmh3">Near By Shops</h3>}
-      {userRole === "Customer" && <NearByShop />}
+      {userRole === "Customer" && (
+        <main className="home-main">
+          <Generatelinkbtnbox />
+          <h2 className="home-heading">Shops near you</h2>
+          <NearByShop />
+        </main>
+      )}
       {/* {userRole === "Customer" && <h3 className="hmh3">Your Connections</h3>}
       {userRole === "Customer" && <Connections />} */}
+      {userRole === "Admin" && (
+        <main className="home-main">
+          <h2 className="home-heading">Admin</h2>
+          <p className="page-lead" style={{ padding: '0 16px' }}>Review role requests, upload shop layouts and pay out withdrawals from the Menu.</p>
+          <div style={{ padding: '16px' }}>
+            <button type="button" className="btn btn-primary btn-block" onClick={() => navigate('/Menu')}>Open menu</button>
+          </div>
+        </main>
+      )}
       {userRole === "Delivery_partner" && <DeliveryPartnerdashboard />}
       {userPhoneNoVerification === false && <UpdatePhoneNo fun1={fun1} />}
       {userEmailVerification === false && <EmailVerification setemailverificationvisibility={setemailverificationvisibility} />}
-      <button id="AboutUsbtn" onClick={() => navigate('/AboutUs')}>Know About Us</button>
+      {userRole === "Customer" && <button id="AboutUsbtn" type="button" onClick={() => navigate('/AboutUs')}>About Empty Store</button>}
       {/* <Footer/> */}
     </div>
   );

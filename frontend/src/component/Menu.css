@@ -1,85 +1,58 @@
-#mainboxMenu{
-    width: 100%;
-    height: 100vh;
+.menu-list {
+    list-style: none;
     display: flex;
-    justify-content: center;
-    align-items: center;
     flex-direction: column;
-    gap: 5px;
+    gap: 10px;
+    margin-top: 22px;
 }
 
-#box2Menu{
-    width: 98%;
-    height: 99%;
-}
-
-h2{
-    color: #000;
-    text-align: center;
-    font-family: sans-serif;
-    font-size: 50px;
-}
-
-#logoutbutton{
+.menu-item {
     width: 100%;
-    height: 10%;
-    font-weight: bold;
-    font-size: 25px;
-    color: red;
-    border-radius: 10px;
-    background-color: rgba(255, 0, 0, 0.446);
-}
-
-#menubutton{
-    width: 100%;
-    height: 10%;
-    font-weight: bold;
-    font-size: 25px;
-    color: #fff;
-    background-color: #000;
-    text-align: left;
-    padding-left: 5%;
-    border-radius: 10px;
-}
-
-@media (min-width:794px) {
-#box2Menu{
-    width: 98%;
-    height: 99%;
-    background-color: #fff;
-    flex-wrap: wrap;
+    min-height: 64px;
     display: flex;
-    gap: 20px;
-    justify-content: flex-start;
-}
-
-h2{
-    color: #000;
-    text-align: center;
-    font-family: sans-serif;
-    font-size: 50px;
-    text-decoration: 2px underline #000;
-
-}
-#logoutbutton{
-    width: 15%;
-    height: 20%;
-    font-weight: bold;
-    font-size: 25px;
-    color: red;
-    background-color: rgba(255, 0, 0, 0.446);
-    border-radius: 20px;
-}
-#menubutton{
-    width: 15%;
-    height: 20%;
-    font-weight: bold;
-    font-size: 25px;
-    color: #fff;
-    background-color: #000;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    font: inherit;
     text-align: left;
-    padding-left: 5%;
-        border-radius: 20px;
-
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: border-color 0.15s, background-color 0.15s;
 }
+
+.menu-item:hover {
+    border-color: var(--green-700);
+    background: var(--green-50);
+}
+
+.menu-item-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.menu-item-label {
+    font-weight: 700;
+    font-size: 1.05rem;
+}
+
+.menu-item-hint {
+    font-size: 0.9rem;
+    color: var(--muted);
+}
+
+.menu-item-chevron {
+    flex: none;
+    font-size: 1.6rem;
+    line-height: 1;
+    color: var(--green-700);
+}
+
+.menu-logout {
+    margin-top: 28px;
 }

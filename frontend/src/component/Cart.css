@@ -1,162 +1,136 @@
-#mainboxcart {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-#mainboxcart #Items {
-    width: 90%;
-    height: 10%;
-    border-radius: 20px;
-    margin-top: 10px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 10px;
-    gap: 10px;
-    box-shadow: 2px 2px 20px 1px #000;
-}
-
-#mainboxcart #Items img {
-    width: 25%;
-    height: 92%;
-    border: none;
-    border-radius: 20px;
-}
-
-#mainboxcart #Items #itemdetail {
-    width: 50%;
-    height: 90%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-#mainboxcart #Items #itemdetail p {
-    font-family: sans-serif;
-    letter-spacing: 0.25px;
-    font-weight: 600;
-    font-size: 20px;
-    margin-left: 2px;
-    line-height: 12px;
-
-
-}
-
-#mainboxcart #Items #itemdetail p span {
-    font-family: sans-serif;
-    letter-spacing: 0.25px;
-    font-weight: 600;
-    font-size: 12px;
-    color: rgba(155, 149, 149, 0.691);
-}
-
-#mainboxcart #Items #itemquanity {
-    width: 25%;
-    height: 90%;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-}
-
-#mainboxcart #Items #itemquanity input{
-    width: 50%;
-    height: 30%;
-    border: none;
-    background-color: rgb(234, 237, 239);
-    text-align: center;
-}
-#mainboxcart #Items #itemquanity button{
-    width: 25%;
-    height: 30%;
-}
-
-#TotalAmountToPayBox{
-    background-color: rgb(232, 229, 229);
-    width: 100%;
+.cart-gap {
     margin-top: 20px;
-    display: flex;
-    flex-direction: column;gap: 2px;
-    font-family: sans-serif;
 }
 
-#TotalAmountToPayBox #Allcharges{
-    width: 100%;
-}
-
-#TotalAmountToPayBox #Allcharges #internalcharges{
-    width: 100%;
-    height: 30px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 10px;
-}
-
-#TotalAmountToPayBox #Allcharges #internalcharges h5{
-    width: 70%;
-    display: flex;
-}
-
-#TotalAmountToPayBox #Allcharges #internalcharges p{
-    width: 30%;
-    text-align: center;
-}
-
-#TotalAmountToPayBox #Allcharges #internalcharges h5 span{
-    background-color: #d5d0d0d0;
-    width: 10%;
-    height: 10%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 15px;
-    margin-left: 2px;
-}
-
-#TotalAmountToPayBox #Allcharges #externalcharges{
-    width: 100%;
-    height: 50px;
-}
-#TotalAmountToPayBox #Allcharges #externalcharges .externalcharge{
-    display: flex;
-    height: 30px;
-    justify-content: flex-start;
-}
-
-#TotalAmountToPayBox #Allcharges #externalcharges .externalcharge h5{
-    width: 70%;
-    padding: 10px;
-}
-
-#TotalAmountToPayBox #Allcharges #externalcharges p{
-    width: 30%;
-    text-align: center;
-}
-
-#TotalAmountToPayBox  #Totalamountpay{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    width: 100%;
-    height: 70px;
-}
-
-#TotalAmountToPayBox  #Totalamountpay button{
-    background-color: #000;
-    color: #fff;
-    width: 30%;
-    height: 80%;
-    border-radius: 30px;
-    border: none;
+.cart-list {
+    list-style: none;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    gap: 12px;
+    margin-top: 20px;
 }
 
-#TotalAmountToPayBox  #Totalamountpay button:hover{
-    background-color: grey;
+.cart-item {
+    display: grid;
+    grid-template-columns: 64px 1fr auto;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+}
+
+.cart-thumb {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    background: var(--green-50);
+}
+
+.cart-info {
+    min-width: 0;
+}
+
+.cart-name {
+    font-weight: 700;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+}
+
+.cart-seller {
+    font-size: 0.9rem;
+    color: var(--muted);
+}
+
+.cart-price {
+    margin-top: 2px;
+}
+
+.cart-stepper {
+    display: flex;
+    align-items: center;
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.cart-stepper button {
+    width: 44px;
+    height: 44px;
+    font: inherit;
+    font-size: 1.3rem;
+    color: var(--green-700);
+    background: var(--surface);
+    border: none;
+    cursor: pointer;
+}
+
+.cart-stepper button:hover {
+    background: var(--green-50);
+}
+
+.cart-qty {
+    min-width: 32px;
+    text-align: center;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.cart-bill {
+    margin-top: 20px;
+}
+
+.cart-lines {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.cart-line {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.cart-line dt {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.cart-line dd {
+    flex: none;
+    font-weight: 600;
+}
+
+.cart-times {
+    color: var(--muted);
+}
+
+.cart-line.is-sub {
+    padding-top: 10px;
+    border-top: 1px dashed var(--line);
+}
+
+.cart-line.is-total {
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.cart-pay {
+    margin-top: 20px;
+    min-height: 54px;
+    font-size: 1.1rem;
+}
+
+.cart-done {
+    margin-top: 20px;
+}
+
+.cart-done-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 22px;
 }

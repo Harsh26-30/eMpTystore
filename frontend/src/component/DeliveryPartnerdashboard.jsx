@@ -59,7 +59,8 @@ const DeliveryPartnerdashboard = () => {
     const [QrVusibility, setQrVusibility] = useState(false);
     const [managingOrder, setmanagingOrder] = useState('')
     const [selectedOrder, setSelectedOrder] = useState(null);
-    const routingRef = useRef(null);   // <-- ADD THIS
+    const routingRef = useRef(null);
+    const [geoError, setGeoError] = useState('');
 
 
 
@@ -135,8 +136,9 @@ const DeliveryPartnerdashboard = () => {
 
                 setclat(newLat);
                 setclong(newLng);
+                setGeoError('');
             },
-            (error) => console.log(error.message),
+            (error) => { console.log(error.message); setGeoError(error.message || 'Location unavailable'); },
             {
                 enableHighAccuracy: true,
                 maximumAge: 0,
@@ -162,7 +164,23 @@ const DeliveryPartnerdashboard = () => {
     }
 
     if (clat === null || clong === null) {
-        return <Loaderpage />
+        if (geoError) {
+            return (
+                <div className="dp-page">
+                    <section className="card dp-geo-error" role="alert">
+                        <h2 className="dp-title">We cannot see your location</h2>
+                        <p className="dp-text">
+                            Deliveries need your live location. Turn on location for this site in your
+                            browser settings, then reload the page.
+                        </p>
+                        <button type="button" className="btn btn-primary btn-block dp-big" onClick={() => window.location.reload()}>
+                            Reload page
+                        </button>
+                    </section>
+                </div>
+            )
+        }
+        return <Loaderpage inline message="Finding your location…" />
     }
 
     const destination = [destlat, destlong]; // Delhi example
@@ -197,75 +215,78 @@ const DeliveryPartnerdashboard = () => {
         return (bearing + 360) % 360;
     }
 
+    const showMap = mapvisblity === true || managingOrder !== '' && managingOrder;
+
     return (
-        <div id='maindpd'>
-            {(mapvisblity === true || managingOrder !== '' && managingOrder) && (
-                <MapContainer
-                    center={position}
-                    zoom={6}
-                    style={{ height: "500px", width: "100%" }}
-                >
-                    <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+        <div className="dp-page">
+            <div className={showMap ? 'dp-grid' : 'dp-grid dp-grid-single'}>
+                <div className="dp-orders">
+                    <Deliveryorderdetail
+                        setQrVusibility={setQrVusibility}
+                        setSelectedOrder={setSelectedOrder}
+                        selectedOrder={selectedOrder}
+                        setmapvisblity={setmapvisblity}
+                        setdestlat={setdestlat}
+                        setdestlong={setdestlong}
+                    />
+                </div>
 
-                    <Marker
-                        position={position}
-                        icon={riderIcon}
-                        ref={markerRef}
-                    >
-                        <Popup>Your Location</Popup>
-                    </Marker>
+                {showMap && (
+                    <section className="card dp-map-card" aria-labelledby="dp-map-title">
+                        <h2 id="dp-map-title" className="dp-title">Route to the shop</h2>
+                        <MapContainer
+                            className="dp-map"
+                            center={position}
+                            zoom={6}
+                        >
+                            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
-                    {destlat && destlong && (
-                        <Marker position={[destlat, destlong]} icon={shopIcon}>
-                            <Popup>Shop Location</Popup>
-                        </Marker>
-                    )}
+                            <Marker
+                                position={position}
+                                icon={riderIcon}
+                                ref={markerRef}
+                            >
+                                <Popup>Your Location</Popup>
+                            </Marker>
 
-                    {destlat !== null && destlong !== null && (
-                        <Routing
-                            start={position}
-                            end={destination}
-                            routingRef={routingRef}
-                        />)}            </MapContainer>)}
+                            {destlat && destlong && (
+                                <Marker position={[destlat, destlong]} icon={shopIcon}>
+                                    <Popup>Shop Location</Popup>
+                                </Marker>
+                            )}
 
-            <Deliveryorderdetail
-                setQrVusibility={setQrVusibility}
-                setSelectedOrder={setSelectedOrder}
-                selectedOrder={selectedOrder}
-                setmapvisblity={setmapvisblity}
-                setdestlat={setdestlat}
-                setdestlong={setdestlong}
-            />
+                            {destlat !== null && destlong !== null && (
+                                <Routing
+                                    start={position}
+                                    end={destination}
+                                    routingRef={routingRef}
+                                />)}
+                        </MapContainer>
+                    </section>
+                )}
+            </div>
+
             {QrVusibility === true && (
-                <div
-                    style={{
-                        position: "fixed",
-                        top: 0,
-                        left: 0,
-                        width: "100vw",
-                        height: "100vh",
-                        background: "rgba(0,0,0,0.6)",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        zIndex: 9999,   // 👈 highest layer
-                    }}
-                >
+                <div className="dp-backdrop">
                     <div
-                        style={{
-                            background: "white",
-                            padding: "20px",
-                            borderRadius: "12px",
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }}
+                        className="dp-dialog"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="dp-qr-title"
+                        onKeyDown={(e) => { if (e.key === 'Escape') setQrVusibility(false); }}
                     >
-                        {selectedOrder && <OrderQr value={selectedOrder._id} />}
+                        <h2 id="dp-qr-title" className="dp-title">Show this QR code to the shop</h2>
+                        <p className="dp-text">The seller scans it to confirm you picked up the order.</p>
+                        {selectedOrder && (
+                            <div className="dp-qr">
+                                <OrderQr value={selectedOrder._id} />
+                            </div>
+                        )}
                         <button
+                            type="button"
+                            className="btn btn-primary btn-block dp-big"
+                            autoFocus
                             onClick={() => setQrVusibility(false)}
-                            style={{ marginTop: "10px" }}
                         >
                             Close
                         </button>

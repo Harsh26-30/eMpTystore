@@ -1,125 +1,108 @@
 import React from 'react'
-import './aboutUs.css'
 import Header2 from './header2'
+import './aboutUs.css'
+
+const SECTIONS = [
+    ['emptyStore', 'Empty Store'],
+    ['howWorks', 'How it works'],
+    ['Customer', 'For customers'],
+    ['Seller', 'For sellers'],
+    ['priceStruture', 'Pricing']
+]
 
 const aboutUs = () => {
     return (
-        <div id='mainboxaboutus'>
+        <div className="page">
             <Header2 />
-            <div id='aboutusnav'>
-                <a href="#emptyStore">Empty Store</a>
-                <a href="#howWorks">How Works</a>
-                <a href="#Customer">Customer</a>
-                <a href="#Seller">Seller</a>
-                <a href="#priceStruture">Pricing</a>
-            </div>
 
-            <section style={{ "marginTop": '90px' }} id='emptyStore'>
-                <h3>Empty Store</h3>
-                <div id='content'>
-                    <p>
-                        Empty Store was created with a simple goal:
-                        to make online shopping, selling, and delivery accessible,
-                        convenient, and reliable for everyone. We bring together
-                        customers looking for quality products, sellers who want
-                        to grow their businesses, and delivery partners who
-                        ensure orders reach their destination safely and on
-                        time.
-                        <hr />
+            <nav className="au-nav" aria-label="On this page">
+                <ul>
+                    {SECTIONS.map(([id, label]) => (
+                        <li key={id}><a href={`#${id}`}>{label}</a></li>
+                    ))}
+                </ul>
+            </nav>
 
-                        Our platform is designed to remove the barriers between
-                        buyers and businesses by providing a smooth digital
-                        marketplace where every interaction is simple and secure.
-                        Whether you're shopping for everyday essentials,
-                        discovering new products, or expanding your business
-                        to a larger audience, Empty Store offers the tools and
-                        technology to make the experience effortless.
-                        <hr />
-
-                        At Empty Store, we believe technology should create
-                        opportunities. By supporting local businesses,
-                        improving customer convenience, and enabling flexible
-                        earning opportunities for delivery partners, we aim to
-                        build a stronger and more connected marketplace for
-                        everyone.
-                        <hr />
-
-                        Every feature on our platform is built with trust,
-                        transparency, and user satisfaction in mind.
-                        As we continue to grow, our commitment remains the
-                        same—to create a marketplace where customers enjoy
-                        shopping, sellers achieve success, and delivery partners
-                        thrive.
-                    </p>
-                </div>
-            </section>
-
-            <section id='howWorks'>
-                <h3>How Works</h3>
-                <div id='content'>
-                    <p>
-                        Getting started with Empty Store is quick and easy.
-                        Customers can browse products, place orders,
-                        and track deliveries in real time. Sellers can list
-                        and manage their products through an easy-to-use
-                        dashboard, while delivery partners receive assigned
-                        orders and deliver them efficiently. Every step is
-                        designed to ensure a smooth and reliable experience
-                        for all users.
-                    </p>
-                </div>
-            </section>
-
-            <section id='Customer'>
-                <h3>Customer</h3>
-                <div id='content'>
-                    <object
-                        data="\1000017794.pdf"
-                        type="application/pdf"
-                        width="100%"
-                        height="800px">
-                        <p>Your browser doesn't support PDFs.
-                            <a href="1000017794.pdf">Download the PDF</a>.
+            <main className="page-body is-narrow au-main">
+                <section id="emptyStore" className="au-section">
+                    <h1 className="page-title">About Empty Store</h1>
+                    <div className="au-text">
+                        <p>
+                            Empty Store was created with a simple goal: to make online shopping,
+                            selling and delivery accessible, convenient and reliable for everyone.
+                            We bring together customers looking for quality products, sellers who
+                            want to grow their businesses, and delivery partners who make sure
+                            orders reach their destination safely and on time.
                         </p>
-                    </object>
-                </div>
-            </section>
-
-            <section id='Seller'>
-                <h3>Seller</h3>
-                <div id='content'>
-                    <object
-                        data="\1000017805.pdf"
-                        type="application/pdf"
-                        width="100%"
-                        height="800px">
-                        <p>Your browser doesn't support PDFs.
-                            <a href="\1000017805.pdf">Download the PDF</a>.
+                        <p>
+                            Our platform is designed to remove the barriers between buyers and
+                            businesses by providing a smooth digital marketplace where every
+                            interaction is simple and secure. Whether you are shopping for everyday
+                            essentials, discovering new products, or expanding your business to a
+                            larger audience, Empty Store offers the tools to make it effortless.
                         </p>
+                        <p>
+                            At Empty Store, we believe technology should create opportunities. By
+                            supporting local businesses, improving customer convenience, and
+                            enabling flexible earning opportunities for delivery partners, we aim
+                            to build a stronger and more connected marketplace for everyone.
+                        </p>
+                        <p>
+                            Every feature on our platform is built with trust, transparency and
+                            user satisfaction in mind. As we continue to grow, our commitment
+                            remains the same: a marketplace where customers enjoy shopping, sellers
+                            achieve success, and delivery partners thrive.
+                        </p>
+                    </div>
+                </section>
+
+                <section id="howWorks" className="au-section">
+                    <h2 className="au-heading">How it works</h2>
+                    <div className="au-text">
+                        <p>
+                            Getting started with Empty Store is quick and easy. Customers can browse
+                            shops, place orders and track deliveries in real time. Sellers can list
+                            and manage their products through an easy-to-use dashboard, while
+                            delivery partners receive assigned orders and deliver them efficiently.
+                            Every step is designed to give all users a smooth and reliable
+                            experience.
+                        </p>
+                    </div>
+                </section>
+
+                <section id="Customer" className="au-section">
+                    <h2 className="au-heading">For customers</h2>
+                    <object className="au-pdf" data="/1000017794.pdf" type="application/pdf">
+                        <p>Your browser cannot show this guide. <a href="/1000017794.pdf">Open the customer guide (PDF)</a>.</p>
                     </object>
-                </div>
-            </section>
+                </section>
 
-            <section style={{ "marginTop": '90px' }} id='priceStruture'>
-                <h3>Pricing Structure</h3>
-                <div id='content'>
-                    <p>
+                <section id="Seller" className="au-section">
+                    <h2 className="au-heading">For sellers</h2>
+                    <object className="au-pdf" data="/1000017805.pdf" type="application/pdf">
+                        <p>Your browser cannot show this guide. <a href="/1000017805.pdf">Open the seller guide (PDF)</a>.</p>
+                    </object>
+                </section>
 
-
-                        The pricing structure of Empty Store is simple and transparent.
-                        The seller determines the price of each product, while Empty Store
-                        applies a fixed delivery charge of ₹30 for every order to cover the
-                        delivery service. In addition, a service charge of ₹2 is collected
-                        for each order as a platform fee for providing services such as order
-                        management, store management, and customer support. Therefore, the total
-                        amount paid by the customer is the sum of the product price,
-                        the ₹30 delivery charge, and the ₹2 service charge. The product amount
-                        is transferred to the seller, the ₹30 delivery charge is allocated to
-                        the delivery partner, and the ₹2 service charge is retained by Empty
-                        Store for maintaining and operating the platform.
-                    </p>
-                </div>
-            </section>
+                <section id="priceStruture" className="au-section">
+                    <h2 className="au-heading">Pricing structure</h2>
+                    <div className="au-text">
+                        <p>
+                            The pricing of Empty Store is simple and transparent. The seller sets
+                            the price of each product. Empty Store adds a fixed delivery charge of
+                            ₹30 for every order to cover delivery, and a service charge for the
+                            platform and payment costs, such as order management, store management
+                            and customer support.
+                        </p>
+                        <p>
+                            The total a customer pays is the product price, plus the ₹30 delivery
+                            charge, plus the service charge. The product amount goes to the seller,
+                            the ₹30 delivery charge goes to the delivery partner, and the service
+                            charge is kept by Empty Store to run the platform.
+                        </p>
+                    </div>
+                </section>
+            </main>
         </div>
     )
 }

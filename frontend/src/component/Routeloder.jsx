@@ -1,7 +1,8 @@
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import Loadingpage from "./Loaderpage"; 
+import Loadingpage from "./Loaderpage";
 
+// Shows the branded loader for a moment each time the page changes.
 function RouteLoader({ children }) {
   const location = useLocation();
   const [loading, setLoading] = useState(false);
@@ -11,12 +12,12 @@ function RouteLoader({ children }) {
 
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 3000); // loader duration
+    }, 500); // loader duration
 
     return () => clearTimeout(timer);
   }, [location.pathname]);
 
-  return loading ? <Loadingpage /> : children;
+  return loading ? <Loadingpage message="Opening page…" /> : children;
 }
 
 export default RouteLoader;
