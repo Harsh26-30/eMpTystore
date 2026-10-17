@@ -168,7 +168,7 @@ const UserProfile = () => {
         }
     };
 
-    const isOwnProfile = SellerId;
+    const isOwnProfile = !SellerId;
 
     return (
         <div className="page">
