@@ -2372,14 +2372,10 @@ app.post("/signup", async (req, res) => {
     try {
 
       const createOtp = generateOTP();
-      await OTPData.findOneAndUpdate(
+      const user = await User.findOneAndUpdate(
         { email },
-        {
-          otp: createOtp,
-          status: "pending",
-          expiresAt: new Date(Date.now() + 5 * 60 * 1000) // 5 minutes
-        },
-        { upsert: true, new: true }
+        { verified: true },
+        { returnDocument: 'after' }
       );
 
       try {
@@ -2454,14 +2450,17 @@ app.post("/resendOTP", authMiddleware, async (req, res) => {
   try {
 
     const createOtp = generateOTP();
-    await OTPData.findOneAndUpdate(
+    const otpRecord = await Otp.findOneAndUpdate(
       { email: req.user.email },
       {
         otp: createOtp,
         status: "pending",
-        expiresAt: new Date(Date.now() + 5 * 60 * 1000) // 5 minutes
+        expiresAt: new Date(Date.now() + 5 * 60 * 1000)
       },
-      { upsert: true, new: true }
+      {
+        returnDocument: "after",
+        upsert: true
+      }
     );
 
     try {
