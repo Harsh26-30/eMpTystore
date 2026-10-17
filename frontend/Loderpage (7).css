@@ -1,0 +1,59 @@
+.share-card,
+.share-card * {
+    box-sizing: border-box;
+}
+
+.share-card {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 0 16px 24px;
+    padding: 18px;
+    color: var(--green-900);
+    background: var(--green-100);
+    border-radius: var(--radius-md);
+}
+
+.share-card-text h2 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.2rem;
+    line-height: 1.2;
+}
+
+.share-card-text p {
+    margin-top: 4px;
+    font-size: 0.98rem;
+    line-height: 1.45;
+}
+
+.share-card button {
+    align-self: stretch;
+    min-height: 46px;
+    padding: 0 20px;
+    font: inherit;
+    font-weight: 700;
+    color: #fff;
+    background: var(--green-700);
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+}
+
+.share-card button:hover {
+    background: var(--green-800);
+}
+
+@media (min-width: 640px) {
+    .share-card {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 22px;
+    }
+
+    .share-card button {
+        align-self: auto;
+        flex: none;
+    }
+}

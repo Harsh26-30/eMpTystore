@@ -1,0 +1,43 @@
+.ft-bar {
+  box-sizing: border-box;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 90;
+  display: flex;
+  justify-content: center;
+  padding: 8px 16px calc(8px + env(safe-area-inset-bottom));
+  background: var(--green-900);
+  box-shadow: 0 -4px 16px rgba(15, 61, 49, 0.2);
+  font-family: var(--font-body);
+}
+
+.ft-btn {
+  width: 100%;
+  max-width: 420px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font: inherit;
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--green-900);
+  background: var(--marigold);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.ft-btn:hover {
+  background: var(--marigold-600);
+}
+
+.ft-icon {
+  width: 22px;
+  height: 22px;
+  /* the white icon turns dark to sit on the yellow button */
+  filter: brightness(0) saturate(100%);
+}

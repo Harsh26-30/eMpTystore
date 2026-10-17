@@ -1,0 +1,133 @@
+.mo-gap {
+    margin-top: 20px;
+}
+
+.mo-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 20px;
+}
+
+.mo-card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.mo-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.mo-shop {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.mo-head .pill {
+    flex: none;
+}
+
+/* Progress: five steps, filled up to the current one */
+.mo-steps {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+}
+
+.mo-steps li {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--muted);
+}
+
+.mo-steps li::before {
+    content: "";
+    position: absolute;
+    top: 6px;
+    right: 50%;
+    width: 100%;
+    height: 3px;
+    background: var(--line);
+}
+
+.mo-steps li:first-child::before {
+    display: none;
+}
+
+.mo-dot {
+    position: relative;
+    z-index: 1;
+    width: 15px;
+    height: 15px;
+    background: var(--surface);
+    border: 3px solid var(--line);
+    border-radius: 50%;
+}
+
+.mo-steps li.is-done {
+    color: var(--green-900);
+    font-weight: 600;
+}
+
+.mo-steps li.is-done::before {
+    background: var(--green-700);
+}
+
+.mo-steps li.is-done .mo-dot {
+    background: var(--green-700);
+    border-color: var(--green-700);
+}
+
+.mo-items {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+}
+
+.mo-items li {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.mo-times {
+    flex: none;
+    color: var(--muted);
+}
+
+.mo-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.mo-qr {
+    align-items: center;
+    text-align: center;
+}
+
+.mo-qr-box {
+    padding: 14px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+}
+
+.mo-qr .modal-primary {
+    align-self: stretch;
+}

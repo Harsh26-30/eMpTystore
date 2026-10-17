@@ -1,0 +1,64 @@
+/* ---------- Design tokens: shared by every screen ---------- */
+:root {
+  /* Brand */
+  --green-900: #0F3D31;
+  --green-700: #17624C;
+  --green-800: #124F3D;
+  --green-100: #D7EBE3;
+  --green-50: #EEF6F2;
+  --marigold: #F4B63F;
+  --marigold-600: #D9951A;
+
+  /* Neutrals */
+  --bg: #F5F7F6;
+  --surface: #FFFFFF;
+  --ink: #17231F;
+  --muted: #566660;
+  --line: #D5DFDA;
+
+  /* Feedback */
+  --danger: #B3261E;
+  --danger-bg: #FCEBEA;
+  --success: #17624C;
+
+  /* Type */
+  --font-body: 'Figtree', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Bricolage Grotesque', 'Figtree', system-ui, sans-serif;
+
+  /* Shape and depth */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --shadow-card: 0 1px 2px rgba(15, 61, 49, 0.06), 0 8px 24px rgba(15, 61, 49, 0.08);
+  --focus-ring: 0 0 0 3px rgba(244, 182, 63, 0.55);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  width: 100%;
+}
+
+/* Keyboard focus is always visible */
+:focus-visible {
+  outline: 3px solid var(--marigold);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
