@@ -2386,13 +2386,43 @@ app.post("/signup", async (req, res) => {
         console.log("Sending email to:", email);
 
         const result = await sendMail(
-          email,
-          "Your Empty Store OTP",
-          `
-      <h2>OTP Verification</h2>
-      <p>Your OTP is <b>${createOtp}</b></p>
+      email,
+      "Your Empty Store Verification Code",
+      `
+      <!DOCTYPE html>
+      <html>
+      <body style="margin:0;padding:0;background:#f1f5f9;font-family:Arial,sans-serif;color:#0f172a;">
+        <div style="max-width:560px;margin:30px auto;background:#ffffff;border-radius:14px;overflow:hidden;">
+          <div style="background:#2563eb;padding:25px;text-align:center;color:#ffffff;">
+            <h1 style="margin:0;font-size:26px;">Empty Store</h1>
+            <p style="margin:8px 0 0;font-size:14px;">Secure account verification</p>
+          </div>
+
+          <div style="padding:32px 25px;">
+            <h2 style="margin-top:0;">Verify your email address</h2>
+            <p>Hello,</p>
+            <p>Thank you for choosing Empty Store. Enter the verification code below to complete your email verification.</p>
+
+            <div style="margin:28px 0;padding:24px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;text-align:center;">
+              <p style="margin:0 0 10px;font-size:12px;color:#475569;letter-spacing:2px;">YOUR VERIFICATION CODE</p>
+              <div style="font-size:34px;font-weight:bold;letter-spacing:8px;color:#2563eb;">${createOtp}</div>
+            </div>
+
+            <p>This code expires according to your account's OTP validity period. Please do not share it with anyone.</p>
+            <p>If you didn't request this code, you can safely ignore this email.</p>
+
+            <p style="margin-top:28px;">Thanks for choosing Empty Store!</p>
+            <p style="margin-bottom:0;"><strong>The Empty Store Team</strong></p>
+          </div>
+
+          <div style="padding:18px;background:#f8fafc;text-align:center;color:#64748b;font-size:12px;">
+            © ${new Date().getFullYear()} Empty Store · emptystore.in
+          </div>
+        </div>
+      </body>
+      </html>
     `
-        );
+    );
 
       } catch (err) {
         console.log("Email error:");
@@ -2437,13 +2467,43 @@ app.post("/resendOTP", authMiddleware, async (req, res) => {
     try {
 
       const result = await sendMail(
-        req.user.email,
-        "Your Empty Store OTP",
-        `
-      <h2>OTP Verification</h2>
-      <p>Your New OTP is <b>${createOtp}</b></p>
-    `
-      );
+  req.user.email,
+  "Your Empty Store Verification Code",
+  `
+  <!DOCTYPE html>
+  <html>
+  <body style="margin:0;padding:0;background:#f1f5f9;font-family:Arial,sans-serif;color:#0f172a;">
+    <div style="max-width:560px;margin:30px auto;background:#ffffff;border-radius:14px;overflow:hidden;">
+      <div style="background:#2563eb;padding:25px;text-align:center;color:#ffffff;">
+        <h1 style="margin:0;font-size:26px;">Empty Store</h1>
+        <p style="margin:8px 0 0;font-size:14px;">Secure account verification</p>
+      </div>
+
+      <div style="padding:32px 25px;">
+        <h2 style="margin-top:0;">Verify your email address</h2>
+        <p>Hello,</p>
+        <p>Thank you for choosing Empty Store. Enter the verification code below to complete your email verification.</p>
+
+        <div style="margin:28px 0;padding:24px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;text-align:center;">
+          <p style="margin:0 0 10px;font-size:12px;color:#475569;letter-spacing:2px;">YOUR VERIFICATION CODE</p>
+          <div style="font-size:34px;font-weight:bold;letter-spacing:8px;color:#2563eb;">${createOtp}</div>
+        </div>
+
+        <p>This code expires according to your account's OTP validity period. Please do not share it with anyone.</p>
+        <p>If you didn't request this code, you can safely ignore this email.</p>
+
+        <p style="margin-top:28px;">Thanks for choosing Empty Store!</p>
+        <p style="margin-bottom:0;"><strong>The Empty Store Team</strong></p>
+      </div>
+
+      <div style="padding:18px;background:#f8fafc;text-align:center;color:#64748b;font-size:12px;">
+        © ${new Date().getFullYear()} Empty Store · emptystore.in
+      </div>
+    </div>
+  </body>
+  </html>
+  `
+);
 
       return res.json({ success: true, message: "OTP resent successfully to " + req.user.email });
 
