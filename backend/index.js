@@ -26,7 +26,9 @@ const Withdrawal = require("./Withdrawaldata");
 
 const upload = multer({ dest: "uploads/" });
 
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGO_URI), {
+    dbName: "emtystore"
+  }
   .then(() => console.log("MongoDB connected"))
   .catch(err => console.log(err));
 
