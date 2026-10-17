@@ -2488,38 +2488,64 @@ app.post("/verifyOTP", authMiddleware, async (req, res) => {
     return res.status(500).json({ message: err.message });
   }
 });
+/*app.post("/login", async (req, res) => {
+  try {
+    const { email, pass } = req.body;
+    const regexemail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (regexemail.test(email)) {
+      pass
+    } else {
+      return res.json({ valid: "fasle", msg: "Inappropriate Email Typed" });
+    }
+
+    const user = await User.findOne({ email: email });
+
+    if (user) {
+      const isMatch = await bcrypt.compare(pass, user.pass);
+
+      if (isMatch) {
+        const token = jwt.sign(
+          { email },
+          process.env.JWT_SECRET || "secretkey",
+          { expiresIn: "365d" }
+        );
+        res.json({ valid: "true", token });
+      } else {
+        res.json({ msg: "Wrong Password Entered" });
+      }
+    } else {
+      res.json({ msg: "User Not Found" });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});*/
+
 
 app.post("/login", async (req, res) => {
+  console.log("🔥 LOGIN ROUTE HIT");
+  console.log("Request body:", {
+    email: req.body?.email,
+    hasPassword: Boolean(req.body?.pass)
+  });
+
   try {
-    const email = String(req.body.email || "")
-      .trim()
-      .toLowerCase();
-
-    const pass = req.body.pass;
-
-    // Validate email
+    const { email, pass } = req.body;
     const regexemail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!regexemail.test(email)) {
       return res.status(400).json({
-        valid: false,
-        msg: "Inappropriate email typed"
+        valid: "false",
+        msg: "Invalid email"
       });
     }
 
-    if (!pass) {
-      return res.status(400).json({
-        valid: false,
-        msg: "Password is required"
-      });
-    }
-
-    // Find user using normalized email
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(404).json({
-        valid: false,
+        valid: "false",
         msg: "User not found"
       });
     }
@@ -2528,28 +2554,26 @@ app.post("/login", async (req, res) => {
 
     if (!isMatch) {
       return res.status(401).json({
-        valid: false,
-        msg: "Wrong password entered"
+        valid: "false",
+        msg: "Wrong password"
       });
     }
 
     const token = jwt.sign(
       { email: user.email },
-      process.env.JWT_SECRET,
+      SECRET,
       { expiresIn: "365d" }
     );
 
     return res.json({
-      valid: true,
+      valid: "true",
       token
     });
 
   } catch (err) {
-    console.error("Login error:", err);
-
+    console.error("🔥 LOGIN ERROR:", err);
     return res.status(500).json({
-      valid: false,
-      msg: "Internal server error"
+      error: "Login failed"
     });
   }
 });
