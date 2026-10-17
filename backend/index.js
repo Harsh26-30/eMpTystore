@@ -28,7 +28,7 @@ const upload = multer({ dest: "uploads/" });
 
 
 mongoose.connect(process.env.MONGO_URI, {
-  dbName: "emtystore"
+  dbName: "emptystore"
 })
   .then(() => {
     console.log("MongoDB connected to emtystore");
