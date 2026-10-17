@@ -31,9 +31,10 @@ mongoose.connect(process.env.MONGO_URI)
   .catch(err => console.log(err));
 
 const allowedOrigins = [
-  "http://localhost:5173",
+  // "http://localhost:5173",
   "https://emptystore.in",
-  "https://www.emptystore.in"
+  "https://www.emptystore.in",
+  "https://emptystore.onrender.com"
 ];
 
 function generateOTP() {
