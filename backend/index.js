@@ -26,11 +26,17 @@ const Withdrawal = require("./Withdrawaldata");
 
 const upload = multer({ dest: "uploads/" });
 
-mongoose.connect(process.env.MONGO_URI, { 
-    dbName: "emtystore"
-  }
-  .then(() => console.log("MongoDB connected"))
-  .catch(err => console.log(err));
+
+mongoose.connect(process.env.MONGO_URI, {
+  dbName: "emtystore"
+})
+  .then(() => {
+    console.log("MongoDB connected to emtystore");
+  })
+  .catch((err) => {
+    console.error("MongoDB connection error:", err);
+  });
+
 
 const allowedOrigins = [
   // "http://localhost:5173",
