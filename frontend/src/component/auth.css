@@ -141,7 +141,7 @@
 .auth-tab[aria-selected="true"] {
   background: var(--surface);
   color: var(--green-900);
-  box-shadow: 0 1px 3px rgba(15, 61, 49, 0.18);
+  box-shadow: 0 1px 3px rgba(14, 42, 107, 0.18);
 }
 
 /* ---------- Form ---------- */
@@ -190,11 +190,11 @@
 }
 
 .auth-input::placeholder {
-  color: #7D8B85;
+  color: #8390AD;
 }
 
 .auth-input:hover {
-  border-color: #A9B9B2;
+  border-color: #B3C2E6;
 }
 
 .auth-input:focus {
@@ -271,7 +271,7 @@
 }
 
 .auth-choice input:hover + span {
-  border-color: #A9B9B2;
+  border-color: #B3C2E6;
 }
 
 .auth-choice input:checked + span {
@@ -328,7 +328,7 @@
 }
 
 .auth-submit:disabled {
-  background: #8FB3A5;
+  background: #9DB8EE;
   cursor: wait;
 }
 
@@ -436,7 +436,7 @@ select.auth-input {
     max-width: 38ch;
     font-size: 1.1rem;
     line-height: 1.55;
-    color: #CFE3DA;
+    color: #C9D8F7;
   }
 
   .auth-points {

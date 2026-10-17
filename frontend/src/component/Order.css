@@ -68,7 +68,7 @@
 .so-filter[aria-pressed="true"] {
   color: var(--green-900);
   background: var(--surface);
-  box-shadow: 0 1px 3px rgba(15, 61, 49, 0.18);
+  box-shadow: 0 1px 3px rgba(14, 42, 107, 0.18);
 }
 
 .so-count {
@@ -307,7 +307,7 @@
 .so-skel {
   min-height: 210px;
   border-radius: var(--radius-md);
-  background: linear-gradient(90deg, #E4ECE8 25%, #EEF3F0 50%, #E4ECE8 75%);
+  background: linear-gradient(90deg, #E6EDFA 25%, #EEF2FB 50%, #E6EDFA 75%);
   background-size: 200% 100%;
   animation: so-shimmer 1.4s ease-in-out infinite;
 }
@@ -331,7 +331,7 @@
   align-items: center;
   justify-content: center;
   padding: 16px;
-  background: rgba(15, 61, 49, 0.7);
+  background: rgba(14, 42, 107, 0.7);
 }
 
 .so-scan {
@@ -345,7 +345,7 @@
   padding: 22px 18px 20px;
   background: var(--surface);
   border-radius: var(--radius-lg);
-  box-shadow: 0 20px 60px rgba(15, 61, 49, 0.35);
+  box-shadow: 0 20px 60px rgba(14, 42, 107, 0.35);
 }
 
 .so-scan h3 {
@@ -387,7 +387,7 @@
   color: #fff;
   background: var(--green-900);
   border-radius: var(--radius-sm);
-  box-shadow: 0 6px 20px rgba(15, 61, 49, 0.3);
+  box-shadow: 0 6px 20px rgba(14, 42, 107, 0.3);
 }
 
 .so-toast.is-error {

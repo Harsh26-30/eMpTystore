@@ -152,7 +152,7 @@
 .sp-bar {
   height: 10px;
   overflow: hidden;
-  background: #E4ECE8;
+  background: #E6EDFA;
   border-radius: 999px;
 }
 
@@ -280,7 +280,7 @@
 .sp-skel {
   min-height: 210px;
   border-radius: var(--radius-md);
-  background: linear-gradient(90deg, #E4ECE8 25%, #EEF3F0 50%, #E4ECE8 75%);
+  background: linear-gradient(90deg, #E6EDFA 25%, #EEF2FB 50%, #E6EDFA 75%);
   background-size: 200% 100%;
   animation: sp-shimmer 1.4s ease-in-out infinite;
 }
@@ -309,7 +309,7 @@
   color: #fff;
   background: var(--green-900);
   border-radius: var(--radius-sm);
-  box-shadow: 0 6px 20px rgba(15, 61, 49, 0.3);
+  box-shadow: 0 6px 20px rgba(14, 42, 107, 0.3);
 }
 
 .sp-toast.is-error {

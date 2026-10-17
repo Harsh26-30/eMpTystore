@@ -26,6 +26,7 @@ const MyOrderStatus = () => {
   const [SelectedOrder, setSelectedOrder] = useState(null)
   const [orders, setOrders] = useState([])
   const [status, setStatus] = useState('loading') // loading | ready | error
+  const [tab, setTab] = useState('active')
 
   const fetchOrderStatus = async () => {
     setStatus('loading')
@@ -75,8 +76,19 @@ const MyOrderStatus = () => {
         )}
 
         {status === 'ready' && orders.length > 0 && (
+          <div className="mo-seg" role="tablist" aria-label="Order list">
+            <button type="button" role="tab" aria-selected={tab === 'active'} onClick={() => setTab('active')}>Active</button>
+            <button type="button" role="tab" aria-selected={tab === 'past'} onClick={() => setTab('past')}>Past</button>
+          </div>
+        )}
+
+        {status === 'ready' && orders.length > 0 && orders.filter((o) => (o.orderStatus !== 'Reached' && o.orderStatus !== 'Rejected') === (tab === 'active')).length === 0 && (
+          <div className="empty-state mo-gap"><p>{tab === 'active' ? 'No active orders right now.' : 'No past orders yet.'}</p></div>
+        )}
+
+        {status === 'ready' && orders.length > 0 && (
           <ul className="mo-list">
-            {orders.map((order) => {
+            {orders.filter((o) => (o.orderStatus !== 'Reached' && o.orderStatus !== 'Rejected') === (tab === 'active')).map((order) => {
               const info = STATUS[order.orderStatus] || { label: 'Checking status', tone: '', step: 0 }
               const total = order.items?.reduce(
                 (sum, item) => sum + Number(item.price || 0) * Number(item.quantity || 0), 0

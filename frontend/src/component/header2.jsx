@@ -94,7 +94,7 @@ const Header2 = ({ setmanagehomepagevisible, managehomepagevisible }) => {
             </button>
           )}
 
-          {userRole === 'Customer' && (
+          {false && (
             <button type="button" className="hd-btn" onClick={() => navigate('/myOrderStatus')}>
               <img src="/format_list_bulleted_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="" />
               <span>My orders</span>

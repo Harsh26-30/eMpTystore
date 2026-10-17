@@ -1,4 +1,4 @@
-# Frontend map (green theme)
+# Frontend map (blue theme)
 
 How the screens, files and your backend routes connect. Generated from the code.
 
@@ -49,10 +49,11 @@ frontend/
   .env                  YOUR keys (not in git). See .env.example
   public/               images, PDFs and videos used by screens
   src/
-    main.jsx            starts the app, loads index.css and ds.css
-    App.jsx             all routes
+    main.jsx            starts the app, loads index.css and ds.css, theme.css
+    App.jsx             all routes; also shows the bottom tab bar
     index.css           colours, fonts, radius tokens (the theme lives here)
     ds.css              shared buttons, cards, inputs, tabs, alerts
+    theme.css           blue theme on top of the tokens; welcome, home, store rows
     component/          one JSX and CSS pair per screen or part
 ```
 
@@ -61,7 +62,7 @@ frontend/
 | Group | Files |
 |---|---|
 | Sign in | `auth`, `AuthLayout`, `AuthField`, `logincard`, `signupcard`, `forgotPassword`, `addAddress`, `EmailVerification`, `updatePhoneNo` |
-| Customer | `homepage`, `NearByShop`, `searchbox`, `searchresult`, `Shopnox`, `productview`, `buynow`, `Cart`, `MyOrderStatus`, `OrderQr`, `UserProfile`, `shareAndEarn`, `generatelinkbtnbox`, `aboutUs`, `Menu` |
+| Customer | `homepage`, `NearByShop`, `searchbox`, `searchresult`, `Shopnox`, `productview`, `buynow`, `Cart`, `MyOrderStatus`, `OrderQr`, `UserProfile`, `shareAndEarn`, `generatelinkbtnbox`, `aboutUs`, `Menu`, `BottomNav` |
 | Seller | `Order`, `OrderStatus`, `Product`, `UI`, `uploadproduct`, `updateproductuiid`, `rendercomponent`, `QrScanner`, `rejectpOrderform`, `connections` |
 | Delivery | `DeliveryPartnerdashboard`, `deliveryorderdetail` |
 | Wallet and admin | `wallet`, `wallettotalamount`, `walletwithdrawbtn`, `upiIdForm`, `MakePayment`, `Request`, `requestform`, `Key` |

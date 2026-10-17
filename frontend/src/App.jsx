@@ -25,6 +25,7 @@ import Requestform from "./component/requestform"
 import Wallet from './component/wallet'
 import MakePayment from './component/MakePayment'
 import ShareAndEarn from './component/shareAndEarn'
+import BottomNav from './component/BottomNav'
 
 
 function App() {
@@ -50,6 +51,7 @@ function App() {
   return (
     <BrowserRouter>
       <RouteLoader>
+        <BottomNav />
         <Routes>
           {/* <Route path="/" element={<Homepage />} /> */}
                     <Route path="/" element={<Auth />} />

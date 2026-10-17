@@ -208,7 +208,7 @@ const getServiceCharge = (productAmount) => {
                 },
 
                 theme: {
-                    color: "#17624C"
+                    color: "#1A62E6"
                 }
             };
 

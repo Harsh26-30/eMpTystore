@@ -132,11 +132,6 @@ const NearByShop = () => {
                             <button
                                 type="button"
                                 className={isOpen ? 'shop' : 'shop is-closed'}
-                                style={{
-                                    backgroundColor: info.BackgroundColor || undefined,
-                                    backgroundImage: info.Backgroundimage ? `url(${info.Backgroundimage})` : undefined,
-                                    color: info.TextColor || undefined
-                                }}
                                 aria-disabled={!isOpen}
                                 onClick={() => {
                                     if (isOpen) {
@@ -146,13 +141,21 @@ const NearByShop = () => {
                                     }
                                 }}
                             >
-                                <span className="shop-name">{name}</span>
-                                <span className="shop-meta">
-                                    <span className={isOpen ? 'shop-pill is-open' : 'shop-pill'}>
-                                        {isOpen ? 'Open' : 'Closed'}
+                                <span
+                                    className="shop-thumb"
+                                    aria-hidden="true"
+                                    style={{ backgroundColor: info.BackgroundColor || undefined, color: info.TextColor || undefined }}
+                                >{name.trim().charAt(0).toUpperCase()}</span>
+                                <span className="shop-body">
+                                    <span className="shop-name">{name}</span>
+                                    <span className="shop-meta">
+                                        <span className={isOpen ? 'shop-pill is-open' : 'shop-pill'}>
+                                            {isOpen ? 'Open' : 'Closed'}
+                                        </span>
+                                        {km !== null && <span className="shop-distance">{formatDistance(km)}</span>}
                                     </span>
-                                    {km !== null && <span className="shop-distance">{formatDistance(km)}</span>}
                                 </span>
+                                <span className="shop-chevron" aria-hidden="true">&rsaquo;</span>
                             </button>
                         </li>
                     )

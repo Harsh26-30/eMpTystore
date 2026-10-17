@@ -43,7 +43,7 @@
 
 .shop:hover {
   transform: translateY(-2px);
-  box-shadow: 0 2px 4px rgba(15, 61, 49, 0.08), 0 12px 28px rgba(15, 61, 49, 0.14);
+  box-shadow: 0 2px 4px rgba(14, 42, 107, 0.08), 0 12px 28px rgba(14, 42, 107, 0.14);
 }
 
 .shop.is-closed {
@@ -94,7 +94,7 @@
 .shop-skeleton {
   min-height: 132px;
   border-radius: var(--radius-md);
-  background: linear-gradient(90deg, #E4ECE8 25%, #EEF3F0 50%, #E4ECE8 75%);
+  background: linear-gradient(90deg, #E6EDFA 25%, #EEF2FB 50%, #E6EDFA 75%);
   background-size: 200% 100%;
   animation: shop-shimmer 1.4s ease-in-out infinite;
 }
@@ -156,7 +156,7 @@
   color: #fff;
   background: var(--green-900);
   border-radius: var(--radius-sm);
-  box-shadow: 0 6px 20px rgba(15, 61, 49, 0.3);
+  box-shadow: 0 6px 20px rgba(14, 42, 107, 0.3);
 }
 
 @media (min-width: 640px) {

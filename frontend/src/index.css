@@ -1,36 +1,36 @@
 /* ---------- Design tokens: shared by every screen ---------- */
 :root {
   /* Brand */
-  --green-900: #0F3D31;
-  --green-700: #17624C;
-  --green-800: #124F3D;
-  --green-100: #D7EBE3;
-  --green-50: #EEF6F2;
-  --marigold: #F4B63F;
-  --marigold-600: #D9951A;
+  --green-900: #0E2A6B;
+  --green-700: #1A62E6;
+  --green-800: #1553C7;
+  --green-100: #DCE8FD;
+  --green-50: #EEF4FF;
+  --marigold: #FFB82E;
+  --marigold-600: #E39A00;
 
   /* Neutrals */
-  --bg: #F5F7F6;
+  --bg: #F4F7FD;
   --surface: #FFFFFF;
-  --ink: #17231F;
-  --muted: #566660;
-  --line: #D5DFDA;
+  --ink: #0F1B3D;
+  --muted: #5A6788;
+  --line: #DCE3F2;
 
   /* Feedback */
   --danger: #B3261E;
   --danger-bg: #FCEBEA;
-  --success: #17624C;
+  --success: #1A62E6;
 
   /* Type */
-  --font-body: 'Figtree', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-display: 'Bricolage Grotesque', 'Figtree', system-ui, sans-serif;
+  --font-body: 'Plus Jakarta Sans', 'Figtree', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Plus Jakarta Sans', 'Figtree', system-ui, sans-serif;
 
   /* Shape and depth */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
-  --shadow-card: 0 1px 2px rgba(15, 61, 49, 0.06), 0 8px 24px rgba(15, 61, 49, 0.08);
-  --focus-ring: 0 0 0 3px rgba(244, 182, 63, 0.55);
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 24px;
+  --shadow-card: 0 1px 2px rgba(14, 42, 107, 0.06), 0 8px 24px rgba(14, 42, 107, 0.08);
+  --focus-ring: 0 0 0 3px rgba(26, 98, 230, 0.55);
 }
 
 * {
