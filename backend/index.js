@@ -2488,7 +2488,8 @@ app.post("/verifyOTP", authMiddleware, async (req, res) => {
     return res.status(500).json({ message: err.message });
   }
 });
-/*app.post("/login", async (req, res) => {
+
+app.post("/login", async (req, res) => {
   try {
     const { email, pass } = req.body;
     const regexemail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -2520,63 +2521,63 @@ app.post("/verifyOTP", authMiddleware, async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-});*/
-
-
-app.post("/login", async (req, res) => {
-  console.log("🔥 LOGIN ROUTE HIT");
-  console.log("Request body:", {
-    email: req.body?.email,
-    hasPassword: Boolean(req.body?.pass)
-  });
-
-  try {
-    const { email, pass } = req.body;
-    const regexemail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!regexemail.test(email)) {
-      return res.status(400).json({
-        valid: "false",
-        msg: "Invalid email"
-      });
-    }
-
-    const user = await User.findOne({ email });
-
-    if (!user) {
-      return res.status(404).json({
-        valid: "false",
-        msg: "User not found"
-      });
-    }
-
-    const isMatch = await bcrypt.compare(pass, user.pass);
-
-    if (!isMatch) {
-      return res.status(401).json({
-        valid: "false",
-        msg: "Wrong password"
-      });
-    }
-
-    const token = jwt.sign(
-      { email: user.email },
-      SECRET,
-      { expiresIn: "365d" }
-    );
-
-    return res.json({
-      valid: "true",
-      token
-    });
-
-  } catch (err) {
-    console.error("🔥 LOGIN ERROR:", err);
-    return res.status(500).json({
-      error: "Login failed"
-    });
-  }
 });
+
+
+// app.post("/login", async (req, res) => {
+//   console.log("🔥 LOGIN ROUTE HIT");
+//   console.log("Request body:", {
+//     email: req.body?.email,
+//     hasPassword: Boolean(req.body?.pass)
+//   });
+
+//   try {
+//     const { email, pass } = req.body;
+//     const regexemail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+//     if (!regexemail.test(email)) {
+//       return res.status(400).json({
+//         valid: "false",
+//         msg: "Invalid email"
+//       });
+//     }
+
+//     const user = await User.findOne({ email });
+
+//     if (!user) {
+//       return res.status(404).json({
+//         valid: "false",
+//         msg: "User not found"
+//       });
+//     }
+
+//     const isMatch = await bcrypt.compare(pass, user.pass);
+
+//     if (!isMatch) {
+//       return res.status(401).json({
+//         valid: "false",
+//         msg: "Wrong password"
+//       });
+//     }
+
+//     const token = jwt.sign(
+//       { email: user.email },
+//       SECRET,
+//       { expiresIn: "365d" }
+//     );
+
+//     return res.json({
+//       valid: "true",
+//       token
+//     });
+
+//   } catch (err) {
+//     console.error("🔥 LOGIN ERROR:", err);
+//     return res.status(500).json({
+//       error: "Login failed"
+//     });
+//   }
+// });
 
 
 app.post("/toggleShopOpenOrNot", authMiddleware, async (req, res) => {
