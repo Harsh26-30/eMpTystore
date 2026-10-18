@@ -22,6 +22,7 @@ const sendMail = require("./sendMail.js");
 const razorpay = require("./razorpay");
 const crypto = require("crypto");
 const Withdrawal = require("./Withdrawaldata");
+const crypto = require("crypto");
 
 
 const upload = multer({ dest: "uploads/" });
@@ -46,7 +47,26 @@ const allowedOrigins = [
 ];
 
 function generateOTP() {
-  return Math.floor(100000 + Math.random() * 900000);
+  return crypto.randomInt(100000, 1000000).toString();
+}
+
+async function saveOTP(email, otp) {
+  return OTPData.findOneAndUpdate(
+    { email: email.trim().toLowerCase() },
+    {
+      $set: {
+        otp,
+        status: "pending",
+        expiresAt: new Date(Date.now() + 5 * 60 * 1000)
+      }
+    },
+    {
+      upsert: true,
+      returnDocument: "after",
+      runValidators: true,
+      setDefaultsOnInsert: true
+    }
+  );
 }
 
 app.use(cors({
@@ -2372,11 +2392,9 @@ app.post("/signup", async (req, res) => {
     try {
 
       const createOtp = generateOTP();
-      const user = await User.findOneAndUpdate(
-        { email },
-        { verified: true },
-        { returnDocument: 'after' }
-      );
+      await saveOTP(email, createOtp);
+
+ 
 
       try {
         console.log("Sending email to:", email);
@@ -2451,18 +2469,7 @@ app.post("/resendOTP", authMiddleware, async (req, res) => {
     // const user = await User.findOne({ email: req.user.email });
 
     const createOtp = generateOTP();
-    const otpRecord = await User.findOneAndUpdate(
-      { email: req.user.email },
-      {
-        otp: createOtp,
-        status: "pending",
-        expiresAt: new Date(Date.now() + 5 * 60 * 1000)
-      },
-      {
-        returnDocument: "after",
-        upsert: true
-      }
-    );
+    await saveOTP(req.user.email, createOtp);
 
     try {
 
