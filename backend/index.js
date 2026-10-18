@@ -2448,9 +2448,10 @@ app.post("/signup", async (req, res) => {
 
 app.post("/resendOTP", authMiddleware, async (req, res) => {
   try {
+    const user = await User.findOne({ email: req.user.email });
 
     const createOtp = generateOTP();
-    const otpRecord = await Otp.findOneAndUpdate(
+    const otpRecord = await user.findOneAndUpdate(
       { email: req.user.email },
       {
         otp: createOtp,
