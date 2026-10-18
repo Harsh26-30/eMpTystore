@@ -22,7 +22,6 @@ const sendMail = require("./sendMail.js");
 const razorpay = require("./razorpay");
 const crypto = require("crypto");
 const Withdrawal = require("./Withdrawaldata");
-const crypto = require("crypto");
 
 
 const upload = multer({ dest: "uploads/" });
